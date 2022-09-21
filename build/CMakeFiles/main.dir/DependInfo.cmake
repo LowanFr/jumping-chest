@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/schneider/Fac/PA/fonctions_SDL.c" "CMakeFiles/main.dir/fonctions_SDL.c.o" "gcc" "CMakeFiles/main.dir/fonctions_SDL.c.o.d"
-  "/home/schneider/Fac/PA/main.c" "CMakeFiles/main.dir/main.c.o" "gcc" "CMakeFiles/main.dir/main.c.o.d"
+  "/home/schneider/Fac/PA/mario-bross-lite/fonctions_SDL.c" "CMakeFiles/main.dir/fonctions_SDL.c.o" "gcc" "CMakeFiles/main.dir/fonctions_SDL.c.o.d"
+  "/home/schneider/Fac/PA/mario-bross-lite/main.c" "CMakeFiles/main.dir/main.c.o" "gcc" "CMakeFiles/main.dir/main.c.o.d"
   )
 
 # Targets to which this target links.

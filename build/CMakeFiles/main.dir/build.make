@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/schneider/Fac/PA
+CMAKE_SOURCE_DIR = /home/schneider/Fac/PA/mario-bross-lite
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/schneider/Fac/PA/build
+CMAKE_BINARY_DIR = /home/schneider/Fac/PA/mario-bross-lite/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/main.dir/depend.make
@@ -72,30 +72,30 @@ include CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/fonctions_SDL.c.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/fonctions_SDL.c.o: ../fonctions_SDL.c
 CMakeFiles/main.dir/fonctions_SDL.c.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/schneider/Fac/PA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/main.dir/fonctions_SDL.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/fonctions_SDL.c.o -MF CMakeFiles/main.dir/fonctions_SDL.c.o.d -o CMakeFiles/main.dir/fonctions_SDL.c.o -c /home/schneider/Fac/PA/fonctions_SDL.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/schneider/Fac/PA/mario-bross-lite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/main.dir/fonctions_SDL.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/fonctions_SDL.c.o -MF CMakeFiles/main.dir/fonctions_SDL.c.o.d -o CMakeFiles/main.dir/fonctions_SDL.c.o -c /home/schneider/Fac/PA/mario-bross-lite/fonctions_SDL.c
 
 CMakeFiles/main.dir/fonctions_SDL.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/main.dir/fonctions_SDL.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/schneider/Fac/PA/fonctions_SDL.c > CMakeFiles/main.dir/fonctions_SDL.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/schneider/Fac/PA/mario-bross-lite/fonctions_SDL.c > CMakeFiles/main.dir/fonctions_SDL.c.i
 
 CMakeFiles/main.dir/fonctions_SDL.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/fonctions_SDL.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/schneider/Fac/PA/fonctions_SDL.c -o CMakeFiles/main.dir/fonctions_SDL.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/schneider/Fac/PA/mario-bross-lite/fonctions_SDL.c -o CMakeFiles/main.dir/fonctions_SDL.c.s
 
 CMakeFiles/main.dir/main.c.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/main.c.o: ../main.c
 CMakeFiles/main.dir/main.c.o: CMakeFiles/main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/schneider/Fac/PA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/main.dir/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/main.c.o -MF CMakeFiles/main.dir/main.c.o.d -o CMakeFiles/main.dir/main.c.o -c /home/schneider/Fac/PA/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/schneider/Fac/PA/mario-bross-lite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/main.dir/main.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/main.dir/main.c.o -MF CMakeFiles/main.dir/main.c.o.d -o CMakeFiles/main.dir/main.c.o -c /home/schneider/Fac/PA/mario-bross-lite/main.c
 
 CMakeFiles/main.dir/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/main.dir/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/schneider/Fac/PA/main.c > CMakeFiles/main.dir/main.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/schneider/Fac/PA/mario-bross-lite/main.c > CMakeFiles/main.dir/main.c.i
 
 CMakeFiles/main.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/main.dir/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/schneider/Fac/PA/main.c -o CMakeFiles/main.dir/main.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/schneider/Fac/PA/mario-bross-lite/main.c -o CMakeFiles/main.dir/main.c.s
 
 # Object files for target main
 main_OBJECTS = \
@@ -109,7 +109,7 @@ main: CMakeFiles/main.dir/fonctions_SDL.c.o
 main: CMakeFiles/main.dir/main.c.o
 main: CMakeFiles/main.dir/build.make
 main: CMakeFiles/main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/schneider/Fac/PA/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/schneider/Fac/PA/mario-bross-lite/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -121,6 +121,6 @@ CMakeFiles/main.dir/clean:
 .PHONY : CMakeFiles/main.dir/clean
 
 CMakeFiles/main.dir/depend:
-	cd /home/schneider/Fac/PA/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/schneider/Fac/PA /home/schneider/Fac/PA /home/schneider/Fac/PA/build /home/schneider/Fac/PA/build /home/schneider/Fac/PA/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/schneider/Fac/PA/mario-bross-lite/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/schneider/Fac/PA/mario-bross-lite /home/schneider/Fac/PA/mario-bross-lite /home/schneider/Fac/PA/mario-bross-lite/build /home/schneider/Fac/PA/mario-bross-lite/build /home/schneider/Fac/PA/mario-bross-lite/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/main.dir/depend
 
