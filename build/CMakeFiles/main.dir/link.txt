@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/main.dir/fonctions_SDL.c.o CMakeFiles/main.dir/main.c.o -o main  -L/usr/lib/x86_64-linux-gnu  -lSDL2 -lSDL2_ttf 
