@@ -1,0 +1,8 @@
+# macOs settings
+.DS_Store
+
+# CMake
+build/*
+
+# CLion / Jetbrains
+.idea/
