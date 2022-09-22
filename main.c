@@ -67,7 +67,8 @@ int main(int argc, char *argv[]) {
     // Définition du rectangle source pour chaque sprite dans sprites
     SDL_Rect SrcR_sprite[6];
     for(int i=0;i<6;i++){
-        SrcR_sprite[i].x = i > 2 ? (spritesW/3)*(i-3): (spritesW/3)*i;
+        SrcR_sprite[i].x = i > 2 ? (spritesW/3)*(i-3): (spritesW/3)*i; 
+        //x=0 Pour i=0 et 3/x=spritesW/3 Pour i=1 et 4/x=2*(spriteW/3) Pour i=2 et 5/
         SrcR_sprite[i].y = i > 2 ? spritesH/2 : 0;
         SrcR_sprite[i].w = spritesW/3; // Largeur de l’objet en pixels
         SrcR_sprite[i].h = spritesH/2; // Hauteur de l’objet en pixels
