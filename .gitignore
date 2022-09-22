@@ -2,7 +2,9 @@
 .DS_Store
 
 # CMake
-build/*
+build/*/*
+build/*make*
+build/main
 
 # CLion / Jetbrains
 .idea/
