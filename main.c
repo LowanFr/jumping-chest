@@ -1,7 +1,11 @@
-#include "fonctions_SDL.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "struct.h"
+#include "fonctions_SDL.h"
+#include "constante.h"
+
+void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueur);
 
 /**
  * La fonction principale. C'est la première fonction qui est appelée lors de l'exécution du programme.
@@ -11,7 +15,15 @@
 int main(int argc, char *argv[]) {
     SDL_Window* window; // Déclaration de la fenêtre
     SDL_Event events; // Événements liés à la fenêtre
+    const int FPS = 60;
+
     bool end = false;
+    etat_clavier_t touches;
+
+    joueur_t joueur;
+    joueur.saut = false;
+    joueur.tempsDepuisLeDebutDuSaut = 0;
+    joueur.y0;
 
     // Initialisation de la SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -39,7 +51,7 @@ int main(int argc, char *argv[]) {
 
     // Charger l'image obj
     Uint8 r = 255, g = 255, b = 255;
-    SDL_Texture* obj = charger_image_transparente("../assets/obj.bmp", renderer, r, g, b);
+    SDL_Texture* obj = charger_image_transparente("../assets/25aa.bmp", renderer, r, g, b);
 
     // Définition de la hauteur / largeur d'obj
     int objetW, objetH;
@@ -57,30 +69,6 @@ int main(int argc, char *argv[]) {
     DestR.y = 350;
     DestR.w = objetW/3;
     DestR.h = objetH/3;
-
-    // Charger l'image sprites
-    r = 0; // Couleur cyan
-    SDL_Texture* sprites = charger_image_transparente("../assets/sprites.bmp", renderer, r, g, b);
-    int spritesW, spritesH;
-    SDL_QueryTexture(sprites, NULL, NULL, &spritesW, &spritesH);
-
-    // Définition du rectangle source pour chaque sprite dans sprites
-    SDL_Rect SrcR_sprite[6];
-    for(int i=0;i<6;i++){
-        SrcR_sprite[i].x = i > 2 ? (spritesW/3)*(i-3): (spritesW/3)*i;
-        SrcR_sprite[i].y = i > 2 ? spritesH/2 : 0;
-        SrcR_sprite[i].w = spritesW/3; // Largeur de l’objet en pixels
-        SrcR_sprite[i].h = spritesH/2; // Hauteur de l’objet en pixels
-    }
-
-    // Définition du rectangle destination pour chaque sprite dans sprites
-    SDL_Rect DestR_sprite[6];
-    for(int i=0; i<6; i++) {
-        DestR_sprite[i].x = i > 2 ? 60*(i+1)+100 : 60*(i+1);
-        DestR_sprite[i].y = i > 2 ? 60 : 120;
-        DestR_sprite[i].w = spritesW/3; // Largeur du sprite
-        DestR_sprite[i].h = spritesH/2; // Hauteur du sprite
-    }
 
     // Initialisation de TTF
     TTF_Init();
@@ -100,6 +88,10 @@ int main(int argc, char *argv[]) {
     text_pos.w = texteW; // Largeur du texte en pixels
     text_pos.h = texteH; // Hauteur du texte en pixels
 
+    int temps_debut;
+    int temps_fin=0;
+    bool right = false;
+
     // Boucle principale
     while (!end) {
         // Suppression de l'ancien rendu
@@ -108,7 +100,6 @@ int main(int argc, char *argv[]) {
         // Mise à jour du rendu
         SDL_RenderCopy(renderer, fond, NULL, NULL);
         SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
-        for (int i = 0; i < 6; i++) SDL_RenderCopy(renderer, sprites, &SrcR_sprite[i], &DestR_sprite[i]);
         SDL_RenderCopy(renderer, texte, NULL, &text_pos);
 
         // Récupération des événements
@@ -121,15 +112,49 @@ int main(int argc, char *argv[]) {
             case SDL_KEYDOWN:
                 switch(events.key.keysym.sym){
                     case SDLK_ESCAPE:
-                    case SDLK_q:
                         end = true; break;
+                    case SDLK_LEFT:
+                        touches.left=true; break;
+                    case SDLK_RIGHT:
+                        touches.right=true; break;
+                    case SDLK_UP:
+                        touches.up=true;break;
+                }break;
+
+            case SDL_KEYUP:
+                switch(events.key.keysym.sym){
+                    case SDLK_LEFT:
+                        touches.left=false; break;
+                    case SDLK_RIGHT:
+                        touches.right=false; break;
+                    case SDLK_UP:
+                        touches.up=false;break;
+
                 }
         }
+        deplacement_joueur(&touches,&DestR,&joueur);
 
+        
         // Mise à jour de l'écran avec le rendu
         SDL_RenderPresent(renderer);
+        
+        
+        if (SDL_GetTicks() < (temps_fin + 1000 / FPS)){
+            SDL_Delay((temps_fin + 1000 / FPS) - SDL_GetTicks());
+        }
+        temps_fin = SDL_GetTicks();
+        
+        
+        
     }
+    
+    
+    
+ 
+    // Où y0 est l'ordonnée de départ (au moment où ou saute)
 
+
+    
     // Quitter SDL_ttf
     TTF_CloseFont(font);
     TTF_Quit();
@@ -137,10 +162,36 @@ int main(int argc, char *argv[]) {
     // Quitter SDL
     SDL_DestroyTexture(fond);
     SDL_DestroyTexture(obj);
-    SDL_DestroyTexture(sprites);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
     return EXIT_SUCCESS;
+}
+
+void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueur){
+    
+    
+    if(touches->left){
+        DestR->x=DestR->x-VITESSE_X_MARCHE;
+    }
+    if(touches->right){
+        DestR->x=DestR->x+VITESSE_X_MARCHE;
+    }
+    if(touches->up){
+        if(joueur->saut==false){
+            joueur->y0 = DestR->y;
+            joueur->tempsDepuisLeDebutDuSaut = 0;
+            joueur->saut = true;
+        }
+    }
+    if(joueur->saut==true){
+        DestR->y = joueur->y0 - VITESSE_Y_SAUT * joueur->tempsDepuisLeDebutDuSaut + 0.5 * GRAVITE * joueur->tempsDepuisLeDebutDuSaut * joueur->tempsDepuisLeDebutDuSaut;
+        joueur->tempsDepuisLeDebutDuSaut++;
+        if(DestR->y-1 >= joueur->y0){
+            DestR->y=joueur->y0;
+            joueur->saut=false;
+        }
+    }
+
 }
