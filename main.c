@@ -43,11 +43,12 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
+
     // Création du contexte de rendu
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    // Charger le fond / background
-    SDL_Texture* fond = charger_image("../assets/fond.bmp", renderer);
+    //Changement de la couleur de fond
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     // Charger l'image obj
     Uint8 r = 255, g = 255, b = 255;
@@ -70,48 +71,7 @@ int main(int argc, char *argv[]) {
     DestR.w = objetW/3;
     DestR.h = objetH/3;
 
-    // Charger l'image sprites
-    r = 0; // Couleur cyan
-    SDL_Texture* sprites = charger_image_transparente("../assets/sprites.bmp", renderer, r, g, b);
-    int spritesW, spritesH;
-    SDL_QueryTexture(sprites, NULL, NULL, &spritesW, &spritesH);
-
-    // Définition du rectangle source pour chaque sprite dans sprites
-    SDL_Rect SrcR_sprite[6];
-    for(int i=0;i<6;i++){
-        SrcR_sprite[i].x = i > 2 ? (spritesW/3)*(i-3): (spritesW/3)*i; 
-        //x=0 Pour i=0 et 3/x=spritesW/3 Pour i=1 et 4/x=2*(spriteW/3) Pour i=2 et 5/
-        SrcR_sprite[i].y = i > 2 ? spritesH/2 : 0;
-        SrcR_sprite[i].w = spritesW/3; // Largeur de l’objet en pixels
-        SrcR_sprite[i].h = spritesH/2; // Hauteur de l’objet en pixels
-    }
-
-    // Définition du rectangle destination pour chaque sprite dans sprites
-    SDL_Rect DestR_sprite[6];
-    for(int i=0; i<6; i++) {
-        DestR_sprite[i].x = i > 2 ? 60*(i+1)+100 : 60*(i+1);
-        DestR_sprite[i].y = i > 2 ? 60 : 120;
-        DestR_sprite[i].w = spritesW/3; // Largeur du sprite
-        DestR_sprite[i].h = spritesH/2; // Hauteur du sprite
-    }
-
-    // Initialisation de TTF
-    TTF_Init();
-    TTF_Font *font = TTF_OpenFont("../assets/arial.ttf", 28);
-    SDL_Color color = {0, 0, 0, 0}; // RGBA : alpha = transparence
-    char msg[] = "TP sur Makefile et SDL"; // Message à afficher
-
-    // Chargement du texte puis initialisation de sa position
-    SDL_Texture* texte = charger_texte(msg, renderer, font, color);
-    SDL_Rect text_pos;
-
-    // Définition de la position du texte
-    int texteW, texteH;
-    SDL_QueryTexture(texte, NULL, NULL, &texteW, &texteH);
-    text_pos.x = 10;
-    text_pos.y = 100;
-    text_pos.w = texteW; // Largeur du texte en pixels
-    text_pos.h = texteH; // Hauteur du texte en pixels
+    //Chargement de la map
 
     int temps_debut;
     int temps_fin=0;
@@ -123,9 +83,7 @@ int main(int argc, char *argv[]) {
         SDL_RenderClear(renderer);
 
         // Mise à jour du rendu
-        SDL_RenderCopy(renderer, fond, NULL, NULL);
         SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
-        SDL_RenderCopy(renderer, texte, NULL, &text_pos);
 
         // Récupération des événements
         SDL_PollEvent(&events);
@@ -140,20 +98,21 @@ int main(int argc, char *argv[]) {
                         end = true; break;
                     case SDLK_LEFT:
                         touches.left=true; break;
+                    case SDLK_SPACE:
+                        touches.space=true; break;
                     case SDLK_RIGHT:
                         touches.right=true; break;
-                    case SDLK_UP:
-                        touches.up=true;break;
+
                 }break;
 
             case SDL_KEYUP:
                 switch(events.key.keysym.sym){
                     case SDLK_LEFT:
                         touches.left=false; break;
+                    case SDLK_SPACE:
+                        touches.space=false; break;
                     case SDLK_RIGHT:
                         touches.right=false; break;
-                    case SDLK_UP:
-                        touches.up=false;break;
 
                 }
         }
@@ -180,12 +139,8 @@ int main(int argc, char *argv[]) {
 
 
     
-    // Quitter SDL_ttf
-    TTF_CloseFont(font);
-    TTF_Quit();
 
     // Quitter SDL
-    SDL_DestroyTexture(fond);
     SDL_DestroyTexture(obj);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -203,7 +158,7 @@ void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueu
     if(touches->right){
         DestR->x=DestR->x+VITESSE_X_MARCHE;
     }
-    if(touches->up){
+    if(touches->space){
         if(joueur->saut==false){
             joueur->y0 = DestR->y;
             joueur->tempsDepuisLeDebutDuSaut = 0;

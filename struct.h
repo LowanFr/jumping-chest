@@ -4,7 +4,7 @@
 struct etat_clavier_s {
     bool left;
     bool right;
-    bool up;
+    bool space;
 };
 typedef struct etat_clavier_s etat_clavier_t;
 

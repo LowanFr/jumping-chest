@@ -129,30 +129,6 @@ main/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
-addition.o: addition.c.o
-.PHONY : addition.o
-
-# target to build an object file
-addition.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/addition.c.o
-.PHONY : addition.c.o
-
-addition.i: addition.c.i
-.PHONY : addition.i
-
-# target to preprocess a source file
-addition.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/addition.c.i
-.PHONY : addition.c.i
-
-addition.s: addition.c.s
-.PHONY : addition.s
-
-# target to generate assembly for a file
-addition.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/addition.c.s
-.PHONY : addition.c.s
-
 fonctions_SDL.o: fonctions_SDL.c.o
 .PHONY : fonctions_SDL.o
 
@@ -210,9 +186,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... main"
-	@echo "... addition.o"
-	@echo "... addition.i"
-	@echo "... addition.s"
 	@echo "... fonctions_SDL.o"
 	@echo "... fonctions_SDL.i"
 	@echo "... fonctions_SDL.s"
