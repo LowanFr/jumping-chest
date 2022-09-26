@@ -4,7 +4,9 @@
 # CMake
 build/*/*
 build/*make*
+build/*Make*
 build/main
 
 # CLion / Jetbrains
 .idea/
+cmake-build-debug/
