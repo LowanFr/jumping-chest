@@ -5,6 +5,8 @@
 #include "fonctions_SDL.h"
 #include "constante.h"
 
+#define FPS 60
+
 void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueur);
 
 /**
@@ -15,7 +17,6 @@ void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueu
 int main(int argc, char *argv[]) {
     SDL_Window* window; // Déclaration de la fenêtre
     SDL_Event events; // Événements liés à la fenêtre
-    const int FPS = 60;
 
     bool end = false;
     etat_clavier_t touches;
@@ -23,7 +24,6 @@ int main(int argc, char *argv[]) {
     joueur_t joueur;
     joueur.saut = false;
     joueur.tempsDepuisLeDebutDuSaut = 0;
-    joueur.y0;
 
     // Initialisation de la SDL
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -42,7 +42,6 @@ int main(int argc, char *argv[]) {
         SDL_Quit();
         return EXIT_FAILURE;
     }
-
 
     // Création du contexte de rendu
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -72,10 +71,7 @@ int main(int argc, char *argv[]) {
     DestR.h = objetH/3;
 
     //Chargement de la map
-
-    int temps_debut;
-    int temps_fin=0;
-    bool right = false;
+    int temps_fin = 0;
 
     // Boucle principale
     while (!end) {
@@ -92,53 +88,46 @@ int main(int argc, char *argv[]) {
         switch (events.type) {
             case SDL_QUIT:
                 end = true; break;
+
             case SDL_KEYDOWN:
                 switch(events.key.keysym.sym){
                     case SDLK_ESCAPE:
                         end = true; break;
                     case SDLK_LEFT:
-                        touches.left=true; break;
+                        touches.left = true; break;
                     case SDLK_SPACE:
-                        touches.space=true; break;
+                        touches.space = true; break;
                     case SDLK_RIGHT:
-                        touches.right=true; break;
+                        touches.right = true; break;
 
                 }break;
 
             case SDL_KEYUP:
                 switch(events.key.keysym.sym){
                     case SDLK_LEFT:
-                        touches.left=false; break;
+                        touches.left = false; break;
                     case SDLK_SPACE:
-                        touches.space=false; break;
+                        touches.space = false; break;
                     case SDLK_RIGHT:
-                        touches.right=false; break;
+                        touches.right = false; break;
 
-                }
+                }break;
         }
-        deplacement_joueur(&touches,&DestR,&joueur);
+
+        // Déplacement du joueur
+        deplacement_joueur(&touches, &DestR, &joueur);
 
         
         // Mise à jour de l'écran avec le rendu
         SDL_RenderPresent(renderer);
         
-        
+
+        // Ralentissement pour un affichage fluide
         if (SDL_GetTicks() < (temps_fin + 1000 / FPS)){
             SDL_Delay((temps_fin + 1000 / FPS) - SDL_GetTicks());
         }
         temps_fin = SDL_GetTicks();
-        
-        
-        
     }
-    
-    
-    
- 
-    // Où y0 est l'ordonnée de départ (au moment où ou saute)
-
-
-    
 
     // Quitter SDL
     SDL_DestroyTexture(obj);
@@ -149,29 +138,36 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
 }
 
-void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueur){
-    
-    
+/**
+ * Ça déplace le joueur en fonction des touches appuyées
+ *
+ * @param touches le statut du clavier
+ * @param DestR la destination du rectangle du joueur
+ * @param joueur la structure du joueur
+ */
+void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR, joueur_t *joueur) {
     if(touches->left){
-        DestR->x=DestR->x-VITESSE_X_MARCHE;
+        DestR->x = DestR->x-VITESSE_X_MARCHE;
     }
+
     if(touches->right){
-        DestR->x=DestR->x+VITESSE_X_MARCHE;
+        DestR->x = DestR->x+VITESSE_X_MARCHE;
     }
+
     if(touches->space){
-        if(joueur->saut==false){
+        if(joueur->saut == false){
             joueur->y0 = DestR->y;
             joueur->tempsDepuisLeDebutDuSaut = 0;
             joueur->saut = true;
         }
     }
-    if(joueur->saut==true){
+
+    if(joueur->saut == true){
         DestR->y = joueur->y0 - VITESSE_Y_SAUT * joueur->tempsDepuisLeDebutDuSaut + 0.5 * GRAVITE * joueur->tempsDepuisLeDebutDuSaut * joueur->tempsDepuisLeDebutDuSaut;
         joueur->tempsDepuisLeDebutDuSaut++;
         if(DestR->y-1 >= joueur->y0){
-            DestR->y=joueur->y0;
-            joueur->saut=false;
+            DestR->y = joueur->y0;
+            joueur->saut = false;
         }
     }
-
 }
