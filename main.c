@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 
     // Définition du rectangle destination pour obj
     DestR.x = 350;
-    DestR.y = 531;
+    DestR.y = 721 - objetH - 63*3;
     DestR.w = objetW;
     DestR.h = objetH;
 
