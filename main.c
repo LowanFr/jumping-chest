@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     // Créer la fenêtre
     window = SDL_CreateWindow("Fenêtre SDL", SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED, 600, 600, SDL_WINDOW_RESIZABLE);
+                              SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE);
 
     // En cas d’erreur
     if (window == NULL){
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     //Changement de la couleur de fond
-    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     //Chargement fond
     SDL_Texture* fond = charger_image("../assets/background.bmp", renderer);
