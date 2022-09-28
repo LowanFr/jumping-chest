@@ -47,7 +47,10 @@ int main(int argc, char *argv[]) {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     //Changement de la couleur de fond
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+    //Chargement fond
+    SDL_Texture* fond = charger_image("../assets/background.bmp", renderer);
 
     // Charger l'image obj
     Uint8 r = 255, g = 255, b = 255;
@@ -79,7 +82,9 @@ int main(int argc, char *argv[]) {
         SDL_RenderClear(renderer);
 
         // Mise à jour du rendu
+        SDL_RenderCopy(renderer, fond, NULL, NULL);
         SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
+        
 
         // Récupération des événements
         SDL_PollEvent(&events);
