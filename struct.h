@@ -11,7 +11,7 @@ typedef struct etat_clavier_s etat_clavier_t;
 struct joueur_s {
     bool saut;
     int tempsDepuisLeDebutDuSaut;
-    int y0;
+    int ground;
 };
 typedef struct joueur_s joueur_t;
 

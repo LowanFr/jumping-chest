@@ -161,17 +161,17 @@ void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR, joueur_t *joue
 
     if(touches->space){
         if(joueur->saut == false){
-            joueur->y0 = DestR->y;
+            joueur->ground = DestR->y;
             joueur->tempsDepuisLeDebutDuSaut = 0;
             joueur->saut = true;
         }
     }
 
     if(joueur->saut == true){
-        DestR->y = joueur->y0 - VITESSE_Y_SAUT * joueur->tempsDepuisLeDebutDuSaut + 0.5 * GRAVITE * joueur->tempsDepuisLeDebutDuSaut * joueur->tempsDepuisLeDebutDuSaut;
+        DestR->y = joueur->ground - VITESSE_Y_SAUT * joueur->tempsDepuisLeDebutDuSaut + 0.5 * GRAVITE * joueur->tempsDepuisLeDebutDuSaut * joueur->tempsDepuisLeDebutDuSaut;
         joueur->tempsDepuisLeDebutDuSaut++;
-        if(DestR->y > joueur->y0){
-            DestR->y = joueur->y0;
+        if(DestR->y > joueur->ground){
+            DestR->y = joueur->ground;
             joueur->saut = false;
         }
     }
