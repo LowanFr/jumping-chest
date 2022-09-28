@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
     // Charger l'image obj
     Uint8 r = 255, g = 255, b = 255;
-    SDL_Texture* obj = charger_image_transparente("../assets/25aa.bmp", renderer, r, g, b);
+    SDL_Texture* obj = charger_image_transparente("../assets/gugus.bmp", renderer, r, g, b);
 
     // Définition de la hauteur / largeur d'obj
     int objetW, objetH;
@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
 
     // Définition du rectangle destination pour obj
     DestR.x = 350;
-    DestR.y = 350;
-    DestR.w = objetW/3;
-    DestR.h = objetH/3;
+    DestR.y = 531;
+    DestR.w = objetW;
+    DestR.h = objetH;
 
     //Chargement de la map
     int temps_fin = 0;
