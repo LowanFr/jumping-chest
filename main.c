@@ -3,7 +3,10 @@
 #include <stdbool.h>
 #include "struct.h"
 #include "fonctions_SDL.h"
+#include "logique.h"
 #include "constante.h"
+
+//Couleur bleu texture rgb(55,78,211)
 
 #define FPS 60
 
@@ -17,6 +20,7 @@ void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueu
 int main(int argc, char *argv[]) {
     SDL_Window* window; // Déclaration de la fenêtre
     SDL_Event events; // Événements liés à la fenêtre
+    world_t world;
 
     bool end = false;
     etat_clavier_t touches;
@@ -53,8 +57,13 @@ int main(int argc, char *argv[]) {
     SDL_Texture* fond = charger_image("../assets/background.bmp", renderer);
 
     // Charger l'image obj
-    Uint8 r = 255, g = 255, b = 255;
+    Uint8 r = 55, g = 78, b = 211;
     SDL_Texture* obj = charger_image_transparente("../assets/gugus.bmp", renderer, r, g, b);
+
+    //Charger textures
+    SDL_Texture* textures = charger_image_transparente("../assets/classic.bmp", renderer, r, g, b);
+
+    init_textures(&world);
 
     // Définition de la hauteur / largeur d'obj
     int objetW, objetH;
@@ -85,6 +94,7 @@ int main(int argc, char *argv[]) {
         SDL_RenderCopy(renderer, fond, NULL, NULL);
         SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
         
+        SDL_RenderCopy(renderer, textures, world.textures[0].SrcR, NULL);
 
         // Récupération des événements
         SDL_PollEvent(&events);
