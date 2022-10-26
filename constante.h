@@ -40,9 +40,4 @@
  */
 #define GRAVITE 2
 
-
-
-
-
-
 #endif

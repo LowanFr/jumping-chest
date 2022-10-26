@@ -1,5 +1,5 @@
-#ifndef FONCTIONS_SDL_H
-#define FONCTIONS_SDL_H
+#ifndef LOGICAL_H
+#define LOGICAL_H
 
 #include <stdlib.h>
 #include <SDL.h>
