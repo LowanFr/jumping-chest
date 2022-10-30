@@ -21,7 +21,7 @@ typedef struct joueur_s joueur_t;
 // Defining a new type called textures_t which is a pointer to a struct textures_s.
 struct textures_s{
     SDL_Rect DestR;
-    SDL_Rect *SrcR;
+    SDL_Rect SrcR;
 };
 typedef struct textures_s textures_t;
 

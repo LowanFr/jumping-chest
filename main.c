@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 
     //Charger textures
     SDL_Texture* textures = charger_image_transparente("../assets/classic.bmp", renderer, r, g, b);
-
+    
     init_textures(&world);
 
     // Définition de la hauteur / largeur d'obj
@@ -93,8 +93,10 @@ int main(int argc, char *argv[]) {
         // Mise à jour du rendu
         SDL_RenderCopy(renderer, fond, NULL, NULL);
         SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
+
+        SDL_RenderCopy(renderer, textures, &world.textures[1].SrcR, &world.textures[0].DestR);
         
-        SDL_RenderCopy(renderer, textures, world.textures[0].SrcR, NULL);
+        
 
         // Récupération des événements
         SDL_PollEvent(&events);
@@ -149,6 +151,7 @@ int main(int argc, char *argv[]) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+    free(world.textures);
 
     return EXIT_SUCCESS;
 }
