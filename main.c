@@ -5,6 +5,7 @@
 #include "world.h"
 #include "joueur.h"
 #include "constante.h"
+#include "graphique.h"
 
 //Couleur bleu texture rgb(55,78,211)
 
@@ -15,6 +16,7 @@
 void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world){
     init_sdl(window,renderer,SCREEN_W, SCREEN_H);
     init_data(world);
+    init_ressources(*renderer, ressources);
 }
 
 /**
@@ -24,8 +26,14 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
  */
 int main(int argc, char *argv[]) {
     SDL_Window* window; // Déclaration de la fenêtre
-    SDL_Event events; // Événements liés à la fenêtre
+    SDL_Renderer* renderer;
+    ressources_t ressources;
     world_t world;
+
+    init(&window, &renderer, &ressources, &world);
+
+    SDL_Event events; // Événements liés à la fenêtre
+    
 
 
     bool end = false;
@@ -35,39 +43,18 @@ int main(int argc, char *argv[]) {
     joueur.saut = false;
     joueur.tempsDepuisLeDebutDuSaut = 0;
 
-    // Initialisation de la SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("Erreur d’initialisation de la SDL: %s", SDL_GetError());
-        SDL_Quit();
-        return EXIT_FAILURE;
-    }
 
-    // Créer la fenêtre
-    window = SDL_CreateWindow("Fenêtre SDL", SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_RESIZABLE);
 
-    // En cas d’erreur
-    if (window == NULL){
-        printf("Erreur de la creation d’une fenêtre: %s", SDL_GetError());
-        SDL_Quit();
-        return EXIT_FAILURE;
-    }
-
-    // Création du contexte de rendu
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     //Changement de la couleur de fond
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    //Chargement fond
-    SDL_Texture* fond = charger_image("../assets/background.bmp", renderer);
 
     // Charger l'image obj
     Uint8 r = 55, g = 78, b = 211;
     SDL_Texture* obj = charger_image_transparente("../assets/gugus.bmp", renderer, r, g, b);
 
     //Charger textures
-    SDL_Texture* textures = charger_image_transparente("../assets/classic.bmp", renderer, r, g, b);
+    SDL_Texture* blocks = charger_image_transparente("../assets/classic.bmp", renderer, r, g, b);
     
     init_textures(&world);
 
@@ -98,10 +85,10 @@ int main(int argc, char *argv[]) {
 
         // Mise à jour du rendu
         
-        SDL_RenderCopy(renderer, fond, NULL, NULL);
-        SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
+        SDL_RenderCopy(renderer, ressources.background, NULL, NULL);
+        SDL_RenderCopy(renderer, ressources.player, &world.joueur->SrcR, &world.joueur->DestR);
 
-        SDL_RenderCopy(renderer, textures, &world.textures[1].SrcR, &world.textures[0].DestR);
+        SDL_RenderCopy(renderer, blocks, &world.blocks[1].SrcR, &world.blocks[0].DestR);
         
         
 
@@ -139,7 +126,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Déplacement du joueur
-        deplacement_joueur(&touches, &joueur);
+        deplacement_joueur(&touches, &joueur, world.joueur);
 
         
         // Mise à jour de l'écran avec le rendu
@@ -158,7 +145,7 @@ int main(int argc, char *argv[]) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    free(world.textures);
+    free(world.blocks);
 
     return EXIT_SUCCESS;
 }

@@ -37,15 +37,6 @@ int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height
 void clean_texture(SDL_Texture *texture);
 
 /**
- * \brief La fonction permet d'appliquer une texture sur le renderer à une position donnée. La hauteur et la largeur est la même que celle de la texture.
- * \param texture  la texture que l'on va appliquer
- * \param renderer le renderer qui va recevoir la texture
- * \param x l'abscisse sur le renderer de l'endroit où est appliquée texture (point en haut à gauche de la surface)
- * \param y l'ordonnée sur le renderer de l'endroit où est appliquée texture (point en haut à gauche de la surface)
-*/
-void apply_texture(SDL_Texture *texture,SDL_Renderer *renderer,int x, int y);
-
-/**
  * \brief La fonction vide le contenu graphique du renderer lié à l'écran de jeu
  * \param renderer le renderer de l'écran
 */
