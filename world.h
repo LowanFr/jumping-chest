@@ -6,15 +6,8 @@
 #include <stdbool.h>
 #include "sdl2-light.h"
 #include "constante.h"
-#include "joueur.h"
 
-// Defining a new type called joueur_t which is a pointer to a struct joueur_s.
-struct joueur_s {
-    bool saut;
-    int tempsDepuisLeDebutDuSaut;
-    int ground;
-};
-typedef struct joueur_s joueur_t;
+
 
 // Defining a new type called textures_t which is a pointer to a struct sprite_s.
 struct sprite_s{

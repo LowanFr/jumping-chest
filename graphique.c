@@ -13,7 +13,7 @@ void clean_ressources(ressources_t *ressources) {
 }
 
 void init_ressources (SDL_Renderer *renderer, ressources_t *ressources) {
-    ressources->background = load_image("assets/space-background.bmp", renderer);
+    ressources->background = load_image("assets/background.bmp", renderer);
     ressources->player = load_image("assets/player.bmp", renderer);
 }
 

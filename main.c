@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "struct.h"
 #include "fonctions_SDL.h"
 #include "world.h"
+#include "joueur.h"
 #include "constante.h"
 
 //Couleur bleu texture rgb(55,78,211)
 
 #define FPS 60
-
-void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR,joueur_t *joueur);
 
 /**
  * La fonction principale. C'est la première fonction qui est appelée lors de l'exécution du programme.
@@ -21,6 +19,7 @@ int main(int argc, char *argv[]) {
     SDL_Window* window; // Déclaration de la fenêtre
     SDL_Event events; // Événements liés à la fenêtre
     world_t world;
+    
 
     bool end = false;
     etat_clavier_t touches;
@@ -88,9 +87,10 @@ int main(int argc, char *argv[]) {
     // Boucle principale
     while (!end) {
         // Suppression de l'ancien rendu
-        SDL_RenderClear(renderer);
+        clear_renderer(renderer);
 
         // Mise à jour du rendu
+        apply_texture()
         SDL_RenderCopy(renderer, fond, NULL, NULL);
         SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
 
@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Déplacement du joueur
-        deplacement_joueur(&touches, &DestR, &joueur);
+        deplacement_joueur(&touches, &joueur);
 
         
         // Mise à jour de l'écran avec le rendu
@@ -156,36 +156,4 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
 }
 
-/**
- * Ça déplace le joueur en fonction des touches appuyées
- *
- * @param touches le statut du clavier
- * @param DestR la destination du rectangle du joueur
- * @param joueur la structure du joueur
- */
-void deplacement_joueur(etat_clavier_t *touches, SDL_Rect *DestR, joueur_t *joueur) {
-    if(touches->left){
-        DestR->x = DestR->x-VITESSE_X_MARCHE;
-    }
 
-    if(touches->right){
-        DestR->x = DestR->x+VITESSE_X_MARCHE;
-    }
-
-    if(touches->space){
-        if(joueur->saut == false){
-            joueur->ground = DestR->y;
-            joueur->tempsDepuisLeDebutDuSaut = 0;
-            joueur->saut = true;
-        }
-    }
-
-    if(joueur->saut == true){
-        DestR->y = joueur->ground - VITESSE_Y_SAUT * joueur->tempsDepuisLeDebutDuSaut + 0.5 * GRAVITE * joueur->tempsDepuisLeDebutDuSaut * joueur->tempsDepuisLeDebutDuSaut;
-        joueur->tempsDepuisLeDebutDuSaut++;
-        if(DestR->y > joueur->ground){
-            DestR->y = joueur->ground;
-            joueur->saut = false;
-        }
-    }
-}
