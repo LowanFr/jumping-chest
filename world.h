@@ -35,6 +35,7 @@ typedef struct world_s world_t;
 struct ressources_s {
     SDL_Texture *background; /*!< Ressource liée à l'image du fond de l'écran. */
     SDL_Texture *player; /*!< Ressource liée à l'image du joueur*/
+    
 };
 
 /**
@@ -45,5 +46,8 @@ typedef struct ressources_s ressources_t;
 void set_invisible(sprite_t *sprite);
 void init_textures(world_t *world);
 
+void init_data(world_t *world);
+
+void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v);
 
 #endif

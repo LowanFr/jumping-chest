@@ -9,6 +9,13 @@
 //Couleur bleu texture rgb(55,78,211)
 
 #define FPS 60
+#define SCREEN_H 720
+#define SCREEN_W 1280
+
+void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world){
+    init_sdl(window,renderer,SCREEN_W, SCREEN_H);
+    init_data(world);
+}
 
 /**
  * La fonction principale. C'est la première fonction qui est appelée lors de l'exécution du programme.
@@ -19,7 +26,7 @@ int main(int argc, char *argv[]) {
     SDL_Window* window; // Déclaration de la fenêtre
     SDL_Event events; // Événements liés à la fenêtre
     world_t world;
-    
+
 
     bool end = false;
     etat_clavier_t touches;
@@ -90,7 +97,7 @@ int main(int argc, char *argv[]) {
         clear_renderer(renderer);
 
         // Mise à jour du rendu
-        apply_texture()
+        
         SDL_RenderCopy(renderer, fond, NULL, NULL);
         SDL_RenderCopy(renderer, obj, &SrcR, &DestR);
 
