@@ -1,6 +1,8 @@
 #include "world.h"
 
-void init_data(world_t *world){
+void init_world(world_t *world){
+
+    world->end = 0;
     world->blocks = calloc(NBR_DE_TEXTURES, sizeof(sprite_t));
     for(int i = 0; i<NBR_DE_TEXTURES; ++i){
         init_sprite(&world->blocks[i],X_PREMIERE_TEXTURE + (TAILLE_TEXTURES + DECALAGE_TEXTURE) * (i%11), Y_PREMIERE_TEXTURE + (TAILLE_TEXTURES + DECALAGE_TEXTURE) * (i/11),TAILLE_TEXTURES,TAILLE_TEXTURES,0,0,TAILLE_TEXTURES,TAILLE_TEXTURES);
@@ -21,7 +23,7 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
     sprite->DestR.y = y2;
     sprite->DestR.w = w2;
     sprite->DestR.h = h2;
-    sprite->v = 0;
+    sprite->v = VITESSE_X_MARCHE;
     sprite->is_visible = 1;
     sprite->is_deleted = 0;
 }

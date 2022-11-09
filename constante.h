@@ -1,9 +1,10 @@
 #ifndef CONSTANTE_H
 #define CONSTANTE_H
 
-//4,72 coord 1er bloc
-//16*4
-
+/**
+ * \brief Nombre de FPS dans le jeu
+ */
+#define FPS 60
 /**
  * \brief Nombre de textures dans une tilemap
  */

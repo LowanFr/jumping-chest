@@ -16,7 +16,7 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
 
     ressources->background = charger_image("../assets/background.bmp", renderer);
     ressources->player = charger_image("../assets/player.bmp", renderer);
-    
+    ressources->blocks = charger_image("../assets/classic.bmp", renderer);
 }
 
 void apply_background(SDL_Renderer *renderer, ressources_t *ressources) {

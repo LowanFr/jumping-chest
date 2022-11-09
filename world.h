@@ -7,8 +7,6 @@
 #include "sdl2-light.h"
 #include "constante.h"
 
-
-
 // Defining a new type called textures_t which is a pointer to a struct sprite_s.
 struct sprite_s{
     SDL_Rect DestR;
@@ -33,6 +31,7 @@ typedef struct world_s world_t;
 struct ressources_s {
     SDL_Texture *background; /*!< Ressource liée à l'image du fond de l'écran. */
     SDL_Texture *player; /*!< Ressource liée à l'image du joueur*/
+    SDL_Texture *blocks; /*!< Ressource liée à l'image des blocks*/
     
 };
 /**
@@ -41,9 +40,8 @@ struct ressources_s {
 typedef struct ressources_s ressources_t;
 
 void set_invisible(sprite_t *sprite);
-void init_textures(world_t *world);
 
-void init_data(world_t *world);
+void init_world(world_t *world);
 
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
 
