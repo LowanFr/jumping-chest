@@ -39,5 +39,13 @@
  * \brief Gravité, sert au joueur de retomber
  */
 #define GRAVITE 2
+/**
+ * \brief Gravité, sert au joueur de retomber
+ */
+#define HAUTEUR_PLAYER 96
+/**
+ * \brief Gravité, sert au joueur de retomber
+ */
+#define LARGEUR_PLAYER 64
 
 #endif
