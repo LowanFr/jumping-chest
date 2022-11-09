@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include "struct.h"
 #include "fonctions_SDL.h"
-#include "logique.h"
+#include "world.h"
 #include "constante.h"
 
 //Couleur bleu texture rgb(55,78,211)

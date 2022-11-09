@@ -39,14 +39,13 @@ SDL_Texture *load_image(const char path[], SDL_Renderer *renderer) {
     return texture;
 }
 
-void apply_texture(SDL_Texture *texture,SDL_Renderer *renderer,int x, int y) {
+void apply_texture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y) {
     SDL_Rect dst = {0, 0, 0, 0};
     
     SDL_QueryTexture(texture, NULL, NULL, &dst.w, &dst.h);
     dst.x = x; dst.y=y;
     
     SDL_RenderCopy(renderer, texture, NULL, &dst);
-    
 }
 
 void clean_texture(SDL_Texture *texture) {
