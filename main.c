@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include "fonctions_SDL.h"
 #include "world.h"
 #include "joueur.h"
@@ -26,7 +25,7 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
  * @param argc Le nombre d'arguments passés au programme.
  * @param argv C'est un tableau de chaînes de caractères qui contient les arguments de la ligne de commande.
  */
-int main(int argc, char *argv[]) {
+int main() {
     SDL_Window* window; // Déclaration de la fenêtre
     SDL_Renderer* renderer;
     ressources_t ressources;
@@ -52,7 +51,12 @@ int main(int argc, char *argv[]) {
         SDL_RenderCopy(renderer, ressources.background, NULL, NULL);
         SDL_RenderCopy(renderer, ressources.player, &world.joueur->SrcR, &world.joueur->DestR);
 
-        SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[1].SrcR, &world.blocks[0].DestR);
+
+        for(int i = 0; i<world.map->nb_ligne; ++i){
+            for(int j = 0; j<world.map->nb_col; ++j){
+                SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[world.map->tab[i][j]].SrcR, &world.map->DestR[i][j]);
+            }
+        }
         
         
 
@@ -77,12 +81,27 @@ int main(int argc, char *argv[]) {
         }
         temps_fin = SDL_GetTicks();
     }
-
+    
     // Quitter SDL
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+
+    SDL_DestroyTexture(ressources.background);
+    SDL_DestroyTexture(ressources.player);
+    SDL_DestroyTexture(ressources.blocks);
     SDL_Quit();
+    
+    desallouer_tab_2D(world.map->tab, world.map->nb_ligne);
+    
+    for (int i = 0; i < world.map->nb_ligne; i++) { // Libère toutes les lignes
+        free(world.map->DestR[i]);
+    }
+    free(world.map->DestR);
+    
+    free(world.map);
     free(world.blocks);
+    free(world.joueur);
+    
 
     return EXIT_SUCCESS;
 }

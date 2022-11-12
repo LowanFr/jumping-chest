@@ -10,10 +10,10 @@
 void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->background);
     clean_texture(ressources->player);
+    clean_texture(ressources->blocks);
 }
 
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
-
     ressources->background = charger_image("../assets/background.bmp", renderer);
     ressources->player = charger_image("../assets/player.bmp", renderer);
     ressources->blocks = charger_image("../assets/classic.bmp", renderer);

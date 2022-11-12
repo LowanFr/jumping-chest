@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include "sdl2-light.h"
 #include "constante.h"
+#include "fonctions_fichiers.h"
 
 // Defining a new type called textures_t which is a pointer to a struct sprite_s.
 struct sprite_s{
@@ -17,10 +18,23 @@ struct sprite_s{
 };
 typedef struct sprite_s sprite_t;
 
+// Defining a new type called map_t which is a pointer to a struct map_s.
+struct map_s{
+    int** tab;
+    int nb_ligne;
+    int nb_col;
+    SDL_Rect **DestR;
+};
+typedef struct map_s map_t;
+
+
+
 // Defining a new type called joueur_t which is a pointer to a struct joueur_s.
 struct world_s {
     sprite_t *blocks;
     sprite_t *joueur;
+    
+    map_t *map;
     bool end;
 };
 typedef struct world_s world_t;
@@ -32,12 +46,12 @@ struct ressources_s {
     SDL_Texture *background; /*!< Ressource liée à l'image du fond de l'écran. */
     SDL_Texture *player; /*!< Ressource liée à l'image du joueur*/
     SDL_Texture *blocks; /*!< Ressource liée à l'image des blocks*/
-    
 };
 /**
  * \brief Type qui correspond aux ressources du jeu
 */
 typedef struct ressources_s ressources_t;
+
 
 void set_invisible(sprite_t *sprite);
 

@@ -6,6 +6,7 @@ SDL_Texture* charger_image(const char* nomFichier, SDL_Renderer* renderer) {
 
     // Conversion de la surface en texture
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
     return texture;
 }
 
@@ -19,6 +20,8 @@ SDL_Texture* charger_image_transparente(const char* nomFichier, SDL_Renderer* re
 
     // Conversion de la surface en texture
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_FreeSurface(surface);
     return texture;
 }
 
@@ -28,5 +31,6 @@ SDL_Texture* charger_texte(const char* message, SDL_Renderer* renderer, TTF_Font
 
     //Convertir la surface de l'image au format texture
     SDL_Texture* image = SDL_CreateTextureFromSurface(renderer,surface);
+    SDL_FreeSurface(surface);
     return image;
 }
