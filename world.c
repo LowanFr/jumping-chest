@@ -1,55 +1,69 @@
+/**
+ * @file world.c
+ * @brief Exécutable concernant le module : world
+ * @authors SCHNEIDER Paul, DOUILLET Esteban
+ * @date 14 Novembre 2022
+ */
 #include "world.h"
 
-void init_world(world_t *world){
-
-    world->end = 0;
+void init_world(world_t *world) {
+    world->end = false;
     world->blocks = calloc(NBR_DE_TEXTURES, sizeof(sprite_t));
-    for(int i = 1; i<NBR_DE_TEXTURES; ++i){
-        init_sprite(&world->blocks[i],X_PREMIERE_TEXTURE + (TAILLE_TEXTURES + DECALAGE_TEXTURE) * ((i-1)%11), Y_PREMIERE_TEXTURE + (TAILLE_TEXTURES + DECALAGE_TEXTURE) * ((i-1)/11),TAILLE_TEXTURES,TAILLE_TEXTURES,0,0,TAILLE_TEXTURES,TAILLE_TEXTURES);
+
+    // Initialisation des images de tous les blocs
+    for(int i = 1; i < NBR_DE_TEXTURES; ++i) {
+        init_sprite(&world->blocks[i], X_PREMIERE_TEXTURE + (TAILLE_TEXTURES + DECALAGE_TEXTURE) * ((i-1)%11),
+                    Y_PREMIERE_TEXTURE + (TAILLE_TEXTURES + DECALAGE_TEXTURE) * ((i-1)/11),
+                    TAILLE_TEXTURES,TAILLE_TEXTURES, 0, 0, TAILLE_TEXTURES,TAILLE_TEXTURES);
     }
-    world->joueur = calloc(1, sizeof(sprite_t));
-    init_sprite(world->joueur, 0,0,LARGEUR_PLAYER,HAUTEUR_PLAYER,350,720-3*HAUTEUR_PLAYER,LARGEUR_PLAYER,HAUTEUR_PLAYER);
+
+    // Initialisation de l'image du joueur
+    world->player = calloc(1, sizeof(sprite_t));
+    init_sprite(world->player, 0, 0, LARGEUR_PLAYER, HAUTEUR_PLAYER, 350, 720 - 3 * HAUTEUR_PLAYER, LARGEUR_PLAYER, HAUTEUR_PLAYER);
 
     world->map = malloc(sizeof(map_t));
     world->map->tab = lire_fichier("../assets/map.txt");
 
-    taille_fichier("../assets/map.txt", &world->map->nb_ligne, &world->map->nb_col);
+    // Récupération de la taille de la map
+    taille_fichier("../assets/map.txt", &world->map->nb_row, &world->map->nb_col);
 
-    world->map->DestR = malloc(sizeof(SDL_Rect*)* world->map->nb_ligne);
-
-    for (int i = 0; i < world->map->nb_ligne; i++) {
+    // Initialisation de tous les blocs sur la map
+    world->map->DestR = calloc(sizeof(SDL_Rect*), world->map->nb_row);
+    for (int i = 0; i < world->map->nb_row; i++) {
         world->map->DestR[i] =  calloc(sizeof(SDL_Rect), world->map->nb_col);
-        for(int j = 0; j<world->map->nb_col; ++j){
+        for(int j = 0; j < world->map->nb_col; ++j){
             world->map->DestR[i][j].x = j + j*64;
             world->map->DestR[i][j].y = i + i*64;
             world->map->DestR[i][j].h = TAILLE_TEXTURES;
             world->map->DestR[i][j].w = TAILLE_TEXTURES;
         }
     }
-    
-    
 }
 
-void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2){
+void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {
+    // Définition du rectangle de source
     sprite->SrcR.x = x1;
     sprite->SrcR.y = y1;
     sprite->SrcR.w = w1;
     sprite->SrcR.h = h1;
 
+    // Définition de mon rectangle de destination
     sprite->DestR.x = x2;
     sprite->DestR.y = y2;
     sprite->DestR.w = w2;
     sprite->DestR.h = h2;
 
+    // Définition des autres paramètres de l'image
     sprite->v = VITESSE_X_MARCHE;
     sprite->is_visible = 1;
     sprite->is_deleted = 0;
 }
 
-void set_invisible(sprite_t *sprite){
-
+void set_invisible(sprite_t *sprite) {
+    // todo
 }
-void init_textures(world_t *world){
 
+void init_textures(world_t *world) {
+    // todo
 }
 
