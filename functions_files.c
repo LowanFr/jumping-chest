@@ -2,7 +2,7 @@
 // Created by Esteban Douillet on 19/10/2022.
 //
 
-#include "fonctions_fichiers.h"
+#include "functions_files.h"
 #include <stdlib.h>
 #include <stdio.h>
 
