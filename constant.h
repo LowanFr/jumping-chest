@@ -27,25 +27,25 @@
 #define DECALAGE_TEXTURE 4
 
 /**
- * \brief Vitesse du joueur sur l'axe X (marche)
+ * \brief Vitesse du player sur l'axe X (marche)
  */
 #define VITESSE_X_MARCHE 10
 
 /**
- * \brief Vitesse du joueur sur l'axe Y (saut)
+ * \brief Vitesse du player sur l'axe Y (saut)
  */
 #define VITESSE_Y_SAUT 30
 
 /**
- * \brief Gravité, sert au joueur de retomber
+ * \brief Gravité, sert au player de retomber
  */
 #define GRAVITE 2
 /**
- * \brief Gravité, sert au joueur de retomber
+ * \brief Gravité, sert au player de retomber
  */
 #define HAUTEUR_PLAYER 96
 /**
- * \brief Gravité, sert au joueur de retomber
+ * \brief Gravité, sert au player de retomber
  */
 #define LARGEUR_PLAYER 64
 
