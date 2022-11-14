@@ -1,6 +1,0 @@
-{
-    "C_Cpp.errorSquiggles": "Disabled",
-    "files.associations": {
-        "sdl_ttf.h": "c"
-    }
-}

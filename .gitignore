@@ -8,3 +8,6 @@ build/*
 # CLion / Jetbrains
 .idea/
 cmake-build-debug/
+
+# Visual Studio Code
+.vscode/
