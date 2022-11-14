@@ -5,7 +5,7 @@
  * \version 1.0
  * \date 9 Novembre 2022
  */
-#include "graphique.h"
+#include "graphic.h"
 
 void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->background);
@@ -41,7 +41,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
 
     // application des ressources dans le renderer
     apply_background(renderer, ressources);
-    apply_sprite(renderer, ressources->player, world->joueur);
+    apply_sprite(renderer, ressources->player, world->player);
 
     // on met à jour l'écran
     if (!world->end) {

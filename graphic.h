@@ -1,16 +1,15 @@
 #ifndef GRAPHIC_H
 #define GRAPHIC_H
 
-#include "fonctions_SDL.h"
 
 /**
  * \file graphic.h
  * \brief Header du module de la partie graphique
  * \author Esteban DOUILLET & SCHNEIDER Paul
- * \version 1.0
- * \date 9 Novembre 2022
+ * \date 14 Novembre 2022
  */
 #include "world.h"
+#include "functions_SDL.h"
 
 /**
  * \brief La fonction nettoie les ressources
