@@ -1,4 +1,4 @@
-#include "fonctions_SDL.h"
+#include "functions_SDL.h"
 
 SDL_Texture* charger_image(const char* nomFichier, SDL_Renderer* renderer) {
     // Chargement de l'image à partir du chemin
