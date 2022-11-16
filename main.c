@@ -25,7 +25,7 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_world(world);
     init_touches(keys);
     init_ressources(*renderer, ressources);
-    init_player(player);
+    init_player(player, world);
 }
 
 /**
@@ -69,7 +69,7 @@ int main() {
         refresh_keys(&world, &keys);
 
         // Déplacement du player
-        player_movement(&keys, &player, world.player);
+        player_movement(&keys, &player);
 
         // Mise à jour de l'écran avec le rendu
         SDL_RenderPresent(renderer);
