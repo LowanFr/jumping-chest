@@ -2,10 +2,6 @@
 #define CONSTANTE_H
 
 /**
- * \brief Nombre de FPS dans le jeu
- */
-#define FPS 60
-/**
  * \brief Nombre de textures dans une tilemap
  */
 #define NBR_DE_TEXTURES 33
@@ -39,11 +35,8 @@
 /**
  * \brief Gravité, sert au player de retomber
  */
-#define GRAVITE 2
-/**
- * \brief Gravité, sert au player de retomber
- */
 #define HAUTEUR_PLAYER 96
+
 /**
  * \brief Gravité, sert au player de retomber
  */

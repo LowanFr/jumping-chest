@@ -12,6 +12,11 @@
 #include "keyboard.h"
 
 /**
+ * \brief Gravité, sert au player de retomber
+ */
+#define GRAVITE 2
+
+/**
  * @brief Définition d'un nouveau type appelé player_t qui est un pointeur vers une struct player_s.
  */
 struct player_s {

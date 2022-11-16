@@ -2,6 +2,11 @@
 #include "player.h"
 #include "graphic.h"
 
+/**
+ * \brief Nombre de FPS dans le jeu
+ */
+#define FPS 60
+
 // La taille de l'écran
 #define SCREEN_H 720
 #define SCREEN_W 1280
