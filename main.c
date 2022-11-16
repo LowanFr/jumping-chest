@@ -55,13 +55,14 @@ int main() {
 
         // Mise à jour des textures
         SDL_RenderCopy(renderer, ressources.background, NULL, NULL);
-        SDL_RenderCopy(renderer, ressources.player, &world.player->SrcR, &world.player->DestR);
+        
 
         for(int i = 0; i<world.map->nb_row; ++i){
             for(int j = 0; j<world.map->nb_col; ++j){
                 SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[world.map->tab[i][j]].SrcR, &world.map->DestR[i][j]);
             }
         }
+        SDL_RenderCopy(renderer, ressources.player, &world.player->SrcR, &world.player->DestR);
 
         // Récupération des événements
         SDL_PollEvent(&keys.events);
