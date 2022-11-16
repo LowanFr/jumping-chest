@@ -63,6 +63,7 @@ int main() {
             }
         }
         SDL_RenderCopy(renderer, ressources.player, &world.player->SrcR, &world.player->DestR);
+        handle_collision(&world, &player);
 
         // Récupération des événements
         SDL_PollEvent(&keys.events);
@@ -70,6 +71,7 @@ int main() {
 
         // Déplacement du player
         player_movement(&keys, &player);
+        
 
         // Mise à jour de l'écran avec le rendu
         SDL_RenderPresent(renderer);
