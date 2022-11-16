@@ -20,7 +20,7 @@
  * @brief Définition d'un nouveau type appelé player_t qui est un pointeur vers une struct player_s.
  */
 struct player_s {
-    // todo: Sprite du player dans joueur_t
+    sprite_t *sprite;
     bool saut; /*!< Champ vérifiant si le joueur est en saut. */
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */
@@ -30,15 +30,29 @@ typedef struct player_s player_t;
 /**
  * @brief Définition des données du joueur
  * @param player Le joueur
+ * @param world Le monde
  */
-void init_player(player_t *player);
+void init_player(player_t *player, world_t *world);
 
 /**
  * @brief Gestion du déplacement du joueur
  * @param touches Les touches
  * @param player Le joueur
- * @param sprite_player L'image du joueur
  */
-void player_movement(keyboard_status_t *touches, player_t *player, sprite_t *sprite_player);
+void player_movement(keyboard_status_t *touches, player_t *player);
+
+/**
+ * @brief Vérification de toutes les collisions
+ * @param world Le monde
+ * @param player Le joueur
+ */
+void handle_collision(world_t *world, player_t *player);
+
+/**
+ * @brief`Vérification de collision avec un bloc solide
+ * @param world Le monde
+ * @param player Le joueur
+ */
+void handle_collision_solidBlock(world_t *world, player_t *player);
 
 #endif
