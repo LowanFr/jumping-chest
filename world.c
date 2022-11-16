@@ -32,8 +32,8 @@ void init_world(world_t *world) {
     for (int i = 0; i < world->map->nb_row; i++) {
         world->map->DestR[i] =  calloc(sizeof(SDL_Rect), world->map->nb_col);
         for(int j = 0; j < world->map->nb_col; ++j){
-            world->map->DestR[i][j].x = j + j*64;
-            world->map->DestR[i][j].y = i + i*64;
+            world->map->DestR[i][j].x = j*64;
+            world->map->DestR[i][j].y = i*64;
             world->map->DestR[i][j].h = TAILLE_TEXTURES;
             world->map->DestR[i][j].w = TAILLE_TEXTURES;
         }
