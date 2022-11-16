@@ -71,7 +71,6 @@ int main() {
 
         // Déplacement du player
         player_movement(&keys, &player);
-        
 
         // Mise à jour de l'écran avec le rendu
         SDL_RenderPresent(renderer);

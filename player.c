@@ -49,8 +49,8 @@ void handle_collision(world_t *world, player_t *player) {
 
 
 void handle_collision_solidBlock(world_t *world, player_t *player) {
-    for(int i = 0; i<world->map->nb_row; ++i){
-        for(int j = 0; j<world->map->nb_col; ++j){
+    for( int i = 0; i < world->map->nb_row; ++i) {
+        for (int j = 0; j < world->map->nb_col; ++j) {
             int nb = world->map->tab[i][j];
             SDL_Rect DestR = world->map->DestR[i][j];
 
@@ -66,19 +66,14 @@ void handle_collision_solidBlock(world_t *world, player_t *player) {
             if (condCollision1 && condCollision2 && conCollision3) {
                 if (DestR.y + DestR.h > player->sprite->DestR.y) { // Collision en bas du block
                     // todo: Système de chute + arrêt du saut
-                    
                 }
                 if (DestR.y < player->sprite->DestR.y) { // Collision en haut du block
-                    // todo: Système de chute + arrêt du saut
-                    
+
                 }
                 if (DestR.x < player->sprite->DestR.x) { // Collision à droite du block
-                    // todo: Système de chute + arrêt du saut
-                    player->sprite->DestR.x = DestR.x + DestR.w ;
-                }
-                if (DestR.x + DestR.w > player->sprite->DestR.x) { // Collision à gauche du block
-                    // todo: Système de chute + arrêt du saut
-                    
+                    player->sprite->DestR.x = DestR.x + DestR.w - 4;
+                } else if (DestR.x + DestR.w > player->sprite->DestR.x) { // Collision à gauche du block
+                    player->sprite->DestR.x = DestR.x - DestR.w + 4;
                 }
             }
         }
