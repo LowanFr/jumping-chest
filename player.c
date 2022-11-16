@@ -70,10 +70,11 @@ void handle_collision_solidBlock(world_t *world, player_t *player) {
                 if (DestR.y < player->sprite->DestR.y) { // Collision en haut du block
 
                 }
-                if (DestR.x < player->sprite->DestR.x) { // Collision à droite du block
-                    player->sprite->DestR.x = DestR.x + DestR.w - 4;
-                } else if (DestR.x + DestR.w > player->sprite->DestR.x) { // Collision à gauche du block
-                    player->sprite->DestR.x = DestR.x - DestR.w + 4;
+                if (DestR.x < player->sprite->DestR.x + player->sprite->DestR.w && DestR.x>player->sprite->DestR.x) { // Collision à droite du block
+                    player->sprite->DestR.x = DestR.x - player->sprite->DestR.w;
+                } 
+                if (DestR.x + DestR.w > player->sprite->DestR.x && DestR.x<player->sprite->DestR.x) { // Collision à droite du block
+                    player->sprite->DestR.x = DestR.x + DestR.w;
                 }
             }
         }

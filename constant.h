@@ -35,11 +35,11 @@
 /**
  * \brief Gravité, sert au player de retomber
  */
-#define HAUTEUR_PLAYER 85
+#define HAUTEUR_PLAYER 84
 
 /**
  * \brief Gravité, sert au player de retomber
  */
-#define LARGEUR_PLAYER 64
+#define LARGEUR_PLAYER 56
 
 #endif
