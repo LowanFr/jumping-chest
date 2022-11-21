@@ -21,6 +21,7 @@
  */
 struct player_s {
     sprite_t *sprite;
+    SDL_Rect prec;
     bool saut; /*!< Champ vérifiant si le joueur est en saut. */
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */

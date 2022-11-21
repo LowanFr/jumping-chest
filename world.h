@@ -58,10 +58,6 @@ struct ressources_s {
 };
 typedef struct ressources_s ressources_t;
 
-
-enum blockNotTraversable{Block1 = 1, Block2 = 2, Block3 = 3, Block12 = 12, Block13 = 13, Block14 = 14,
-        Block18 = 18, Block19 = 19,Block23 = 23, Block24 = 24, Block25 = 25, Block29 = 29, Block30 = 30};
-
 /**
  * @brief Modifie l'image pour qu'elle devienne invisible.
  * @param sprite L'image
