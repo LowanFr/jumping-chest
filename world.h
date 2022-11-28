@@ -14,6 +14,14 @@
 #include "constant.h"
 #include "functions_files.h"
 
+struct cam_s{
+    int x;  /*!< Champ concernant l'abscisse de la caméra. */
+    int y;  /*!< Champ concernant l'ordonné de la caméra. */
+    int h;  /*!< Champ concernant la hauteur de la caméra. */
+    int w;  /*!< Champ concernant la largeur de la caméra. */
+};
+typedef struct cam_s cam_t;
+
 /**
  * Définition d'un nouveau type appelé textures_t qui est un pointeur vers une struct sprite_s.
  */
@@ -43,6 +51,7 @@ typedef struct map_s map_t;
 struct world_s {
     sprite_t *blocks; /*!<  Champ désignant toutes les images des blocs. */
     sprite_t *player; /*!<  Champ désignant l'image du player. */
+    cam_t *camera; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
     bool end; /*!<  Champ désignant la fin de la partie. */
 };
@@ -71,6 +80,15 @@ void set_invisible(sprite_t *sprite);
 void init_world(world_t *world);
 
 /**
+ * @brief Initialisation de la caméra
+ * @param world Le monde
+ * @param camera La caméra à initialiser
+ * @param h La hauteur de la caméra
+ * @param w La largeur de la caméra
+ */
+void init_cam(world_t *world, cam_t *camera, int h, int w);
+
+/**
  * @brief Initialisation de l'image.
  * @param sprite L'image
  * @param x1 L'abscisse pour la source de l'image
@@ -83,5 +101,13 @@ void init_world(world_t *world);
  * @param h2 La hauteur pour la destination de l'image
  */
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
+
+
+/**
+ * @brief Repositionnement de la caméra en se basant sur les coordonnées de l'utilisateur
+ * @param camera La caméra
+ * @param player Le joueur
+ */
+void repositioning_camera(cam_t *camera, SDL_Rect *player);
 
 #endif

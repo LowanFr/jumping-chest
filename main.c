@@ -19,13 +19,15 @@
  * @param world Le monde
  * @param keys Les touches du clavier
  * @param player Le joueur
+ * @param camera La caméra
  */
-void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keys, player_t *player) {
+void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keys, player_t *player, cam_t *camera) {
     init_sdl(window,renderer, SCREEN_W, SCREEN_H);
     init_world(world);
     init_touches(keys);
     init_ressources(*renderer, ressources);
     init_player(player, world);
+    init_cam(world, camera, SCREEN_W, SCREEN_H);
 }
 
 /**
@@ -36,11 +38,12 @@ int main() {
     SDL_Renderer* renderer;
     ressources_t ressources;
     world_t world;
+    cam_t camera;
     keyboard_status_t keys;
     player_t player;
 
     // Initialisation du jeu
-    init(&window, &renderer, &ressources, &world, &keys, &player);
+    init(&window, &renderer, &ressources, &world, &keys, &player, &camera);
 
     //Changement de la couleur de fond
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -59,11 +62,24 @@ int main() {
 
         for(int i = 0; i<world.map->nb_row; ++i){
             for(int j = 0; j<world.map->nb_col; ++j){
-                SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[world.map->tab[i][j]].SrcR, &world.map->DestR[i][j]);
+                SDL_Rect block = world.map->DestR[i][j];
+                bool onCamera = block.y <= camera.y + camera.h  &&
+                        block.y + block.h >= camera.y &&
+                        block.x <= camera.x + camera.w &&
+                        block.x + block.w >= camera.x;
+
+                if (onCamera) {
+                    block.x -= camera.x;
+                    block.y -= camera.y;
+                    SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[world.map->tab[i][j]].SrcR, &block);
+                }
             }
         }
-        
-        SDL_RenderCopy(renderer, ressources.player, &world.player->SrcR, &world.player->DestR);
+
+        SDL_Rect block = world.player->DestR;
+        block.x -= camera.x;
+        block.y -= camera.y;
+        SDL_RenderCopy(renderer, ressources.player, &world.player->SrcR, &block);
         
 
         // Récupération des événements
@@ -71,7 +87,8 @@ int main() {
         refresh_keys(&world, &keys);
 
         // Déplacement du player
-        player_movement(&keys, &player);
+        player_movement(&keys, &player, &camera);
+        repositioning_camera(&camera, &player.prec);
         handle_collision(&world, &player);
 
         // Mise à jour de l'écran avec le rendu

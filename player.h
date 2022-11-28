@@ -39,8 +39,9 @@ void init_player(player_t *player, world_t *world);
  * @brief Gestion du déplacement du joueur
  * @param touches Les touches
  * @param player Le joueur
+ * @param camera La caméra
  */
-void player_movement(keyboard_status_t *touches, player_t *player);
+void player_movement(keyboard_status_t *touches, player_t *player, cam_t *camera);
 
 /**
  * @brief Vérification de toutes les collisions
