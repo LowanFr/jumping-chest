@@ -1,12 +1,15 @@
-//
-// Created by Esteban Douillet on 19/10/2022.
-//
-
-#ifndef TP2_PROG_A_FONCTIONS_FICHIERS_H
-#define TP2_PROG_A_FONCTIONS_FICHIERS_H
+#ifndef MAP_H
+#define MAP_H
 
 /**
- * Allouer un tableau de caractères de taille n × m
+ * @brief Header des fonctions liées à la map
+ * @file map.h
+ * @authors SCHNEIDER Paul, DOUILLET Esteban
+ * @date 28 Novembre 2022
+ */
+
+/**
+ * @briefAllouer un tableau de caractères de taille n × m
  * @param n Largeur
  * @param m Longueur
  * @return Initialiser ce tableau avec le caractère espace

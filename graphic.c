@@ -1,11 +1,20 @@
 /**
- * \file graphic.c
- * \brief Exécutable du module de la partie graphique
- * \author Esteban DOUILLET & SCHNEIDER Paul
- * \version 1.0
- * \date 9 Novembre 2022
+ * @file graphic.c
+ * @brief Exécutable du module de la partie graphique
+ * @author Esteban DOUILLET, SCHNEIDER Paul
+ * @date 28 Novembre 2022
  */
 #include "graphic.h"
+
+SDL_Texture* charger_image(const char* nomFichier, SDL_Renderer* renderer) {
+    // Chargement de l'image à partir du chemin
+    SDL_Surface* surface = SDL_LoadBMP(nomFichier);
+
+    // Conversion de la surface en texture
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
+}
 
 void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->background);
@@ -20,31 +29,21 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
 }
 
 void apply_background(SDL_Renderer *renderer, ressources_t *ressources) {
-    if (ressources->background != NULL) {
-        SDL_RenderCopy(renderer, ressources->background, 0,0);
-    }
+    if (ressources->background != NULL) SDL_RenderCopy(renderer, ressources->background, 0,0);
 }
 
 void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite) {
-    if (sprite->is_deleted) { // une sprite supprimée doit être invisible
-        set_invisible(sprite);
-    }
-
-    if (sprite->is_visible) { // toutes les images visibles doivent être appliquées sur le renderer
-        SDL_RenderCopy(renderer, texture, &sprite->SrcR, &sprite->DestR);
-    }
+    SDL_RenderCopy(renderer, texture, &sprite->SrcR, &sprite->DestR);
 }
 
 void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources) {
-    // on vide le renderer
+    // Vide le renderer
     clear_renderer(renderer);
 
-    // application des ressources dans le renderer
+    // Applique les ressources dans le renderer
     apply_background(renderer, ressources);
     apply_sprite(renderer, ressources->player, world->player);
 
-    // on met à jour l'écran
-    if (!world->end) {
-        update_screen(renderer);
-    }
+    // Mise à jour de l'écran
+    if (!world->end) update_screen(renderer);
 }

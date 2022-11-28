@@ -3,12 +3,25 @@
 #include "graphic.h"
 
 /**
- * \brief Nombre de FPS dans le jeu
+ * @brief Fichier d'exécution du jeu vidéo
+ * @file main.c
+ * @authors SCHNEIDER Paul, DOUILLET Esteban
+ * @date 28 novembre 2022
+ */
+
+/**
+ * @brief Nombre de FPS dans le jeu
  */
 #define FPS 60
 
-// La taille de l'écran
+/**
+ * @brief La hauteur de l'écran
+ */
 #define SCREEN_H 720
+
+/**
+ * @brief La largeur de l'écran
+ */
 #define SCREEN_W 1280
 
 /**
@@ -45,10 +58,10 @@ int main() {
     // Initialisation du jeu
     init(&window, &renderer, &ressources, &world, &keys, &player, &camera);
 
-    //Changement de la couleur de fond
+    // Changement de la couleur de fond
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-    //Chargement de la map
+    // Chargement de la map
     int tempsFin = 0;
 
     // Boucle principale
@@ -58,8 +71,8 @@ int main() {
 
         // Mise à jour des textures
         SDL_RenderCopy(renderer, ressources.background, NULL, NULL);
-        
 
+        // Affiche tous les blocks présent sur la caméra
         for(int i = 0; i<world.map->nb_row; ++i){
             for(int j = 0; j<world.map->nb_col; ++j){
                 SDL_Rect block = world.map->DestR[i][j];
@@ -68,6 +81,7 @@ int main() {
                         block.x <= camera.x + camera.w &&
                         block.x + block.w >= camera.x;
 
+                // Affiche le block s'il y a une collision entre celui-ci et la caméra
                 if (onCamera) {
                     block.x -= camera.x;
                     block.y -= camera.y;
@@ -76,10 +90,12 @@ int main() {
             }
         }
 
+        // Affiche le joueur selon la caméra
+        SDL_RendererFlip flip = keys.lastIsLeft == 1? SDL_FLIP_HORIZONTAL: SDL_FLIP_NONE;
         SDL_Rect block = world.player->DestR;
         block.x -= camera.x;
         block.y -= camera.y;
-        SDL_RenderCopy(renderer, ressources.player, &world.player->SrcR, &block);
+        SDL_RenderCopyEx(renderer, ressources.player, &world.player->SrcR, &block, 0., NULL, flip);
         
 
         // Récupération des événements
@@ -87,7 +103,7 @@ int main() {
         refresh_keys(&world, &keys);
 
         // Déplacement du player
-        player_movement(&keys, &player, &camera);
+        player_movement(&keys, &player);
         repositioning_camera(&camera, &player.prec);
         handle_collision(&world, &player);
 
@@ -95,31 +111,27 @@ int main() {
         SDL_RenderPresent(renderer);
 
         // Ralentissement pour un affichage fluide
-        if (SDL_GetTicks() < (tempsFin + 1000 / FPS)){
-            SDL_Delay((tempsFin + 1000 / FPS) - SDL_GetTicks());
-        }
+        if (SDL_GetTicks() < (tempsFin + 1000 / FPS)) SDL_Delay((tempsFin + 1000 / FPS) - SDL_GetTicks());
         tempsFin = (int) SDL_GetTicks();
     }
-    
-    // Quitter SDL
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
 
-    SDL_DestroyTexture(ressources.background);
-    SDL_DestroyTexture(ressources.player);
-    SDL_DestroyTexture(ressources.blocks);
-    SDL_Quit();
-    
+    // Libère toute la mémoire utilisée pour le monde
     desallouer_tab_2D(world.map->tab, world.map->nb_row);
-    
-    for (int i = 0; i < world.map->nb_row; i++) { // Libère toutes les lignes
-        free(world.map->DestR[i]);
-    }
+    for (int i = 0; i < world.map->nb_row; i++) free(world.map->DestR[i]); // Libère toutes les lignes
     free(world.map->DestR);
-    
     free(world.map);
     free(world.blocks);
     free(world.player);
+
+    // Libère l'espace des ressources
+    SDL_DestroyTexture(ressources.background);
+    SDL_DestroyTexture(ressources.player);
+    SDL_DestroyTexture(ressources.blocks);
+
+    // Quitter SDL
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return EXIT_SUCCESS;
 }

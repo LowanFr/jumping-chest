@@ -1,18 +1,58 @@
-#ifndef LOGICAL_H
-#define LOGICAL_H
+#ifndef WORLD_H
+#define WORLD_H
 
 /**
  * @file world.h
  * @brief Header concernant le module : world
  * @authors SCHNEIDER Paul, DOUILLET Esteban
- * @date 14 Novembre 2022
+ * @date 28 Novembre 2022
  */
+
 #include <stdlib.h>
 #include <SDL.h>
 #include <stdbool.h>
 #include "sdl2-light.h"
-#include "constant.h"
-#include "functions_files.h"
+#include "map.h"
+
+/**
+ * @brief La largeur du joueur
+ */
+#define LARGEUR_PLAYER 64
+
+/**
+ * @brief La hauteur
+ */
+#define HAUTEUR_PLAYER 85
+
+/**
+ * @brief Vitesse du player sur l'axe X (marche)
+ */
+#define VITESSE_X_MARCHE 10
+
+/**
+ * @brief coordonnée de x de la première
+ */
+#define X_PREMIERE_TEXTURE 4
+
+/**
+ * @brief coordonnée de y de la première
+ */
+#define Y_PREMIERE_TEXTURE 72
+
+/**
+ * @brief Taille d'une seule texture
+ */
+#define TAILLE_TEXTURES 64
+
+/**
+ * \brief Nombre de textures dans une tilemap
+ */
+#define NBR_DE_TEXTURES 33
+
+/**
+ * @brief Taille de la ligne bleu qui sépare deux textures
+ */
+#define DECALAGE_TEXTURE 4
 
 struct cam_s{
     int x;  /*!< Champ concernant l'abscisse de la caméra. */
@@ -29,8 +69,6 @@ struct sprite_s{
     SDL_Rect DestR; /*!< Champ concernant la destination de l'image. */
     SDL_Rect SrcR; /*!< Champ concernant la source de l'image. */
     int v; /*!< Champ concernant la vitesse de l'image. */
-    bool is_visible; /*!< Champ concernant l'état de visibilité de l'image. */
-    bool is_deleted; /*!< Champ concernant l'état de suppression de l'image. */
 };
 typedef struct sprite_s sprite_t;
 
@@ -68,12 +106,6 @@ struct ressources_s {
 typedef struct ressources_s ressources_t;
 
 /**
- * @brief Modifie l'image pour qu'elle devienne invisible.
- * @param sprite L'image
- */
-void set_invisible(sprite_t *sprite);
-
-/**
  * @brief Initialisation du monde.
  * @param world Le monde
  */
@@ -101,7 +133,6 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  * @param h2 La hauteur pour la destination de l'image
  */
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
-
 
 /**
  * @brief Repositionnement de la caméra en se basant sur les coordonnées de l'utilisateur

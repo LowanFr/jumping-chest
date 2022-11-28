@@ -1,5 +1,12 @@
 #include "keyboard.h"
 
+/**
+ * @brief Exécutable des fonctions liées au clavier
+ * @file keyboard.c
+ * @date 28 Novembre 2022
+ * @authors SCHNEIDER Paul, DOUILLET, Esteban
+ */
+
 void refresh_keys(world_t *world, keyboard_status_t *keys) {
     // Effectue des actions sur le type d'événements
     switch (keys->events.type) {
@@ -11,10 +18,12 @@ void refresh_keys(world_t *world, keyboard_status_t *keys) {
                 case SDLK_ESCAPE:
                     world->end = true; break;
                 case SDLK_LEFT:
+                    keys->lastIsLeft = true;
                     keys->left = true; break;
                 case SDLK_SPACE:
                     keys->space = true; break;
                 case SDLK_RIGHT:
+                    keys->lastIsLeft = false;
                     keys->right = true; break;
             }break;
 
@@ -34,4 +43,5 @@ void init_touches(keyboard_status_t *touches) {
     touches->right = false;
     touches->left = false;
     touches->space = false;
+    touches->lastIsLeft = false;
 }

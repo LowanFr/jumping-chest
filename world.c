@@ -2,7 +2,7 @@
  * @file world.c
  * @brief Exécutable concernant le module : world
  * @authors SCHNEIDER Paul, DOUILLET Esteban
- * @date 14 Novembre 2022
+ * @date 28 Novembre 2022
  */
 #include "world.h"
 
@@ -42,7 +42,7 @@ void init_world(world_t *world) {
 
 void init_cam(world_t *world, cam_t *camera, int w, int h) {
     camera->x = world->player->DestR.x - w/2;
-    camera->y = world->player->DestR.y - h/3;
+    camera->y = world->player->DestR.y - h/2;
     camera->h = h;
     camera->w = w;
     world->camera = camera;
@@ -63,20 +63,10 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
 
     // Définition des autres paramètres de l'image
     sprite->v = VITESSE_X_MARCHE;
-    sprite->is_visible = 1;
-    sprite->is_deleted = 0;
 }
 
 void repositioning_camera(cam_t *camera, SDL_Rect *player) {
     camera->x = player->x - camera->w/2;
-    camera->y = player->y - camera->h/3;
-}
-
-void set_invisible(sprite_t *sprite) {
-    // todo
-}
-
-void init_textures(world_t *world) {
-    // todo
+    camera->y = player->y - camera->h/2;
 }
 

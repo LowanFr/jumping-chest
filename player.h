@@ -5,10 +5,9 @@
  * @file player.h
  * @brief Header du module : player
  * @authors SCHNEIDER Paul, DOUILLET Esteban
- * @date 14 Novembre 2022
+ * @date 28 Novembre 2022
  */
 
-#include "world.h"
 #include "keyboard.h"
 
 /**
@@ -17,11 +16,16 @@
 #define GRAVITE 2
 
 /**
+ * \brief Vitesse du player sur l'axe Y (saut)
+ */
+#define VITESSE_Y_SAUT 30
+
+/**
  * @brief Définition d'un nouveau type appelé player_t qui est un pointeur vers une struct player_s.
  */
 struct player_s {
-    sprite_t *sprite;
-    SDL_Rect prec;
+    sprite_t *sprite; /*!< Champ concernant l'image du joueur. */
+    SDL_Rect prec; /*!< Champ concernant les coordonnées précédentes du joueur. */
     int saut; /*!< Champ vérifiant si le joueur est en saut. */
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */
@@ -39,9 +43,8 @@ void init_player(player_t *player, world_t *world);
  * @brief Gestion du déplacement du joueur
  * @param touches Les touches
  * @param player Le joueur
- * @param camera La caméra
  */
-void player_movement(keyboard_status_t *touches, player_t *player, cam_t *camera);
+void player_movement(keyboard_status_t *touches, player_t *player);
 
 /**
  * @brief Vérification de toutes les collisions
