@@ -26,7 +26,7 @@
 struct player_s {
     sprite_t *sprite; /*!< Champ concernant l'image du joueur. */
     SDL_Rect prec; /*!< Champ concernant les coordonnées précédentes du joueur. */
-    int saut; /*!< Champ vérifiant si le joueur est en saut. */
+    bool saut; /*!< Champ vérifiant si le joueur est en saut. */
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */
 };

@@ -17,12 +17,12 @@
 /**
  * @brief La largeur du joueur
  */
-#define LARGEUR_PLAYER 64
+#define LARGEUR_PLAYER 56
 
 /**
  * @brief La hauteur
  */
-#define HAUTEUR_PLAYER 85
+#define HAUTEUR_PLAYER 96
 
 /**
  * @brief Vitesse du player sur l'axe X (marche)
