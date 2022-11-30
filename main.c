@@ -76,27 +76,25 @@ int main() {
         SDL_RenderCopy(renderer, ressources.background, NULL, NULL);
 
         // Affiche tous les blocks présent sur la caméra
-
-        for(int i = 0; i<world.map->nb_row; ++i){
-            for(int j = 0; j<world.map->nb_col; ++j){
+        for (int i = 0; i < world.map->nb_row; ++i) {
+            for (int j = 0; j < world.map->nb_col; ++j) {
                 SDL_Rect block = world.map->DestR[i][j];
                 bool onCamera = block.y <= camera.y + camera.h  &&
                         block.y + block.h >= camera.y &&
                         block.x <= camera.x + camera.w &&
                         block.x + block.w >= camera.x;
-                
 
                 // Affiche le block s'il y a une collision entre celui-ci et la caméra
                 if (onCamera) {
-                    handle_animation(&world, i ,j); //Toutes les animations à l'ecran
-
+                    handle_animation(&world, i ,j); // Actualise les animations présentes sur l'écran
                     block.x -= camera.x;
                     block.y -= camera.y;
                     SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[world.map->tab[i][j]].SrcR, &block);
                 }
             }
         }
-        //Temps entre chaque animations : 0.5 seconde
+
+        // Temps entre chaque animation : 0.5 seconde
         if(world.timeAnimation == 30)  world.timeAnimation = 0; 
         world.timeAnimation++;
     
@@ -114,7 +112,6 @@ int main() {
         player_movement(&keys, &player);
         repositioning_camera(&camera, &player.prec);
         handle_collision(&world, &player);
-        
 
         // Mise à jour de l'écran avec le rendu
         SDL_RenderPresent(renderer);
@@ -133,14 +130,12 @@ int main() {
     free(world.player);
 
     // Libère l'espace des ressources
-    SDL_DestroyTexture(ressources.background);
-    SDL_DestroyTexture(ressources.player);
-    SDL_DestroyTexture(ressources.blocks);
+    clean_texture(ressources.background);
+    clean_texture(ressources.player);
+    clean_texture(ressources.blocks);
 
     // Quitter SDL
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    clean_sdl(renderer, window);
 
     return EXIT_SUCCESS;
 }

@@ -1,32 +1,32 @@
-#ifndef __SDL2_LIGHT__H__
-#define __SDL2_LIGHT__H__
+#ifndef SDL2_LIGHT_H
+#define SDL2_LIGHT_H
 
 #include <SDL.h>
 
 /**
- * \brief La fonction nettoie le renderer et la fenêtre du jeu en mémoire
- * \param renderer le renderer à nettoyer
- * \param window la fenêtre à nettoyer
+ * @brief La fonction nettoie le renderer et la fenêtre du jeu en mémoire
+ * @param renderer le renderer à nettoyer
+ * @param window la fenêtre à nettoyer
 */
 void clean_sdl(SDL_Renderer *renderer,SDL_Window *window);
 
 /**
- * \brief La fonction charge une image  et renvoie la texture correspondante
- * \param path est le chemin du fichier image. Le fichier doit être obligatoirement du BMP.
- * \param renderer le renderer
- * \return la surface SDL contenant l'image. Elle renvoie NULL si le chargement a échoué
+ * @brief La fonction charge une image  et renvoie la texture correspondante
+ * @param path est le chemin du fichier image. Le fichier doit être obligatoirement du BMP.
+ * @param renderer le renderer
+ * @return la surface SDL contenant l'image. Elle renvoie NULL si le chargement a échoué
  * (ex. le fichier path n'existe pas)
 */
 SDL_Texture *load_image(const char path[], SDL_Renderer *renderer);
 
 /**
- * \brief La fonction initialise la SDL.
+ * @brief La fonction initialise la SDL.
  * Elle crée la fenêtre du jeu ainsi que le renderer
- *  \param window la fenêtre du jeu
- *  \param renderer le renderer
- * \param width largeur de l'écran de jeu
- * \param height hauteur de l'écran de jeu
- * \return -1 en cas d'erreur, 0 sinon
+ * @param window la fenêtre du jeu
+ * @param renderer le renderer
+ * @param width largeur de l'écran de jeu
+ * @param height hauteur de l'écran de jeu
+ * @return -1 en cas d'erreur, 0 sinon
 */
 int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height);
 

@@ -5,7 +5,7 @@
  * @file graphic.h
  * @brief Header du module de la partie graphique
  * @author Esteban DOUILLET, SCHNEIDER Paul
- * @date 28 Novembre 2022
+ * @date 30 Novembre 2022
  */
 #include "world.h"
 
@@ -66,7 +66,5 @@ void handle_animation(world_t *world, int i, int j);
  * @param j coord j de la piece à animer
  */
 void pieces_animations(int **tab, int i, int j);
-
-
 
 #endif

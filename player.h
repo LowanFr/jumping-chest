@@ -58,6 +58,13 @@ void handle_collision(world_t *world, player_t *player);
  * @param world Le monde
  * @param player Le joueur
  */
-void handle_collision_solidBlock(world_t *world, player_t *player);
+void handle_collision_solidBlock(world_t *world, player_t *player, int i, int j);
+
+/**
+ * @brief Gestion des collisions entre le joueur et les pièces
+ * @param world Le monde
+ * @param player Le joueur
+ */
+void handle_collision_pieces(world_t *world, player_t *player, int i, int j);
 
 #endif

@@ -1,8 +1,8 @@
 #include "interaction.h"
 
 /**
- * @brief Exécutable des fonctions liées au clavier
- * @file keyboard.c
+ * @brief Exécutable des fonctions liées aux interactions
+ * @file interaction.c
  * @date 30 Novembre 2022
  * @authors SCHNEIDER Paul, DOUILLET, Esteban
  */
@@ -61,23 +61,24 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event) {
     switch (event->type) {
         case SDL_MOUSEBUTTONDOWN: // Bouton appuyé
             switch(event->button.button) {
-                case SDL_BUTTON_LEFT: // Click Gauche
+                case SDL_BUTTON_LEFT:
                     mouse->left = true; break;
-                case SDL_BUTTON_RIGHT: // Click Droit
+                case SDL_BUTTON_RIGHT:
                     mouse->right = true; break;
             }break;
 
         case SDL_MOUSEBUTTONUP: // Bouton libéré
             switch(event->button.button) {
-                case SDL_BUTTON_LEFT: // Click Gauche
+                case SDL_BUTTON_LEFT:
                     mouse->left = false; break;
-                case SDL_BUTTON_RIGHT: // Click Droit
+                case SDL_BUTTON_RIGHT:
                     mouse->right = false; break;
             }break;
     }
 }
 
 void handle_event(mouse_status_t *mouse, keyboard_status_t *keyboard, world_t *world, SDL_Event *event) {
+    // Exécute tous les événements en attente à chaque cycle
     while (SDL_PollEvent(event)) {
         refresh_keys(world, keyboard, event);
         refresh_mouse(mouse, event);

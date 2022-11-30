@@ -1,9 +1,9 @@
-#ifndef CLAVIER_H
-#define CLAVIER_H
+#ifndef INTERACTION_H
+#define INTERACTION_H
 
 /**
- * @brief Fichier représentant le module du clavier
- * @file keyboard.h
+ * @brief Fichier représentant le module des interactions
+ * @file interaction.h
  * @authors SCHNEIDER Paul, DOUILLET Esteban
  * @date 30 Novembre 2022
  */

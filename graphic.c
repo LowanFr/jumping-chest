@@ -2,7 +2,7 @@
  * @file graphic.c
  * @brief Exécutable du module de la partie graphique
  * @author Esteban DOUILLET, SCHNEIDER Paul
- * @date 28 Novembre 2022
+ * @date 30 Novembre 2022
  */
 #include "graphic.h"
 
@@ -47,20 +47,15 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     // Mise à jour de l'écran
     if (!world->end) update_screen(renderer);
 }
-void handle_animation(world_t *world, int i, int j){
-    
-    if(world->timeAnimation == 30){
-        pieces_animations(world->map->tab,i,j);
-    }
+void handle_animation(world_t *world, int i, int j) {
+    // Animation des pièces tous les 30 cycles
+    if(world->timeAnimation == 30) pieces_animations(world->map->tab, i, j);
 }
 
-void pieces_animations(int **tab, int i, int j){
-
+void pieces_animations(int **tab, int i, int j) {
+    // Itère l'image de la pièce
     if(tab[i][j] >= 6 && tab[i][j] <= 9){
         tab[i][j]++;
-        
-        if(tab[i][j] == 10){
-            tab[i][j] = 6;
-        }
+        if(tab[i][j] == 10) tab[i][j] = 6; // Fin du cycle
     }
 }
