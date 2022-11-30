@@ -1,6 +1,6 @@
 #ifndef SDL2_LIGHT_H
 #define SDL2_LIGHT_H
-xs
+
 /**
  * @file sdl2-light.h
  * @brief Header de la sur-couche de SDL2 pour simplifier son utilisation pour le projet.
