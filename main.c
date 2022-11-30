@@ -6,7 +6,7 @@
  * @brief Fichier d'exécution du jeu vidéo
  * @file main.c
  * @authors SCHNEIDER Paul, DOUILLET Esteban
- * @date 28 novembre 2022
+ * @date 30 novembre 2022
  */
 
 /**
@@ -34,10 +34,11 @@
  * @param player Le joueur
  * @param camera La caméra
  */
-void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keys, player_t *player, cam_t *camera) {
+void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keys, mouse_status_t *mouse, player_t *player, cam_t *camera) {
     init_sdl(window,renderer, SCREEN_W, SCREEN_H);
     init_world(world);
     init_touches(keys);
+    init_mouse(mouse);
     init_ressources(*renderer, ressources);
     init_player(player, world);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
@@ -49,14 +50,16 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
 int main() {
     SDL_Window* window;
     SDL_Renderer* renderer;
+    SDL_Event event;
     ressources_t ressources;
     world_t world;
     cam_t camera;
     keyboard_status_t keys;
+    mouse_status_t mouse;
     player_t player;
 
     // Initialisation du jeu
-    init(&window, &renderer, &ressources, &world, &keys, &player, &camera);
+    init(&window, &renderer, &ressources, &world, &keys, &mouse, &player, &camera);
 
     // Changement de la couleur de fond
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -103,11 +106,9 @@ int main() {
         block.x -= camera.x;
         block.y -= camera.y;
         SDL_RenderCopyEx(renderer, ressources.player, &world.player->SrcR, &block, 0., NULL, flip);
-        
 
-        // Récupération des événements
-        SDL_PollEvent(&keys.events);
-        refresh_keys(&world, &keys);
+        // Exécution des événements
+        handle_event(&mouse, &keys, &world, &event);
 
         // Déplacement du player
         player_movement(&keys, &player);
