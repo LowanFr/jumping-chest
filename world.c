@@ -8,6 +8,7 @@
 
 void init_world(world_t *world) {
     world->end = false;
+    world->timeAnimation = 0;
     world->blocks = calloc(NBR_DE_TEXTURES, sizeof(sprite_t));
 
     // Initialisation des images de tous les blocs
@@ -63,6 +64,7 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
 
     // Définition des autres paramètres de l'image
     sprite->v = VITESSE_X_MARCHE;
+    
 }
 
 void repositioning_camera(cam_t *camera, SDL_Rect *player) {

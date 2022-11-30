@@ -53,4 +53,20 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
  */
 SDL_Texture* charger_image(const char* nomFichier, SDL_Renderer* renderer);
 
+/**
+ * @brief Gère toutes les animations
+ * @param world les données du monde
+ */
+void handle_animation(world_t *world, int i, int j);
+
+/**
+ * @brief Gère toutes les animations des pieces
+ * @param world les données du monde
+ * @param i coord i de la piece à animer
+ * @param j coord j de la piece à animer
+ */
+void pieces_animations(int **tab, int i, int j);
+
+
+
 #endif

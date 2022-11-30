@@ -47,3 +47,20 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     // Mise à jour de l'écran
     if (!world->end) update_screen(renderer);
 }
+void handle_animation(world_t *world, int i, int j){
+    
+    if(world->timeAnimation == 30){
+        pieces_animations(world->map->tab,i,j);
+    }
+}
+
+void pieces_animations(int **tab, int i, int j){
+
+    if(tab[i][j] >= 6 && tab[i][j] <= 9){
+        tab[i][j]++;
+        
+        if(tab[i][j] == 10){
+            tab[i][j] = 6;
+        }
+    }
+}

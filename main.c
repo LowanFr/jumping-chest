@@ -73,6 +73,7 @@ int main() {
         SDL_RenderCopy(renderer, ressources.background, NULL, NULL);
 
         // Affiche tous les blocks présent sur la caméra
+
         for(int i = 0; i<world.map->nb_row; ++i){
             for(int j = 0; j<world.map->nb_col; ++j){
                 SDL_Rect block = world.map->DestR[i][j];
@@ -80,16 +81,22 @@ int main() {
                         block.y + block.h >= camera.y &&
                         block.x <= camera.x + camera.w &&
                         block.x + block.w >= camera.x;
+                
 
                 // Affiche le block s'il y a une collision entre celui-ci et la caméra
                 if (onCamera) {
+                    handle_animation(&world, i ,j); //Toutes les animations à l'ecran
+
                     block.x -= camera.x;
                     block.y -= camera.y;
                     SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[world.map->tab[i][j]].SrcR, &block);
                 }
             }
         }
-
+        //Temps entre chaque animations : 0.5 seconde
+        if(world.timeAnimation == 30)  world.timeAnimation = 0; 
+        world.timeAnimation++;
+    
         // Affiche le joueur selon la caméra
         SDL_RendererFlip flip = keys.lastIsLeft == 1? SDL_FLIP_HORIZONTAL: SDL_FLIP_NONE;
         SDL_Rect block = world.player->DestR;
@@ -106,6 +113,7 @@ int main() {
         player_movement(&keys, &player);
         repositioning_camera(&camera, &player.prec);
         handle_collision(&world, &player);
+        
 
         // Mise à jour de l'écran avec le rendu
         SDL_RenderPresent(renderer);

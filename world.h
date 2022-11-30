@@ -91,6 +91,7 @@ struct world_s {
     sprite_t *player; /*!<  Champ désignant l'image du player. */
     cam_t *camera; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
+    int timeAnimation;
     bool end; /*!<  Champ désignant la fin de la partie. */
 };
 typedef struct world_s world_t;
