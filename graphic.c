@@ -6,12 +6,12 @@
  */
 #include "graphic.h"
 
-SDL_Texture* charger_image(const char* nomFichier, SDL_Renderer* renderer) {
+SDL_Texture *charger_image(const char *nomFichier, SDL_Renderer *renderer) {
     // Chargement de l'image à partir du chemin
-    SDL_Surface* surface = SDL_LoadBMP(nomFichier);
+    SDL_Surface *surface = SDL_LoadBMP(nomFichier);
 
     // Conversion de la surface en texture
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
     return texture;
 }
@@ -28,34 +28,56 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
     ressources->blocks = charger_image("../assets/classic.bmp", renderer);
 }
 
-void apply_background(SDL_Renderer *renderer, ressources_t *ressources) {
-    if (ressources->background != NULL) SDL_RenderCopy(renderer, ressources->background, 0,0);
-}
-
-void apply_sprite(SDL_Renderer *renderer, SDL_Texture *texture, sprite_t *sprite) {
-    SDL_RenderCopy(renderer, texture, &sprite->SrcR, &sprite->DestR);
-}
-
-void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources) {
+void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboardStatus) {
     // Vide le renderer
     clear_renderer(renderer);
 
-    // Applique les ressources dans le renderer
-    apply_background(renderer, ressources);
-    apply_sprite(renderer, ressources->player, world->player);
+    // Mise à jour des textures
+    SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
+
+    // Affiche tous les blocks présent sur la caméra
+    for (int i = 0; i < world->map->nb_row; ++i) {
+        for (int j = 0; j < world->map->nb_col; ++j) {
+            SDL_Rect block = world->map->DestR[i][j];
+            bool onCamera = block.y <= world->cam->y + world->cam->h &&
+                            block.y + block.h >= world->cam->y &&
+                            block.x <= world->cam->x + world->cam->w &&
+                            block.x + block.w >= world->cam->x;
+
+            // Affiche le block s'il y a une collision entre celui-ci et la caméra
+            if (onCamera) {
+                handle_animation(world, i, j); // Actualise les animations présentes sur l'écran
+                block.x -= world->cam->x;
+                block.y -= world->cam->y;
+                SDL_RenderCopy(renderer, ressources->blocks, &world->blocks[world->map->tab[i][j]].SrcR, &block);
+            }
+        }
+    }
+
+    // Temps entre chaque animation : 0.5 seconde
+    if (world->timeAnimation == 30) world->timeAnimation = 0;
+    world->timeAnimation++;
+
+    // Affiche le joueur selon la caméra
+    SDL_RendererFlip flip = keyboardStatus->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+    SDL_Rect block = world->player->DestR;
+    block.x -= world->cam->x;
+    block.y -= world->cam->y;
+    SDL_RenderCopyEx(renderer, ressources->player, &world->player->SrcR, &block, 0., NULL, flip);
 
     // Mise à jour de l'écran
-    if (!world->end) update_screen(renderer);
+    update_screen(renderer);
 }
+
 void handle_animation(world_t *world, int i, int j) {
     // Animation des pièces tous les 30 cycles
-    if(world->timeAnimation == 30) pieces_animations(world->map->tab, i, j);
+    if (world->timeAnimation == 30) pieces_animations(world->map->tab, i, j);
 }
 
 void pieces_animations(int **tab, int i, int j) {
     // Itère l'image de la pièce
-    if(tab[i][j] >= 6 && tab[i][j] <= 9){
+    if (tab[i][j] >= 6 && tab[i][j] <= 9) {
         tab[i][j]++;
-        if(tab[i][j] == 10) tab[i][j] = 6; // Fin du cycle
+        if (tab[i][j] == 10) tab[i][j] = 6; // Fin du cycle
     }
 }

@@ -34,8 +34,9 @@
  * @param player Le joueur
  * @param camera La caméra
  */
-void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keys, mouse_status_t *mouse, player_t *player, cam_t *camera) {
-    init_sdl(window,renderer, SCREEN_W, SCREEN_H);
+void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keys,
+     mouse_status_t *mouse, player_t *player, cam_t *camera) {
+    init_sdl(window, renderer, SCREEN_W, SCREEN_H);
     init_world(world);
     init_touches(keys);
     init_mouse(mouse);
@@ -44,12 +45,28 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_cam(world, camera, SCREEN_W, SCREEN_H);
 }
 
+void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, world_t *world) {
+    // Libère toute la mémoire utilisée pour le monde
+    desallouer_tab_2D(world->map->tab, world->map->nb_row);
+    for (int i = 0; i < world->map->nb_row; i++) free(world->map->DestR[i]); // Libère toutes les lignes
+    free(world->map->DestR);
+    free(world->map);
+    free(world->blocks);
+    free(world->player);
+
+    // Libère l'espace des ressources
+    clean_ressources(ressources);
+
+    // Quitter SDL
+    clean_sdl(renderer, window);
+}
+
 /**
  * @brief La fonction principale. C'est la première fonction qui est appelée lors de l'exécution du programme.
  */
 int main() {
-    SDL_Window* window;
-    SDL_Renderer* renderer;
+    SDL_Window *window;
+    SDL_Renderer *renderer;
     SDL_Event event;
     ressources_t ressources;
     world_t world;
@@ -69,41 +86,8 @@ int main() {
 
     // Boucle principale
     while (!world.end) {
-        // Suppression de l'ancien rendu
-        clear_renderer(renderer);
-
-        // Mise à jour des textures
-        SDL_RenderCopy(renderer, ressources.background, NULL, NULL);
-
-        // Affiche tous les blocks présent sur la caméra
-        for (int i = 0; i < world.map->nb_row; ++i) {
-            for (int j = 0; j < world.map->nb_col; ++j) {
-                SDL_Rect block = world.map->DestR[i][j];
-                bool onCamera = block.y <= camera.y + camera.h  &&
-                        block.y + block.h >= camera.y &&
-                        block.x <= camera.x + camera.w &&
-                        block.x + block.w >= camera.x;
-
-                // Affiche le block s'il y a une collision entre celui-ci et la caméra
-                if (onCamera) {
-                    handle_animation(&world, i ,j); // Actualise les animations présentes sur l'écran
-                    block.x -= camera.x;
-                    block.y -= camera.y;
-                    SDL_RenderCopy(renderer, ressources.blocks, &world.blocks[world.map->tab[i][j]].SrcR, &block);
-                }
-            }
-        }
-
-        // Temps entre chaque animation : 0.5 seconde
-        if(world.timeAnimation == 30)  world.timeAnimation = 0; 
-        world.timeAnimation++;
-    
-        // Affiche le joueur selon la caméra
-        SDL_RendererFlip flip = keys.lastIsLeft == 1? SDL_FLIP_HORIZONTAL: SDL_FLIP_NONE;
-        SDL_Rect block = world.player->DestR;
-        block.x -= camera.x;
-        block.y -= camera.y;
-        SDL_RenderCopyEx(renderer, ressources.player, &world.player->SrcR, &block, 0., NULL, flip);
+        // Mise à jour graphique
+        refresh_graphics(renderer, &world, &ressources, &keys);
 
         // Exécution des événements
         handle_event(&mouse, &keys, &world, &event);
@@ -113,29 +97,13 @@ int main() {
         repositioning_camera(&camera, &player.prec);
         handle_collision(&world, &player);
 
-        // Mise à jour de l'écran avec le rendu
-        SDL_RenderPresent(renderer);
-
         // Ralentissement pour un affichage fluide
         if (SDL_GetTicks() < (tempsFin + 1000 / FPS)) SDL_Delay((tempsFin + 1000 / FPS) - SDL_GetTicks());
         tempsFin = (int) SDL_GetTicks();
     }
 
     // Libère toute la mémoire utilisée pour le monde
-    desallouer_tab_2D(world.map->tab, world.map->nb_row);
-    for (int i = 0; i < world.map->nb_row; i++) free(world.map->DestR[i]); // Libère toutes les lignes
-    free(world.map->DestR);
-    free(world.map);
-    free(world.blocks);
-    free(world.player);
-
-    // Libère l'espace des ressources
-    clean_texture(ressources.background);
-    clean_texture(ressources.player);
-    clean_texture(ressources.blocks);
-
-    // Quitter SDL
-    clean_sdl(renderer, window);
+    clean(window, renderer, &ressources, &world);
 
     return EXIT_SUCCESS;
 }

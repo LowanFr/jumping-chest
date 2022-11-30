@@ -40,12 +40,12 @@ void init_world(world_t *world) {
     }
 }
 
-void init_cam(world_t *world, cam_t *camera, int w, int h) {
-    camera->x = world->player->DestR.x - w/2;
-    camera->y = world->player->DestR.y - h/2;
-    camera->h = h;
-    camera->w = w;
-    world->camera = camera;
+void init_cam(world_t *world, cam_t *cam, int w, int h) {
+    cam->x = world->player->DestR.x - w/2;
+    cam->y = world->player->DestR.y - h/2;
+    cam->h = h;
+    cam->w = w;
+    world->cam = cam;
 }
 
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2) {

@@ -14,14 +14,14 @@
  * @param m Longueur
  * @return Initialiser ce tableau avec le caractère espace
  */
-int** allouer_tab_2D(int n, int m);
+int **allouer_tab_2D(int n, int m);
 
 /**
  * Libérer un tableau à deux dimensions, de n lignes
  * @param tab Le tableau à deux dimensions
  * @param n Nombre de lignes
  */
-void desallouer_tab_2D(int** tab, int n);
+void desallouer_tab_2D(int **tab, int n);
 
 /**
  * Afficher le contenu d’un tableau de caractères de taille n × m
@@ -29,7 +29,7 @@ void desallouer_tab_2D(int** tab, int n);
  * @param n Largeur
  * @param m Longueur
  */
-void afficher_tab_2D(int** tab, int n, int m);
+void afficher_tab_2D(int **tab, int n, int m);
 
 /**
  * Compter le nombre max de ligne / colonne
@@ -37,13 +37,13 @@ void afficher_tab_2D(int** tab, int n, int m);
  * @param nbLig Nombre de ligne
  * @param nbCol Nombre de colonne
  */
-void taille_fichier(const char* nomFichier, int* nbLig, int* nbCol);
+void taille_fichier(const char *nomFichier, int *nbLig, int *nbCol);
 
 /**
  * Lire un fichier
  * @param nomFichier Le nom du fichier
  * @return Tableau qui contient les caractères du fichier
  */
-int** lire_fichier(const char* nomFichier);
+int **lire_fichier(const char *nomFichier);
 
-#endif //TP2_PROG_A_FONCTIONS_FICHIERS_H
+#endif

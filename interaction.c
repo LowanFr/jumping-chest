@@ -11,31 +11,41 @@ void refresh_keys(world_t *world, keyboard_status_t *keys, SDL_Event *event) {
     // Effectue des actions sur le type d'événements
     switch (event->type) {
         case SDL_QUIT: // Echap
-            world->end = true;break;
+            world->end = true;
+            break;
 
         case SDL_KEYDOWN: // Touches appuyées
-            switch(event->key.keysym.sym) {
+            switch (event->key.keysym.sym) {
                 case SDLK_ESCAPE:
-                    world->end = true; break;
+                    world->end = true;
+                    break;
                 case SDLK_LEFT:
                     keys->lastIsLeft = true;
-                    keys->left = true; break;
+                    keys->left = true;
+                    break;
                 case SDLK_SPACE:
-                    keys->space = true; break;
+                    keys->space = true;
+                    break;
                 case SDLK_RIGHT:
                     keys->lastIsLeft = false;
-                    keys->right = true; break;
-            }break;
+                    keys->right = true;
+                    break;
+            }
+            break;
 
         case SDL_KEYUP: // Les touches libérées
-            switch(event->key.keysym.sym) {
+            switch (event->key.keysym.sym) {
                 case SDLK_LEFT:
-                    keys->left = false; break;
+                    keys->left = false;
+                    break;
                 case SDLK_SPACE:
-                    keys->space = false; break;
+                    keys->space = false;
+                    break;
                 case SDLK_RIGHT:
-                    keys->right = false; break;
-            }break;
+                    keys->right = false;
+                    break;
+            }
+            break;
     }
 }
 
@@ -60,20 +70,26 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event) {
     // Effectue des actions sur le type d'événements
     switch (event->type) {
         case SDL_MOUSEBUTTONDOWN: // Bouton appuyé
-            switch(event->button.button) {
+            switch (event->button.button) {
                 case SDL_BUTTON_LEFT:
-                    mouse->left = true; break;
+                    mouse->left = true;
+                    break;
                 case SDL_BUTTON_RIGHT:
-                    mouse->right = true; break;
-            }break;
+                    mouse->right = true;
+                    break;
+            }
+            break;
 
         case SDL_MOUSEBUTTONUP: // Bouton libéré
-            switch(event->button.button) {
+            switch (event->button.button) {
                 case SDL_BUTTON_LEFT:
-                    mouse->left = false; break;
+                    mouse->left = false;
+                    break;
                 case SDL_BUTTON_RIGHT:
-                    mouse->right = false; break;
-            }break;
+                    mouse->right = false;
+                    break;
+            }
+            break;
     }
 }
 

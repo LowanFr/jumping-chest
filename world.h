@@ -89,7 +89,7 @@ typedef struct map_s map_t;
 struct world_s {
     sprite_t *blocks; /*!<  Champ désignant toutes les images des blocs. */
     sprite_t *player; /*!<  Champ désignant l'image du player. */
-    cam_t *camera; /*!<  Champ désignant la camera. */
+    cam_t *cam; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
     int timeAnimation;
     bool end; /*!<  Champ désignant la fin de la partie. */
