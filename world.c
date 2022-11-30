@@ -34,11 +34,11 @@ void init_world(world_t *world) {
     for (int i = 0; i < world->map->nb_row; i++) {
         world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
         for (int j = 0; j < world->map->nb_col; ++j) {
-            sprite_t *sprite = NULL;
-            init_sprite(sprite, world->textures[world->map->tab[i][j]].SrcR.x, world->textures[world->map->tab[i][j]].SrcR.y,
+            sprite_t sprite;
+            init_sprite(&sprite, world->textures[world->map->tab[i][j]].SrcR.x, world->textures[world->map->tab[i][j]].SrcR.y,
                         world->textures[world->map->tab[i][j]].SrcR.w, world->textures[world->map->tab[i][j]].SrcR.h,
                         j * SIZE_TEXTURES, i * SIZE_TEXTURES, SIZE_TEXTURES,SIZE_TEXTURES);
-            world->blocks[i][j] = *sprite;
+            world->blocks[i][j] = sprite;
         }
     }
 }
