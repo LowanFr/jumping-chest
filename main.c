@@ -3,29 +3,29 @@
 #include "graphic.h"
 
 /**
- * @brief Fichier d'exécution du jeu vidéo
+ * @brief Fichier d'exécution du jeu vidéo.
  * @file main.c
  * @authors SCHNEIDER Paul, DOUILLET Esteban
  * @date 30 novembre 2022
  */
 
 /**
- * @brief Nombre de FPS dans le jeu
+ * @brief Nombre de FPS dans le jeu.
  */
 #define FPS 60
 
 /**
- * @brief La hauteur de l'écran
+ * @brief La hauteur de l'écran.
  */
 #define SCREEN_H 720
 
 /**
- * @brief La largeur de l'écran
+ * @brief La largeur de l'écran.
  */
 #define SCREEN_W 1280
 
 /**
- * @brief Initialisation du jeu
+ * @brief Initialisation du jeu.
  * @param window La fenêtre
  * @param renderer Le rendu
  * @param ressources Les ressources
@@ -34,8 +34,9 @@
  * @param player Le joueur
  * @param camera La caméra
  */
-void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keyboard,
-     mouse_status_t *mouse, player_t *player, cam_t *camera) {
+void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world,
+          keyboard_status_t *keyboard,
+          mouse_status_t *mouse, player_t *player, cam_t *camera) {
     init_sdl(window, renderer, SCREEN_W, SCREEN_H);
     init_world(world);
     init_keyboard(keyboard);
@@ -74,7 +75,7 @@ int main() {
     keyboard_status_t keyboard;
     mouse_status_t mouse;
     player_t player;
-    int tempsFin = 0;
+    int delay = 0;
 
     // Initialisation du jeu
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &player, &camera);
@@ -92,8 +93,8 @@ int main() {
         handle_collision(&world, &player);
 
         // Ralentissement pour un affichage fluide
-        if (SDL_GetTicks() < (tempsFin + 1000 / FPS)) SDL_Delay((tempsFin + 1000 / FPS) - SDL_GetTicks());
-        tempsFin = (int) SDL_GetTicks();
+        if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
+        delay = (int) SDL_GetTicks();
     }
 
     // Libère toute la mémoire utilisée pour le monde

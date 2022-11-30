@@ -2,48 +2,48 @@
 #define MAP_H
 
 /**
- * @brief Header des fonctions liées à la map
+ * @brief Header des fonctions liées à la map.
  * @file map.h
  * @authors SCHNEIDER Paul, DOUILLET Esteban
- * @date 28 Novembre 2022
+ * @date 30 Novembre 2022
  */
 
 /**
- * @briefAllouer un tableau de caractères de taille n × m
- * @param n Largeur
- * @param m Longueur
- * @return Initialiser ce tableau avec le caractère espace
+ * @brief Alloue un tableau de caractères de taille n × m.
+ * @param n La largeur
+ * @param m La longueur
+ * @return Le tableau alloué
  */
 int **allouer_tab_2D(int n, int m);
 
 /**
- * Libérer un tableau à deux dimensions, de n lignes
+ * @brief Libère un tableau à deux dimensions, de n lignes.
  * @param tab Le tableau à deux dimensions
- * @param n Nombre de lignes
+ * @param n Le nombre de lignes
  */
 void desallouer_tab_2D(int **tab, int n);
 
 /**
- * Afficher le contenu d’un tableau de caractères de taille n × m
- * @param tab Tableau de caractères
- * @param n Largeur
- * @param m Longueur
+ * @brief Affiche le contenu d’un tableau de caractères de taille n × m.
+ * @param tab Le tableau de caractères
+ * @param n La largeur du tableau
+ * @param m La hauteur du tableau
  */
 void afficher_tab_2D(int **tab, int n, int m);
 
 /**
- * Compter le nombre max de ligne / colonne
- * @param nomFichier Nom du fichier
- * @param nbLig Nombre de ligne
- * @param nbCol Nombre de colonne
+ * @brief Compte le nombre max de ligne / colonne.
+ * @param nameFile Le nom du fichier
+ * @param nbRows Le nombre de ligne
+ * @param nbColumns Le nombre de colonne
  */
-void taille_fichier(const char *nomFichier, int *nbLig, int *nbCol);
+void taille_fichier(const char *nameFile, int *nbRows, int *nbColumns);
 
 /**
- * Lire un fichier
- * @param nomFichier Le nom du fichier
- * @return Tableau qui contient les caractères du fichier
+ * @brief Lis un fichier.
+ * @param nameFile Le nom du fichier
+ * @return Un tableau qui contient les caractères du fichier
  */
-int **lire_fichier(const char *nomFichier);
+int **lire_fichier(const char *nameFile);
 
 #endif

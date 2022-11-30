@@ -1,6 +1,6 @@
 /**
  * @file player.c
- * @brief Exécutable concernant le module : player
+ * @brief Exécutable concernant le module : player.
  * @authors SCHNEIDER Paul, DOUILLET Esteban
  * @date 28 Novembre 2022
  */
@@ -30,25 +30,25 @@ void player_movement(keyboard_status_t *touches, player_t *player) {
 
     // Vérifie si le joueur ne saute pas (gravité)
     if (player->saut == false) {
-        player->sprite->DestR.y += player->timeSinceJumpStart * GRAVITE;
+        player->sprite->DestR.y += player->timeSinceJumpStart * GRAVITY;
         player->timeSinceJumpStart++;
     }
 
     // Vérifie la gravité lors d'un saut
     if (player->saut == true) {
-        player->sprite->DestR.y = (int) round(player->ground - VITESSE_Y_SAUT * player->timeSinceJumpStart
+        player->sprite->DestR.y = (int) round(player->ground - JUMP_SPEED * player->timeSinceJumpStart
                                               +
-                                              0.5 * GRAVITE * player->timeSinceJumpStart * player->timeSinceJumpStart);
+                                              0.5 * GRAVITY * player->timeSinceJumpStart * player->timeSinceJumpStart);
         player->timeSinceJumpStart++;
     }
 }
 
 void handle_collision(world_t *world, player_t *player) {
     // Vérification des collisions avec les blocs qui entoure le joueur
-    for (int i = player->sprite->DestR.y / TAILLE_TEXTURES - 2;
-         i <= player->sprite->DestR.y / TAILLE_TEXTURES + 2; ++i) {
-        for (int j = player->sprite->DestR.x / TAILLE_TEXTURES - 1;
-             j <= player->sprite->DestR.x / TAILLE_TEXTURES + 1; ++j) {
+    for (int i = player->sprite->DestR.y / SIZE_TEXTURES - 2;
+         i <= player->sprite->DestR.y / SIZE_TEXTURES + 2; ++i) {
+        for (int j = player->sprite->DestR.x / SIZE_TEXTURES - 1;
+             j <= player->sprite->DestR.x / SIZE_TEXTURES + 1; ++j) {
             handle_collision_solidBlock(world, player, i, j);
             handle_collision_pieces(world, player, i, j);
         }
@@ -95,22 +95,22 @@ void handle_collision_solidBlock(world_t *world, player_t *player, int i, int j)
     // Vérifie qu'il y a une collision et que c'est bloc solide
     if (!condCollision1 || !condCollision2 || !condCollision3) return;
 
-    // Collision en haut du block :
+    // Collision en haut du bloc
     if (DestR.y < player->sprite->DestR.y + player->sprite->DestR.h &&
         // Si le haut du bloc est en collision avec le bas du player
-        player->sprite->DestR.y < DestR.y && // Si le haut du player est bien inférieur au haut du bloc
+        player->sprite->DestR.y < DestR.y && // Si le haut du joueur est bien inférieur au haut du bloc
         player->prec.y + player->prec.h <=
-        DestR.y) { //Si la position précédente du bas du player est bien inférieur au haut du bloc
+        DestR.y) { // Si la position précédente du bas du joueur est bien inférieure au haut du bloc
         player->saut = false;
         player->prec.y = DestR.y - player->prec.h;
         player->sprite->DestR.y = player->prec.y;
         player->timeSinceJumpStart = 0;
     }
 
-        // Collision à gauche du block
+        // Collision à gauche du bloc
     else if (DestR.x < player->sprite->DestR.x + player->sprite->DestR.w &&
              // Côté gauche du bloc est inférieur au côté droit du player
-             DestR.x > player->sprite->DestR.x && // Coté gauche du bloc est inférieur au côté droit du player
+             DestR.x > player->sprite->DestR.x && // Coté gauche du bloc est inférieur au côté droit du joueur
              player->prec.x + player->prec.w <=
              DestR.x) {  // Côté gauche précédent est bien inférieur ou égal au côté gauche du bloc
         player->prec.x = DestR.x - player->prec.w;
@@ -118,20 +118,20 @@ void handle_collision_solidBlock(world_t *world, player_t *player, int i, int j)
 
     }
 
-        // Collision à droite du block
-    else if (DestR.x + DestR.w > player->sprite->DestR.x && // Ce côté droit du bloc est < au côté gauche du player
+        // Collision à droite du bloc
+    else if (DestR.x + DestR.w > player->sprite->DestR.x && // Ce côté droit du bloc est < au côté gauche du joueur
              DestR.x < player->sprite->DestR.x && // Côté gauche du player est < au côté gauche du bloc
              player->prec.x >= DestR.x + DestR.w) { // Côté gauche précédent est bien > au côté droit du bloc
         player->prec.x = DestR.x + DestR.w;
         player->sprite->DestR.x = player->prec.x;
     }
 
-        // Collision en bas du block :
+        // Collision en bas du bloc
     else if (DestR.y + DestR.h > player->sprite->DestR.y && // Si collision "bas" du bloc et haut du player
-             player->sprite->DestR.y > DestR.y && // Si le haut du player est bien supérieur au haut du bloc
-             player->prec.y >= DestR.y + DestR.h) {  // Si le précédent du player est en dehors du bloc
+             player->sprite->DestR.y > DestR.y && // Si le haut du joueur est bien supérieur au haut du bloc
+             player->prec.y >= DestR.y + DestR.h) {  // Si le précédent du joueur est en dehors du bloc
         player->saut = false;
-        player->timeSinceJumpStart = 1; //= 1 évite de pouvoir re-sauter en dessous du bloc
+        player->timeSinceJumpStart = 1; // = 1 évite de pouvoir re-sauter en dessous du bloc
         player->prec.y = DestR.y + DestR.h;
         player->sprite->DestR.y = player->prec.y;
     }

@@ -1,8 +1,8 @@
 /**
- * \file sdl2-light.c
- * \brief sur-couche de SDL2 pour simplifier son utilisation pour le projet
- * \author DOUILLET Esteban & SCHNEIDER Paul
- * \date 30 Novembre 2022
+ * @file sdl2-light.c
+ * @brief sur-couche de SDL2 pour simplifier son utilisation pour le projet.
+ * @author DOUILLET Esteban & SCHNEIDER Paul
+ * @date 30 Novembre 2022
 */
 
 #include "sdl2-light.h"

@@ -11,17 +11,17 @@
 #include "interaction.h"
 
 /**
- * \brief Gravité, sert au player de retomber
+ * @brief La gravité, sert au joueur de retomber.
  */
-#define GRAVITE 2
+#define GRAVITY 2
 
 /**
- * \brief Vitesse du player sur l'axe Y (saut)
+ * @brief La vitesse du joueur sur l'axe des ordonnées (saut).
  */
-#define VITESSE_Y_SAUT 30
+#define JUMP_SPEED 30
 
 /**
- * @brief Définition d'un nouveau type appelé player_t qui est un pointeur vers une struct player_s.
+ * @brief Définition du joueur avec ses coordonnées et ses caractéristiques.
  */
 struct player_s {
     sprite_t *sprite; /*!< Champ concernant l'image du joueur. */
@@ -33,35 +33,35 @@ struct player_s {
 typedef struct player_s player_t;
 
 /**
- * @brief Définition des données du joueur
+ * @brief Définition des données du joueur.
  * @param player Le joueur
  * @param world Le monde
  */
 void init_player(player_t *player, world_t *world);
 
 /**
- * @brief Gestion du déplacement du joueur
+ * @brief Gestion du déplacement du joueur.
  * @param touches Les touches
  * @param player Le joueur
  */
 void player_movement(keyboard_status_t *touches, player_t *player);
 
 /**
- * @brief Vérification de toutes les collisions
+ * @brief Vérification de toutes les collisions.
  * @param world Le monde
  * @param player Le joueur
  */
 void handle_collision(world_t *world, player_t *player);
 
 /**
- * @brief`Vérification de collision avec un bloc solide
+ * @brief Vérification de collision avec un bloc solide.
  * @param world Le monde
  * @param player Le joueur
  */
 void handle_collision_solidBlock(world_t *world, player_t *player, int i, int j);
 
 /**
- * @brief Gestion des collisions entre le joueur et les pièces
+ * @brief Gestion des collisions entre le joueur et les pièces.
  * @param world Le monde
  * @param player Le joueur
  */

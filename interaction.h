@@ -2,7 +2,7 @@
 #define INTERACTION_H
 
 /**
- * @brief Fichier représentant le module des interactions
+ * @brief Fichier représentant le module des interactions.
  * @file interaction.h
  * @authors SCHNEIDER Paul, DOUILLET Esteban
  * @date 30 Novembre 2022
@@ -13,7 +13,7 @@
 #include "world.h"
 
 /**
- * @brief Définition d'un nouveau type appelé keyboard_state_t qui est un pointeur vers une structure keyboard_state_s.
+ * @brief Définition d'un clavier avec les touches majeures.
  */
 struct keyboard_status_s {
     bool left; /*!< Champ concernant la flèche gauche. */
@@ -24,7 +24,7 @@ struct keyboard_status_s {
 typedef struct keyboard_status_s keyboard_status_t;
 
 /**
- * @brief Définition d'un nouveau type appelé keyboard_state_t qui est un pointeur vers une structure keyboard_state_s.
+ * @brief Définition d'une souris avec les boutons et les coordonnées.
  */
 struct mouse_status_s {
     bool right; /*!< Champ concernant l'état du click gauche. */
@@ -35,7 +35,7 @@ struct mouse_status_s {
 typedef struct mouse_status_s mouse_status_t;
 
 /**
- * @brief Actualisation des actions sur le clavier
+ * @brief Actualisation des actions sur le clavier.
  * @param world Le monde
  * @param keyboard Le statut du clavier
  * @param event L'événement
@@ -43,13 +43,13 @@ typedef struct mouse_status_s mouse_status_t;
 void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event);
 
 /**
- * @brief Initialisation du status du clavier par défaut
+ * @brief Initialisation du status du clavier par défaut.
  * @param keyboard Le statut du clavier
  */
 void init_keyboard(keyboard_status_t *keyboard);
 
 /**
- * @brief Actualisation des événements
+ * @brief Actualisation des événements.
  * @param mouse La souris
  * @param keyboard Le clavier
  * @param world Le monde
@@ -58,14 +58,14 @@ void init_keyboard(keyboard_status_t *keyboard);
 void handle_event(mouse_status_t *mouse, keyboard_status_t *keyboard, world_t *world, SDL_Event *event);
 
 /**
- * @brief Initialisation de la souris
+ * @brief Initialisation de la souris.
  * @param mouse La souris
  * @param event L'événement
  */
 void init_mouse(mouse_status_t *mouse);
 
 /**
- * @brief Actualisation des actions de la souris
+ * @brief Actualisation des actions de la souris.
  * @param mouse La souris
  */
 void refresh_mouse(mouse_status_t *mouse, SDL_Event *event);

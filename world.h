@@ -15,57 +15,60 @@
 #include "map.h"
 
 /**
- * @brief La largeur du joueur
+ * @brief La largeur de l'image du joueur
  */
-#define LARGEUR_PLAYER 56
+#define WIDTH_PLAYER 56
 
 /**
- * @brief La hauteur
+ * @brief La hauteur de l'image du joueur
  */
-#define HAUTEUR_PLAYER 96
+#define HEIGHT_PLAYER 96
 
 /**
- * @brief Vitesse du player sur l'axe X (marche)
+ * @brief La vitesse du joueur sur l'axe des abscisses (marche)
  */
-#define VITESSE_X_MARCHE 10
+#define SPEED_X_WALK 10
 
 /**
- * @brief coordonnée de x de la première
+ * @brief L'abscisse de la première texture sur la tile-map
  */
-#define X_PREMIERE_TEXTURE 4
+#define X_FIRST_TEXTURE 4
 
 /**
- * @brief coordonnée de y de la première
+ * @brief L'ordonnée de la première texture sur la tile-map
  */
-#define Y_PREMIERE_TEXTURE 72
+#define Y_FIRST_TEXTURE 72
 
 /**
- * @brief Taille d'une seule texture
+ * @brief La hauteur/largeur d'une texture
  */
-#define TAILLE_TEXTURES 64
+#define SIZE_TEXTURES 64
 
 /**
- * \brief Nombre de textures dans une tilemap
+ * @brief Le nombre de textures dans une tile-map
  */
-#define NBR_DE_TEXTURES 33
+#define NUMBER_OF_TEXTURES 33
 
 /**
- * @brief Taille de la ligne bleu qui sépare deux textures
+ * @brief La taille de la ligne bleu qui sépare deux textures
  */
-#define DECALAGE_TEXTURE 4
+#define SHIFT_TEXTURE 4
 
-struct cam_s{
+/**
+ * @brief Définition de la caméra avec ses coordonnées et ses dimensions
+ */
+struct cam_s {
     int x;  /*!< Champ concernant l'abscisse de la caméra. */
-    int y;  /*!< Champ concernant l'ordonné de la caméra. */
+    int y;  /*!< Champ concernant l'ordonnée de la caméra. */
     int h;  /*!< Champ concernant la hauteur de la caméra. */
     int w;  /*!< Champ concernant la largeur de la caméra. */
 };
 typedef struct cam_s cam_t;
 
 /**
- * Définition d'un nouveau type appelé textures_t qui est un pointeur vers une struct sprite_s.
+ * @brief Définition d'une image avec ses coordonnées et sa vitesse.
  */
-struct sprite_s{
+struct sprite_s {
     SDL_Rect DestR; /*!< Champ concernant la destination de l'image. */
     SDL_Rect SrcR; /*!< Champ concernant la source de l'image. */
     int v; /*!< Champ concernant la vitesse de l'image. */
@@ -73,38 +76,46 @@ struct sprite_s{
 typedef struct sprite_s sprite_t;
 
 /**
- * @brief Définition d'un nouveau type appelé map_t qui est un pointeur vers une struct map_s.
+ * @brief Définition de la carte avec chaque bloc et les coordonnées qui conviennent
  */
-struct map_s{
-    int** tab; /*!< Champ désignant un tableau symbolisant la map. */
+struct map_s {
+    int **tab; /*!< Champ désignant un tableau symbolisant les identifiants des blocs. */
     int nb_row; /*!< Champ lié aux nombres de lignes de la map. */
     int nb_col; /*!< Champ lié aux nombres de colonnes de la map. */
-    SDL_Rect** DestR; /*!< Champ désignant un tableau de rectangle de destination. */
+    SDL_Rect **DestR; /*!< Champ désignant un tableau de rectangle de destination de chaque bloc. */
 };
 typedef struct map_s map_t;
 
 /**
- * @brief Définition d'un nouveau type appelé joueur_t qui est un pointeur vers une structure joueur_s.
+ * @brief Définition du monde avec tous les éléments qu'il contient.
  */
 struct world_s {
     sprite_t *blocks; /*!<  Champ désignant toutes les images des blocs. */
-    sprite_t *player; /*!<  Champ désignant l'image du player. */
+    sprite_t *player; /*!<  Champ désignant l'image du joueur. */
     cam_t *cam; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
-    int timeAnimation;
+    int cycles;
     bool end; /*!<  Champ désignant la fin de la partie. */
 };
 typedef struct world_s world_t;
 
 /**
- * @brief Représentation des ressources
+ * @brief Définition des ressources pour chaque élément du jeu.
  */
 struct ressources_s {
     SDL_Texture *background; /*!< Ressource liée à l'image du fond de l'écran. */
-    SDL_Texture *player; /*!< Ressource liée à l'image du player*/
-    SDL_Texture *blocks; /*!< Ressource liée à l'image des blocks*/
+    SDL_Texture *player; /*!< Ressource liée à l'image du joueur. */
+    SDL_Texture *blocks; /*!< Ressource liée à l'image des blocs. */
 };
 typedef struct ressources_s ressources_t;
+
+
+/**
+ * @brief Repositionnement de la caméra en se basant sur les coordonnées de l'utilisateur.
+ * @param camera La caméra
+ * @param player Le joueur
+ */
+void repositioning_camera(cam_t *camera, SDL_Rect *player);
 
 /**
  * @brief Initialisation du monde.
@@ -113,7 +124,7 @@ typedef struct ressources_s ressources_t;
 void init_world(world_t *world);
 
 /**
- * @brief Initialisation de la caméra
+ * @brief Initialisation de la caméra.
  * @param world Le monde
  * @param camera La caméra à initialiser
  * @param h La hauteur de la caméra
@@ -122,7 +133,7 @@ void init_world(world_t *world);
 void init_cam(world_t *world, cam_t *camera, int h, int w);
 
 /**
- * @brief Initialisation de l'image.
+ * @brief Initialisation d'une image.
  * @param sprite L'image
  * @param x1 L'abscisse pour la source de l'image
  * @param y1 L'ordonnée pour la source de l'image
@@ -134,12 +145,5 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  * @param h2 La hauteur pour la destination de l'image
  */
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
-
-/**
- * @brief Repositionnement de la caméra en se basant sur les coordonnées de l'utilisateur
- * @param camera La caméra
- * @param player Le joueur
- */
-void repositioning_camera(cam_t *camera, SDL_Rect *player);
 
 #endif

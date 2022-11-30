@@ -1,5 +1,5 @@
 /**
- * @brief Exécutable des fonctions liées à la map
+ * @brief Exécutable des fonctions liées à la map?
  * @file map.c
  * @authors SCHNEIDER Paul, DOUILLET Esteban
  * @date 28 Novembre 2022
@@ -25,23 +25,23 @@ void desallouer_tab_2D(int **tab, int n) {
     free(tab); // Libère le tableau
 }
 
-void taille_fichier(const char *nomFichier, int *nbLig, int *nbCol) {
+void taille_fichier(const char *nameFile, int *nbRows, int *nbColumns) {
     FILE *fichier = NULL;
     int caractere, countCol;
-    fichier = fopen(nomFichier, "r"); // Ouvre en mode lecture
+    fichier = fopen(nameFile, "r"); // Ouvre en mode lecture
 
     if (fichier != NULL) { // Fichier introuvable
         caractere = 0;
         countCol = 0;
-        *nbLig = 1;
-        *nbCol = 0;
+        *nbRows = 1;
+        *nbColumns = 0;
 
         while (caractere != EOF) { // Le fichier n'est pas lu entièrement
             caractere = fgetc(fichier);
             if (caractere != ' ') {
                 if (caractere == '\n') {
-                    *nbLig = *nbLig + 1;
-                    if (countCol > *nbCol) *nbCol = countCol;
+                    *nbRows = *nbRows + 1;
+                    if (countCol > *nbColumns) *nbColumns = countCol;
                     countCol = 0;
                 } else if (caractere != '\r') {
                     caractere = fgetc(fichier);
@@ -54,14 +54,14 @@ void taille_fichier(const char *nomFichier, int *nbLig, int *nbCol) {
     }
 }
 
-int **lire_fichier(const char *nomFichier) {
+int **lire_fichier(const char *nameFile) {
     int colTerrain, rowTerrain;
-    taille_fichier(nomFichier, &rowTerrain, &colTerrain);
+    taille_fichier(nameFile, &rowTerrain, &colTerrain);
 
     FILE *fichier = NULL;
     int **tab = NULL;
     int column, row;
-    fichier = fopen(nomFichier, "r"); // Ouvre en mode lecture
+    fichier = fopen(nameFile, "r"); // Ouvre en mode lecture
 
     if (fichier != NULL) { // Fichier introuvable
         tab = allouer_tab_2D(rowTerrain, colTerrain);

@@ -1,7 +1,7 @@
 #include "interaction.h"
 
 /**
- * @brief Exécutable des fonctions liées aux interactions
+ * @brief Exécutable des fonctions liées aux interactions.
  * @file interaction.c
  * @date 30 Novembre 2022
  * @authors SCHNEIDER Paul, DOUILLET, Esteban
