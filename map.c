@@ -77,6 +77,7 @@ int **lire_fichier(const char *nameFile) {
                     row++;
                     column = 0;
                 } else if (caractere[0] != '\r') {
+                    if (row == rowTerrain || column == colTerrain) continue;
                     caractere[1] = (char) fgetc(fichier);
                     tab[row][column] = (int) strtol(caractere, NULL, 10);
                     column++;
