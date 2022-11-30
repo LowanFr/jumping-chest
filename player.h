@@ -5,10 +5,10 @@
  * @file player.h
  * @brief Header du module : player
  * @authors SCHNEIDER Paul, DOUILLET Esteban
- * @date 28 Novembre 2022
+ * @date 30 Novembre 2022
  */
 
-#include "keyboard.h"
+#include "interaction.h"
 
 /**
  * \brief Gravité, sert au player de retomber
