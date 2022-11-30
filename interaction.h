@@ -37,16 +37,16 @@ typedef struct mouse_status_s mouse_status_t;
 /**
  * @brief Actualisation des actions sur le clavier
  * @param world Le monde
- * @param keys Le statut du clavier
+ * @param keyboard Le statut du clavier
  * @param event L'événement
  */
-void refresh_keys(world_t *world, keyboard_status_t *keys, SDL_Event *event);
+void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event);
 
 /**
  * @brief Initialisation du status du clavier par défaut
- * @param touches Le statut du clavier
+ * @param keyboard Le statut du clavier
  */
-void init_touches(keyboard_status_t *touches);
+void init_keyboard(keyboard_status_t *keyboard);
 
 /**
  * @brief Actualisation des événements

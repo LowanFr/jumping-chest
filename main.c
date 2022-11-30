@@ -34,11 +34,11 @@
  * @param player Le joueur
  * @param camera La caméra
  */
-void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keys,
+void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world, keyboard_status_t *keyboard,
      mouse_status_t *mouse, player_t *player, cam_t *camera) {
     init_sdl(window, renderer, SCREEN_W, SCREEN_H);
     init_world(world);
-    init_touches(keys);
+    init_keyboard(keyboard);
     init_mouse(mouse);
     init_ressources(*renderer, ressources);
     init_player(player, world);
@@ -71,29 +71,23 @@ int main() {
     ressources_t ressources;
     world_t world;
     cam_t camera;
-    keyboard_status_t keys;
+    keyboard_status_t keyboard;
     mouse_status_t mouse;
     player_t player;
+    int tempsFin = 0;
 
     // Initialisation du jeu
-    init(&window, &renderer, &ressources, &world, &keys, &mouse, &player, &camera);
-
-    // Changement de la couleur de fond
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    // Chargement de la map
-    int tempsFin = 0;
+    init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &player, &camera);
 
     // Boucle principale
     while (!world.end) {
-        // Mise à jour graphique
-        refresh_graphics(renderer, &world, &ressources, &keys);
+        refresh_graphics(renderer, &world, &ressources, &keyboard); //
 
-        // Exécution des événements
-        handle_event(&mouse, &keys, &world, &event);
+        // Exécution de tous les événements
+        handle_event(&mouse, &keyboard, &world, &event);
 
-        // Déplacement du player
-        player_movement(&keys, &player);
+        // Déplacement du joueur
+        player_movement(&keyboard, &player);
         repositioning_camera(&camera, &player.prec);
         handle_collision(&world, &player);
 

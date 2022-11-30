@@ -1,6 +1,13 @@
 #ifndef SDL2_LIGHT_H
 #define SDL2_LIGHT_H
 
+/**
+ * \file sdl2-light.g
+ * \brief Header de la sur-couche de SDL2 pour simplifier son utilisation pour le projet
+ * \author DOUILLET Esteban & SCHNEIDER Paul
+ * \date 30 Novembre 2022
+*/
+
 #include <SDL.h>
 
 /**
@@ -9,15 +16,6 @@
  * @param window la fenêtre à nettoyer
 */
 void clean_sdl(SDL_Renderer *renderer,SDL_Window *window);
-
-/**
- * @brief La fonction charge une image  et renvoie la texture correspondante
- * @param path est le chemin du fichier image. Le fichier doit être obligatoirement du BMP.
- * @param renderer le renderer
- * @return la surface SDL contenant l'image. Elle renvoie NULL si le chargement a échoué
- * (ex. le fichier path n'existe pas)
-*/
-SDL_Texture *load_image(const char path[], SDL_Renderer *renderer);
 
 /**
  * @brief La fonction initialise la SDL.
@@ -31,27 +29,21 @@ SDL_Texture *load_image(const char path[], SDL_Renderer *renderer);
 int init_sdl(SDL_Window **window, SDL_Renderer **renderer, int width, int height);
 
 /**
- * \brief La fonction nettoie une texture en mémoire
- * \param texture la texture à nettoyer
+ * @brief La fonction nettoie une texture en mémoire
+ * @param texture la texture à nettoyer
 */
 void clean_texture(SDL_Texture *texture);
 
 /**
- * \brief La fonction vide le contenu graphique du renderer lié à l'écran de jeu
- * \param renderer le renderer de l'écran
+ * @brief La fonction vide le contenu graphique du renderer lié à l'écran de jeu
+ * @param renderer le renderer de l'écran
 */
 void clear_renderer(SDL_Renderer *renderer);
 
 /**
- * \brief La fonction met à jour l'écran avec le contenu du renderer
- * \param renderer le renderer de l'écran
+ * @brief La fonction met à jour l'écran avec le contenu du renderer
+ * @param renderer le renderer de l'écran
 */
 void update_screen(SDL_Renderer *renderer);
-
-/**
- * \brief La fonction met le programme en pause pendant un laps de temps
- * \param time ce laps de temps en milliseconde
-*/
-void pause(int time);
 
 #endif

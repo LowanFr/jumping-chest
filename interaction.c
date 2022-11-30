@@ -7,10 +7,10 @@
  * @authors SCHNEIDER Paul, DOUILLET, Esteban
  */
 
-void refresh_keys(world_t *world, keyboard_status_t *keys, SDL_Event *event) {
+void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event) {
     // Effectue des actions sur le type d'événements
     switch (event->type) {
-        case SDL_QUIT: // Echap
+        case SDL_QUIT: // Fermeture de la fenêtre
             world->end = true;
             break;
 
@@ -20,15 +20,15 @@ void refresh_keys(world_t *world, keyboard_status_t *keys, SDL_Event *event) {
                     world->end = true;
                     break;
                 case SDLK_LEFT:
-                    keys->lastIsLeft = true;
-                    keys->left = true;
+                    keyboard->lastIsLeft = true;
+                    keyboard->left = true;
                     break;
                 case SDLK_SPACE:
-                    keys->space = true;
+                    keyboard->space = true;
                     break;
                 case SDLK_RIGHT:
-                    keys->lastIsLeft = false;
-                    keys->right = true;
+                    keyboard->lastIsLeft = false;
+                    keyboard->right = true;
                     break;
             }
             break;
@@ -36,24 +36,24 @@ void refresh_keys(world_t *world, keyboard_status_t *keys, SDL_Event *event) {
         case SDL_KEYUP: // Les touches libérées
             switch (event->key.keysym.sym) {
                 case SDLK_LEFT:
-                    keys->left = false;
+                    keyboard->left = false;
                     break;
                 case SDLK_SPACE:
-                    keys->space = false;
+                    keyboard->space = false;
                     break;
                 case SDLK_RIGHT:
-                    keys->right = false;
+                    keyboard->right = false;
                     break;
             }
             break;
     }
 }
 
-void init_touches(keyboard_status_t *touches) {
-    touches->right = false;
-    touches->left = false;
-    touches->space = false;
-    touches->lastIsLeft = false;
+void init_keyboard(keyboard_status_t *keyboard) {
+    keyboard->right = false;
+    keyboard->left = false;
+    keyboard->space = false;
+    keyboard->lastIsLeft = false;
 }
 
 void init_mouse(mouse_status_t *mouse) {

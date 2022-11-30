@@ -28,30 +28,32 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources);
  * @param renderer la surface de l'écran de jeu
  * @param world les données du monde
  * @param ressources les ressources du jeu
- * @param keyboardStatus le statut du clavier
+ * @param keyboard le statut du clavier
  */
-void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboardStatus);
+void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard);
 
 /**
  * @brief Charge une image .BMP
- * @param nomFichier Le nom du fichier
+ * @param fileName Le nom du fichier
  * @param renderer Le rendu
  * @return
  */
-SDL_Texture *charger_image(const char *nomFichier, SDL_Renderer *renderer);
+SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer);
 
 /**
  * @brief Gère toutes les animations
- * @param world les données du monde
+ * @param world Les données du monde
+ * @param i L'abscisse du bloc
+ * @param j L'ordonnée du bloc
  */
-void handle_animation(world_t *world, int i, int j);
+void handle_animations(world_t *world, int i, int j);
 
 /**
- * @brief Gère toutes les animations des pieces
- * @param world les données du monde
- * @param i coord i de la piece à animer
- * @param j coord j de la piece à animer
+ * @brief Gère l'animation d'une pièce
+ * @param world Les données du monde
+ * @param i L'abscisse de la pièce
+ * @param j L'ordonnée de la pièce
  */
-void pieces_animations(int **tab, int i, int j);
+void coin_animations(int **tab, int i, int j);
 
 #endif

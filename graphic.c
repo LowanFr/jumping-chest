@@ -6,9 +6,9 @@
  */
 #include "graphic.h"
 
-SDL_Texture *charger_image(const char *nomFichier, SDL_Renderer *renderer) {
+SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer) {
     // Chargement de l'image à partir du chemin
-    SDL_Surface *surface = SDL_LoadBMP(nomFichier);
+    SDL_Surface *surface = SDL_LoadBMP(fileName);
 
     // Conversion de la surface en texture
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -23,12 +23,12 @@ void clean_ressources(ressources_t *ressources) {
 }
 
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
-    ressources->background = charger_image("../assets/classic_bg.bmp", renderer);
-    ressources->player = charger_image("../assets/player.bmp", renderer);
-    ressources->blocks = charger_image("../assets/classic.bmp", renderer);
+    ressources->background = load_image("../assets/classic_bg.bmp", renderer);
+    ressources->player = load_image("../assets/player.bmp", renderer);
+    ressources->blocks = load_image("../assets/classic.bmp", renderer);
 }
 
-void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboardStatus) {
+void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard) {
     // Vide le renderer
     clear_renderer(renderer);
 
@@ -46,7 +46,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
 
             // Affiche le block s'il y a une collision entre celui-ci et la caméra
             if (onCamera) {
-                handle_animation(world, i, j); // Actualise les animations présentes sur l'écran
+                handle_animations(world, i, j);
                 block.x -= world->cam->x;
                 block.y -= world->cam->y;
                 SDL_RenderCopy(renderer, ressources->blocks, &world->blocks[world->map->tab[i][j]].SrcR, &block);
@@ -59,7 +59,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     world->timeAnimation++;
 
     // Affiche le joueur selon la caméra
-    SDL_RendererFlip flip = keyboardStatus->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+    SDL_RendererFlip flip = keyboard->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
     SDL_Rect block = world->player->DestR;
     block.x -= world->cam->x;
     block.y -= world->cam->y;
@@ -69,12 +69,12 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     update_screen(renderer);
 }
 
-void handle_animation(world_t *world, int i, int j) {
+void handle_animations(world_t *world, int i, int j) {
     // Animation des pièces tous les 30 cycles
-    if (world->timeAnimation == 30) pieces_animations(world->map->tab, i, j);
+    if (world->timeAnimation == 30) coin_animations(world->map->tab, i, j);
 }
 
-void pieces_animations(int **tab, int i, int j) {
+void coin_animations(int **tab, int i, int j) {
     // Itère l'image de la pièce
     if (tab[i][j] >= 6 && tab[i][j] <= 9) {
         tab[i][j]++;
