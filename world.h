@@ -82,7 +82,6 @@ struct map_s {
     int **tab; /*!< Champ désignant un tableau symbolisant les identifiants des blocs. */
     int nb_row; /*!< Champ lié aux nombres de lignes de la map. */
     int nb_col; /*!< Champ lié aux nombres de colonnes de la map. */
-    SDL_Rect **DestR; /*!< Champ désignant un tableau de rectangle de destination de chaque bloc. */
 };
 typedef struct map_s map_t;
 

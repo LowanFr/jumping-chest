@@ -60,7 +60,7 @@ void handle_collision_pieces(world_t *world, player_t *player, int i, int j) {
     if (i >= world->map->nb_row || i < 0 || j >= world->map->nb_col || j < 0) return;
 
     int nb = world->map->tab[i][j];
-    SDL_Rect DestR = world->map->DestR[i][j];
+    SDL_Rect DestR = world->blocks[i][j].DestR;
 
     // Collision en bas
     bool condCollision1 = DestR.y < player->sprite->DestR.y + player->sprite->DestR.h &&
@@ -82,7 +82,7 @@ void handle_collision_solidBlock(world_t *world, player_t *player, int i, int j)
     if (i >= world->map->nb_row || i < 0 || j >= world->map->nb_col || j < 0) return;
 
     int nb = world->map->tab[i][j];
-    SDL_Rect DestR = world->map->DestR[i][j];
+    SDL_Rect DestR = world->blocks[i][j].DestR;
 
     // Collision en bas
     bool condCollision1 = DestR.y < player->sprite->DestR.y + player->sprite->DestR.h &&

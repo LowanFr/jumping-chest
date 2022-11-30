@@ -30,27 +30,14 @@ void init_world(world_t *world) {
     taille_fichier("../assets/map.txt", &world->map->nb_row, &world->map->nb_col);
 
     // Initialisation de tous les blocs sur la map
-    world->map->DestR = calloc(sizeof(SDL_Rect *), world->map->nb_row);
-    for (int i = 0; i < world->map->nb_row; i++) {
-        world->map->DestR[i] = calloc(sizeof(SDL_Rect), world->map->nb_col);
-        for (int j = 0; j < world->map->nb_col; ++j) {
-            world->map->DestR[i][j].x = j * SIZE_TEXTURES;
-            world->map->DestR[i][j].y = i * SIZE_TEXTURES;
-            world->map->DestR[i][j].h = SIZE_TEXTURES;
-            world->map->DestR[i][j].w = SIZE_TEXTURES;
-        }
-    }
-
-    // Initialisation de tous les blocs sur la map
     world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
     for (int i = 0; i < world->map->nb_row; i++) {
-        world->blocks = calloc(sizeof(sprite_t), world->map->nb_col);
+        world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
         for (int j = 0; j < world->map->nb_col; ++j) {
             sprite_t *sprite = NULL;
             init_sprite(sprite, world->textures[world->map->tab[i][j]].SrcR.x, world->textures[world->map->tab[i][j]].SrcR.y,
                         world->textures[world->map->tab[i][j]].SrcR.w, world->textures[world->map->tab[i][j]].SrcR.h,
-                        world->map->DestR[i][j].x, world->map->DestR[i][j].y, world->map->DestR[i][j].w,
-                        world->map->DestR[i][j].h);
+                        j * SIZE_TEXTURES, i * SIZE_TEXTURES, SIZE_TEXTURES,SIZE_TEXTURES);
             world->blocks[i][j] = *sprite;
         }
     }

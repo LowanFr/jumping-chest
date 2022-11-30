@@ -38,7 +38,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     // Affiche tous les blocs présents sur la caméra
     for (int i = 0; i < world->map->nb_row; ++i) {
         for (int j = 0; j < world->map->nb_col; ++j) {
-            SDL_Rect block = world->map->DestR[i][j];
+            SDL_Rect block = world->blocks[i][j].DestR;
             bool onCamera = block.y <= world->cam->y + world->cam->h &&
                             block.y + block.h >= world->cam->y &&
                             block.x <= world->cam->x + world->cam->w &&
