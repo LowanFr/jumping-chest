@@ -9,6 +9,7 @@
 void init_world(world_t *world) {
     world->end = false;
     world->blocks = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
+    world->cycles = 0;
 
     // Initialisation des images de tous les blocs
     for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
