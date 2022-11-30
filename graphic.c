@@ -49,7 +49,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
                 handle_animations(world, i, j);
                 block.x -= world->cam->x;
                 block.y -= world->cam->y;
-                SDL_RenderCopy(renderer, ressources->blocks, &world->blocks[world->map->tab[i][j]].SrcR, &block);
+                SDL_RenderCopy(renderer, ressources->blocks, &world->textures[world->map->tab[i][j]].SrcR, &block);
             }
         }
     }

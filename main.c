@@ -51,8 +51,10 @@ void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources,
     desallouer_tab_2D(world->map->tab, world->map->nb_row);
     for (int i = 0; i < world->map->nb_row; i++) free(world->map->DestR[i]); // Libère toutes les lignes
     free(world->map->DestR);
-    free(world->map);
+    for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]); // Libère toutes les lignes
     free(world->blocks);
+    free(world->map);
+    free(world->textures);
     free(world->player);
 
     // Libère l'espace des ressources

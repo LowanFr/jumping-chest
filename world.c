@@ -8,12 +8,12 @@
 
 void init_world(world_t *world) {
     world->end = false;
-    world->blocks = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
+    world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
     world->cycles = 0;
 
     // Initialisation des images de tous les blocs
     for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
-        init_sprite(&world->blocks[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
+        init_sprite(&world->textures[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
                     Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11),
                     SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES);
     }
@@ -38,6 +38,20 @@ void init_world(world_t *world) {
             world->map->DestR[i][j].y = i * SIZE_TEXTURES;
             world->map->DestR[i][j].h = SIZE_TEXTURES;
             world->map->DestR[i][j].w = SIZE_TEXTURES;
+        }
+    }
+
+    // Initialisation de tous les blocs sur la map
+    world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
+    for (int i = 0; i < world->map->nb_row; i++) {
+        world->blocks = calloc(sizeof(sprite_t), world->map->nb_col);
+        for (int j = 0; j < world->map->nb_col; ++j) {
+            sprite_t *sprite = NULL;
+            init_sprite(sprite, world->textures[world->map->tab[i][j]].SrcR.x, world->textures[world->map->tab[i][j]].SrcR.y,
+                        world->textures[world->map->tab[i][j]].SrcR.w, world->textures[world->map->tab[i][j]].SrcR.h,
+                        world->map->DestR[i][j].x, world->map->DestR[i][j].y, world->map->DestR[i][j].w,
+                        world->map->DestR[i][j].h);
+            world->blocks[i][j] = *sprite;
         }
     }
 }

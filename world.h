@@ -90,7 +90,8 @@ typedef struct map_s map_t;
  * @brief Définition du monde avec tous les éléments qu'il contient.
  */
 struct world_s {
-    sprite_t *blocks; /*!<  Champ désignant toutes les images des blocs. */
+    sprite_t *textures; /*!<  Champ désignant toutes les images des blocs. */
+    sprite_t **blocks; /*!<  Champ désignant toutes les images des blocks. */
     sprite_t *player; /*!<  Champ désignant l'image du joueur. */
     cam_t *cam; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
