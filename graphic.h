@@ -54,4 +54,12 @@ void handle_animations(world_t *world, sprite_t *block);
  */
 void coin_animations(sprite_t *block);
 
+/**
+ * @brief Actualisation du menu d'accueil
+ * @param world Le monde
+ * @param renderer Le moteur de rendu
+ * @param ressources Les ressources
+ */
+void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressources);
+
 #endif

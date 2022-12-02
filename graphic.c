@@ -26,6 +26,10 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
     ressources->background = load_image("../assets/classic_bg.bmp", renderer);
     ressources->player = load_image("../assets/player.bmp", renderer);
     ressources->blocks = load_image("../assets/classic.bmp", renderer);
+    ressources->exit = load_image("../assets/exit-button.bmp", renderer);
+    ressources->save = load_image("../assets/save-button.bmp", renderer);
+    ressources->resume = load_image("../assets/resume-button.bmp", renderer);
+    ressources->newGame = load_image("../assets/new-button.bmp", renderer);
 }
 
 void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard) {
@@ -92,4 +96,28 @@ void coin_animations(sprite_t *block) {
         block->textureIndex++;
         if (block->textureIndex == 10) block->textureIndex = 6; // Recommence le cycle
     }
+}
+
+void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressources) {
+    // Vide le moteur de rendu
+    clear_renderer(renderer);
+
+    // Affiche l'arrière-plan
+    SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
+
+    for (int i = 0; i < 3; i++) {
+        SDL_Rect DestR;
+        DestR.x = (1080 - 375 / 2) / 2;
+        DestR.y = 220 + i * 90;
+        DestR.w = 375;
+        DestR.h = 75;
+
+        // Display button
+        if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &DestR);
+        else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &DestR);
+        else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &DestR);
+    }
+
+    // Met à jour l'écran
+    update_screen(renderer);
 }

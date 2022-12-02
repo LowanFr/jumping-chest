@@ -2,7 +2,6 @@
 #include "player.h"
 #include "graphic.h"
 #include "sdl2-ttf-light.h"
-#include "sdl2-mixer-light.h"
 
 /**
  * @brief Fichier d'exécution du jeu vidéo.
@@ -44,7 +43,6 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_ressources(*renderer, ressources);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
     init_ttf();
-    init_mixer();
 }
 
 void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, world_t *world) {
@@ -60,7 +58,6 @@ void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources,
     clean_ressources(ressources);
 
     // Quitter SDL
-    clean_mixer();
     clean_ttf();
     clean_sdl(renderer, window);
 }
@@ -82,21 +79,28 @@ int main() {
     // Initialisation du jeu
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera);
 
-    // Boucle principale
+    // Boucle du menu
     while (!world.end) {
-        refresh_graphics(renderer, &world, &ressources, &keyboard); //
-
-        // Exécution de tous les événements
+        // Actualisation du menu
+        refresh_menu(&world, renderer, &ressources);
         handle_event(&mouse, &keyboard, &world, &event);
 
-        // Déplacement du joueur
-        player_movement(&keyboard, world.player);
-        repositioning_camera(&world);
-        handle_collision(&world, world.player);
+        // Boucle principal
+        while (!world.end && world.start) {
+            refresh_graphics(renderer, &world, &ressources, &keyboard);
 
-        // Ralentissement pour un affichage fluide
-        if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
-        delay = (int) SDL_GetTicks();
+            // Exécution de tous les événements
+            handle_event(&mouse, &keyboard, &world, &event);
+
+            // Déplacement du joueur
+            player_movement(&keyboard, world.player);
+            repositioning_camera(&world);
+            handle_collision(&world, world.player);
+
+            // Ralentissement pour un affichage fluide
+            if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
+            delay = (int) SDL_GetTicks();
+        }
     }
 
     // Libère toute la mémoire utilisée pour le monde

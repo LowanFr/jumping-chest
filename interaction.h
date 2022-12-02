@@ -70,4 +70,11 @@ void init_mouse(mouse_status_t *mouse);
  */
 void refresh_mouse(mouse_status_t *mouse, SDL_Event *event);
 
+/**
+ * @brief Actualisations des événements sur les boutons.
+ * @param world  Le monde
+ * @param mouseStatus Le status de la souris
+ */
+void handle_button(world_t *world, mouse_status_t *mouseStatus);
+
 #endif

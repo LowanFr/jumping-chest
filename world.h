@@ -70,6 +70,12 @@
  */
 #define TEXTURE_INDEX_PLAYER (-1)
 
+struct button_s {
+    bool enable; /*!< Champ concernant l'état du bouton. */
+    int type; /*!< Champ concernant le type du bouton. */
+};
+typedef struct button_s button_t;
+
 /**
  * @brief Définition de la caméra avec ses coordonnées et ses dimensions
  */
@@ -93,7 +99,6 @@ struct sprite_s {
     bool saut; /*!< Champ vérifiant si le joueur est en saut. */
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */
-
     bool isright;
 };
 typedef struct sprite_s sprite_t;
@@ -121,6 +126,8 @@ struct world_s {
     int hearts; /*!<  Champ désignant la map du jeu. */
     int scores; /*!<  Champ désignant le score. */
     bool end; /*!<  Champ désignant la fin de la partie. */
+    bool start; /*!<  Champ désignant le début de la partie. */
+    button_t *buttons; /*!<  Champ désignant les boutons */
 };
 typedef struct world_s world_t;
 
@@ -131,6 +138,10 @@ struct ressources_s {
     SDL_Texture *background; /*!< Ressource liée à l'image du fond de l'écran. */
     SDL_Texture *player; /*!< Ressource liée à l'image du joueur. */
     SDL_Texture *blocks; /*!< Ressource liée à l'image des blocs. */
+    SDL_Texture *newGame; /*!< Ressource liée à l'image pour lancer une nouvelle partie. */
+    SDL_Texture *resume; /*!< Ressource liée à l'image du bouton pour reprendre une partie. */
+    SDL_Texture *save; /*!< Ressource liée à l'image du bouton de sauvegarde. */
+    SDL_Texture *exit; /*!< Ressource liée à l'image du bouton pour quitter. */
 };
 typedef struct ressources_s ressources_t;
 

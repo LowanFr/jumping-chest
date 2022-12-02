@@ -98,5 +98,14 @@ void handle_event(mouse_status_t *mouse, keyboard_status_t *keyboard, world_t *w
     while (SDL_PollEvent(event)) {
         refresh_keys(world, keyboard, event);
         refresh_mouse(mouse, event);
+        handle_button(world, mouse);
+    }
+}
+
+void handle_button(world_t *world, mouse_status_t *mouseStatus) {
+    if (!mouseStatus->left) return;
+
+    if (mouseStatus->x >= 446 && mouseStatus->x <= 446 + 375) {
+
     }
 }
