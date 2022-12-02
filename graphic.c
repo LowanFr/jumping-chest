@@ -48,7 +48,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
             if (onCamera) {
                 handle_animations(world, &world->blocks[i][j]);
                 if(world->blocks[i][j].textureIndex == 10){
-                    blob_movement(&world->blocks[i][j]);
+                    blob_movement(world, &world->blocks[i][j]);
                     handle_collision(world, &world->blocks[i][j]);
                 }
                 block.x -= world->cam->x;

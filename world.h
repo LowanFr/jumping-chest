@@ -60,6 +60,12 @@
 #define GRAVITY 2
 
 /**
+ * @brief La vitesse du joueur sur l'axe des ordonnées (saut).
+ */
+#define JUMP_BLOB_SPEED 20
+
+
+/**
  * @brief L'indice de l'image du joueur dans la tile-map
  */
 #define TEXTURE_INDEX_PLAYER (-1)
@@ -87,6 +93,8 @@ struct sprite_s {
     bool saut; /*!< Champ vérifiant si le joueur est en saut. */
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */
+
+    bool isright;
 };
 typedef struct sprite_s sprite_t;
 
@@ -161,6 +169,6 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  */
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex);
 
-void blob_movement(sprite_t *sprite);
+void blob_movement(world_t *world, sprite_t *sprite);
 
 #endif

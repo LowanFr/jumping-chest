@@ -72,6 +72,7 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
     // Définition des autres paramètres de l'image
     sprite->v = SPEED_X_WALK;
     sprite->textureIndex = textureIndex;
+    sprite->isright = true;
 }
 
 void repositioning_camera(world_t *world) {
@@ -79,11 +80,38 @@ void repositioning_camera(world_t *world) {
     world->cam->y = world->player->prec.y - world->cam->h / 2;
 }
 
-void blob_movement(sprite_t *sprite){
+void blob_movement(world_t *world, sprite_t *sprite){
     sprite->prec = sprite->DestR;
+
+    if(world->cycles %180 == 0){
+        sprite->saut = true;
+        sprite->ground = sprite->DestR.y;
+        if(world->player->DestR.x > sprite->DestR.x){
+            sprite->isright = true;
+        }
+        if(world->player->DestR.x < sprite->DestR.x){
+            sprite->isright = false;
+        }
+    }
+
     // Vérifie si le blob ne saute pas (gravité)
     if (sprite->saut == false) {
         sprite->DestR.y += sprite->timeSinceJumpStart * GRAVITY;
         sprite->timeSinceJumpStart++;
     }
+    // Vérifie la gravité lors d'un saut
+    if (sprite->saut == true) {
+        sprite->DestR.y = (int) round(sprite->ground - JUMP_BLOB_SPEED * sprite->timeSinceJumpStart
+                                              +
+                                              0.5 * GRAVITY * sprite->timeSinceJumpStart * sprite->timeSinceJumpStart);
+        sprite->timeSinceJumpStart++;
+        if(sprite->isright == true){
+            sprite->DestR.x += sprite->v;
+        }else{
+            sprite->DestR.x -= sprite->v;
+        }
+        
+    }
+    
+    
 }

@@ -49,10 +49,13 @@ void handle_collision(world_t *world, sprite_t *player) {
             
             
             sprite_t *sprite = &world->blocks[i][j];
-            
+            if(player->textureIndex == -1){
+                handle_collision_pieces(player, sprite);
+            }
 
+            
             handle_collision_solidBlock(player, sprite);
-            handle_collision_pieces(player, sprite);
+            
         }
     }
 
