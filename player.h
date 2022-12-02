@@ -55,16 +55,16 @@ void handle_collision(world_t *world, player_t *player);
 
 /**
  * @brief Vérification de collision avec un bloc solide.
- * @param world Le monde
  * @param player Le joueur
+ * @param sprite Le bloc
  */
-void handle_collision_solidBlock(world_t *world, player_t *player, int i, int j);
+void handle_collision_solidBlock(player_t *player, sprite_t *sprite);
 
 /**
  * @brief Gestion des collisions entre le joueur et les pièces.
- * @param world Le monde
  * @param player Le joueur
+ * @param sprite Le bloc
  */
-void handle_collision_pieces(world_t *world, player_t *player, int i, int j);
+void handle_collision_pieces(player_t *player, sprite_t *sprite);
 
 #endif
