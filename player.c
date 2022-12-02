@@ -31,40 +31,43 @@ void player_movement(keyboard_status_t *touches, sprite_t *player) {
     // Vérifie la gravité lors d'un saut
     if (player->saut == true) {
         player->DestR.y = (int) round(player->ground - JUMP_SPEED * player->timeSinceJumpStart
-                                              +
-                                              0.5 * GRAVITY * player->timeSinceJumpStart * player->timeSinceJumpStart);
+                                      +
+                                      0.5 * GRAVITY * player->timeSinceJumpStart * player->timeSinceJumpStart);
         player->timeSinceJumpStart++;
     }
 }
 
-void handle_collision(world_t *world, sprite_t *player) {
-    
+void handle_collision(world_t *world, sprite_t *entity) {
     // Vérification des collisions avec les blocs qui entoure le joueur
-    for (int i = player->DestR.y / SIZE_TEXTURES - 2;
-         i <= player->DestR.y / SIZE_TEXTURES + 2; ++i) {
-        for (int j = player->DestR.x / SIZE_TEXTURES - 1;
-             j <= player->DestR.x / SIZE_TEXTURES + 1; ++j) {
-            // Vérifie que le bloc existe
-            if (i >= world->map->nb_row || i < 0 || j >= world->map->nb_col || j < 0) continue;
-            
-            
+    for (int i = 0; i < world->map->nb_row; ++i) {
+        for (int j = 0; j < world->map->nb_col; ++j) {
             sprite_t *sprite = &world->blocks[i][j];
-            if(player->textureIndex == -1){
-                handle_collision_pieces(player, sprite);
-            }
 
-            
-            handle_collision_solidBlock(player, sprite);
-            
+            // Les rectangles
+            SDL_Rect *blobImg = &sprite->DestR;
+            SDL_Rect *playerImg = &entity->DestR;
+
+            // Collision en bas
+            bool condCollision1 = blobImg->y < playerImg->y + playerImg->h && blobImg->y + blobImg->h > playerImg->y;
+            bool condCollision2 = blobImg->x < playerImg->x + playerImg->w && blobImg->x + blobImg->w > playerImg->x;
+
+            // Aucune collision
+            if (!condCollision1 || !condCollision2) continue;
+
+            handle_collision_blobs(world, entity, sprite);
+            handle_collision_pieces(entity, sprite);
+            handle_collision_solidBlock(entity, sprite);
         }
     }
 
+    // Arrête le jeu si le joueur est mort
+    if (world->hearts == 0) world->end = true;
 }
 
 void handle_collision_pieces(sprite_t *player, sprite_t *sprite) {
-    // Vérifie que c'est une pièce
+    // Vérifie que l'entité est le joueur et que le bloc est une pièce
     int textureIndex = sprite->textureIndex;
-    if (textureIndex < 6 || textureIndex > 9) return;
+    if (textureIndex < 6 || textureIndex > 9 || player->textureIndex != -1) return;
 
     // Récupère les deux rectangles
     SDL_Rect *block = &sprite->DestR;
@@ -81,8 +84,49 @@ void handle_collision_pieces(sprite_t *player, sprite_t *sprite) {
     sprite->textureIndex = 0;
 }
 
+void handle_collision_blobs(world_t *world, sprite_t *player, sprite_t *blob) {
+    if (player->textureIndex != -1) return;
+
+    // Vérifie que l'entité est le joueur et que le bloc est un blob
+    if ((blob->textureIndex != 11 && blob->textureIndex != 10) || player->textureIndex != -1) return;
+
+    // Récupère les deux rectangles
+    SDL_Rect *blobImg = &blob->DestR;
+    SDL_Rect *playerImg = &player->DestR;
+
+    // Collision en bas
+    bool condCollision1 = blobImg->y < playerImg->y + playerImg->h && blobImg->y + blobImg->h > playerImg->y;
+    bool condCollision2 = blobImg->x < playerImg->x + playerImg->w && blobImg->x + blobImg->w > playerImg->x;
+
+    // Vérifie qu'il y a une collision entre les deux entités
+    if (!condCollision1 || !condCollision2) return;
+
+    // Collision en haut du bloc
+    if (blobImg->y < playerImg->y + playerImg->h && playerImg->y < blobImg->y &&
+        player->prec.y + player->prec.h <= blobImg->y) {
+        blob->textureIndex = 0;
+    }
+
+        // Collision à gauche du bloc
+    else if (blobImg->x < playerImg->x + playerImg->w && blobImg->x > playerImg->x &&
+             player->prec.x + player->prec.w <= blobImg->x) {
+        world->hearts--;
+    }
+
+        // Collision à droite du bloc
+    else if (blobImg->x + blobImg->w > playerImg->x && blobImg->x < playerImg->x &&
+             player->prec.x >= blobImg->x + blobImg->w) {
+        world->hearts--;
+    }
+
+        // Collision en bas du bloc
+    else if (blobImg->y + blobImg->h > playerImg->y && playerImg->y > blobImg->y &&
+             player->prec.y >= blobImg->y + blobImg->h) {
+        world->hearts--;
+    }
+}
+
 void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite) {
-    if(player == sprite) return;
     // Vérifie que c'est un bloc solide
     int index = sprite->textureIndex;
     bool solidBlock =

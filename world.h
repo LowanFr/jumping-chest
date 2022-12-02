@@ -117,7 +117,8 @@ struct world_s {
     sprite_t *player; /*!<  Champ désignant l'image du joueur. */
     cam_t *cam; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
-    int cycles;
+    int cycles; /*!<  Champ désignant le nombre de cycle de jeu. */
+    int hearts; /*!<  Champ désignant la map du jeu. */
     bool end; /*!<  Champ désignant la fin de la partie. */
 };
 typedef struct world_s world_t;

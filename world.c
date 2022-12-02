@@ -10,6 +10,7 @@ void init_world(world_t *world) {
     world->end = false;
     world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
     world->cycles = 0;
+    world->hearts = 3;
 
     // Initialisation des images de tous les blocs
     for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
@@ -110,8 +111,5 @@ void blob_movement(world_t *world, sprite_t *sprite){
         }else{
             sprite->DestR.x -= sprite->v;
         }
-        
     }
-    
-    
 }
