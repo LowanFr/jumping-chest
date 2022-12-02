@@ -78,3 +78,12 @@ void repositioning_camera(cam_t *camera, SDL_Rect *player) {
     camera->x = player->x - camera->w / 2;
     camera->y = player->y - camera->h / 2;
 }
+
+void blob_movement(sprite_t *sprite){
+    sprite->prec = sprite->DestR;
+    // Vérifie si le blob ne saute pas (gravité)
+    if (sprite->saut == false) {
+        sprite->DestR.y += sprite->timeSinceJumpStart * GRAVITY;
+        sprite->timeSinceJumpStart++;
+    }
+}

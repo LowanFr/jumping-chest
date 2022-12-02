@@ -47,6 +47,10 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
             // Affiche le bloc s'il y a une collision entre celui-ci et la caméra
             if (onCamera) {
                 handle_animations(world, i, j);
+                if(world->blocks[i][j].textureIndex == 10){
+                    blob_movement(&world->blocks[i][j]);
+                    handle_collision(world,&world->blocks[i][j]);
+                }
                 block.x -= world->cam->x;
                 block.y -= world->cam->y;
                 SDL_RenderCopy(renderer, ressources->blocks, &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);

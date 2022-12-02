@@ -9,6 +9,7 @@
  */
 #include "world.h"
 #include "interaction.h"
+#include "player.h"
 
 /**
  * @brief Nettoie les ressources.

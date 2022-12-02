@@ -55,6 +55,11 @@
 #define SHIFT_TEXTURE 4
 
 /**
+ * @brief La gravité, sert au joueur de retomber.
+ */
+#define GRAVITY 2
+
+/**
  * @brief L'indice de l'image du joueur dans la tile-map
  */
 #define TEXTURE_INDEX_PLAYER (-1)
@@ -156,5 +161,7 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  * @param textureIndex L'indice de la texture de l'image
  */
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex);
+
+void blob_movement(sprite_t *sprite);
 
 #endif

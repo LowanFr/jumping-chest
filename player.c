@@ -38,6 +38,7 @@ void player_movement(keyboard_status_t *touches, sprite_t *player) {
 }
 
 void handle_collision(world_t *world, sprite_t *player) {
+    
     // Vérification des collisions avec les blocs qui entoure le joueur
     for (int i = player->DestR.y / SIZE_TEXTURES - 2;
          i <= player->DestR.y / SIZE_TEXTURES + 2; ++i) {
@@ -45,8 +46,11 @@ void handle_collision(world_t *world, sprite_t *player) {
              j <= player->DestR.x / SIZE_TEXTURES + 1; ++j) {
             // Vérifie que le bloc existe
             if (i >= world->map->nb_row || i < 0 || j >= world->map->nb_col || j < 0) continue;
-
+            
+            
             sprite_t *sprite = &world->blocks[i][j];
+            
+
             handle_collision_solidBlock(player, sprite);
             handle_collision_pieces(player, sprite);
         }
@@ -75,6 +79,7 @@ void handle_collision_pieces(sprite_t *player, sprite_t *sprite) {
 }
 
 void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite) {
+    if(player == sprite) return;
     // Vérifie que c'est un bloc solide
     int index = sprite->textureIndex;
     bool solidBlock =
