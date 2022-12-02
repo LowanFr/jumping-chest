@@ -31,18 +31,15 @@
  * @param ressources Les ressources
  * @param world Le monde
  * @param keys Les touches du clavier
- * @param player Le joueur
  * @param camera La caméra
  */
 void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world,
-          keyboard_status_t *keyboard,
-          mouse_status_t *mouse, player_t *player, cam_t *camera) {
+          keyboard_status_t *keyboard, mouse_status_t *mouse, cam_t *camera) {
     init_sdl(window, renderer, SCREEN_W, SCREEN_H);
     init_world(world);
     init_keyboard(keyboard);
     init_mouse(mouse);
     init_ressources(*renderer, ressources);
-    init_player(player, world);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
 }
 
@@ -74,11 +71,10 @@ int main() {
     cam_t camera;
     keyboard_status_t keyboard;
     mouse_status_t mouse;
-    player_t player;
     int delay = 0;
 
     // Initialisation du jeu
-    init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &player, &camera);
+    init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera);
 
     // Boucle principale
     while (!world.end) {
@@ -88,9 +84,9 @@ int main() {
         handle_event(&mouse, &keyboard, &world, &event);
 
         // Déplacement du joueur
-        player_movement(&keyboard, &player);
-        repositioning_camera(&camera, &player.prec);
-        handle_collision(&world, &player);
+        player_movement(&keyboard, world.player);
+        repositioning_camera(&camera, &world.player->prec);
+        handle_collision(&world, world.player);
 
         // Ralentissement pour un affichage fluide
         if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());

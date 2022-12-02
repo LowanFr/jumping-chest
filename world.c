@@ -65,6 +65,10 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
     sprite->DestR.w = w2;
     sprite->DestR.h = h2;
 
+    // Définition des mouvements des images
+    sprite->saut = false;
+    sprite->timeSinceJumpStart = 0;
+
     // Définition des autres paramètres de l'image
     sprite->v = SPEED_X_WALK;
     sprite->textureIndex = textureIndex;

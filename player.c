@@ -6,49 +6,43 @@
  */
 #include "player.h"
 
-void init_player(player_t *joueur, world_t *world) {
-    joueur->sprite = world->player;
-    joueur->saut = false;
-    joueur->timeSinceJumpStart = 0;
-}
-
-void player_movement(keyboard_status_t *touches, player_t *player) {
+void player_movement(keyboard_status_t *touches, sprite_t *player) {
     // Sauvegarde des coordonnées précédentes
-    player->prec = player->sprite->DestR;
+    player->prec = player->DestR;
 
     // Vérifie le déplacement à gauche
-    if (touches->left) player->sprite->DestR.x -= player->sprite->v;
+    if (touches->left) player->DestR.x -= player->v;
 
     // Vérifie le déplacement à droite
-    if (touches->right) player->sprite->DestR.x += player->sprite->v;
+    if (touches->right) player->DestR.x += player->v;
 
     // Vérifie un saut
     if (touches->space && player->timeSinceJumpStart == 0) {
-        player->ground = player->sprite->DestR.y;
+        player->ground = player->DestR.y;
         player->saut = true;
     }
 
     // Vérifie si le joueur ne saute pas (gravité)
     if (player->saut == false) {
-        player->sprite->DestR.y += player->timeSinceJumpStart * GRAVITY;
+        player->DestR.y += player->timeSinceJumpStart * GRAVITY;
         player->timeSinceJumpStart++;
     }
 
     // Vérifie la gravité lors d'un saut
     if (player->saut == true) {
-        player->sprite->DestR.y = (int) round(player->ground - JUMP_SPEED * player->timeSinceJumpStart
+        player->DestR.y = (int) round(player->ground - JUMP_SPEED * player->timeSinceJumpStart
                                               +
                                               0.5 * GRAVITY * player->timeSinceJumpStart * player->timeSinceJumpStart);
         player->timeSinceJumpStart++;
     }
 }
 
-void handle_collision(world_t *world, player_t *player) {
+void handle_collision(world_t *world, sprite_t *player) {
     // Vérification des collisions avec les blocs qui entoure le joueur
-    for (int i = player->sprite->DestR.y / SIZE_TEXTURES - 2;
-         i <= player->sprite->DestR.y / SIZE_TEXTURES + 2; ++i) {
-        for (int j = player->sprite->DestR.x / SIZE_TEXTURES - 1;
-             j <= player->sprite->DestR.x / SIZE_TEXTURES + 1; ++j) {
+    for (int i = player->DestR.y / SIZE_TEXTURES - 2;
+         i <= player->DestR.y / SIZE_TEXTURES + 2; ++i) {
+        for (int j = player->DestR.x / SIZE_TEXTURES - 1;
+             j <= player->DestR.x / SIZE_TEXTURES + 1; ++j) {
             // Vérifie que le bloc existe
             if (i >= world->map->nb_row || i < 0 || j >= world->map->nb_col || j < 0) continue;
 
@@ -60,14 +54,14 @@ void handle_collision(world_t *world, player_t *player) {
 
 }
 
-void handle_collision_pieces(player_t *player, sprite_t *sprite) {
+void handle_collision_pieces(sprite_t *player, sprite_t *sprite) {
     // Vérifie que c'est une pièce
     int textureIndex = sprite->textureIndex;
     if (textureIndex < 6 || textureIndex > 9) return;
 
     // Récupère les deux rectangles
     SDL_Rect *block = &sprite->DestR;
-    SDL_Rect *playerImg = &player->sprite->DestR;
+    SDL_Rect *playerImg = &player->DestR;
 
     // Collision en bas
     bool condCollision1 = block->y < playerImg->y + playerImg->h && block->y + block->h > playerImg->y;
@@ -80,7 +74,7 @@ void handle_collision_pieces(player_t *player, sprite_t *sprite) {
     sprite->textureIndex = 0;
 }
 
-void handle_collision_solidBlock(player_t *player, sprite_t *sprite) {
+void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite) {
     // Vérifie que c'est un bloc solide
     int index = sprite->textureIndex;
     bool solidBlock =
@@ -90,7 +84,7 @@ void handle_collision_solidBlock(player_t *player, sprite_t *sprite) {
 
     // Récupère les deux rectangles
     SDL_Rect *block = &sprite->DestR;
-    SDL_Rect *playerImg = &player->sprite->DestR;
+    SDL_Rect *playerImg = &player->DestR;
 
     // Collision en bas
     bool condCollision1 = block->y < playerImg->y + playerImg->h && block->y + block->h > playerImg->y;

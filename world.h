@@ -78,6 +78,10 @@ struct sprite_s {
     SDL_Rect SrcR; /*!< Champ concernant la source de l'image. */
     int textureIndex; /*!< Champ concernant l'index de la texture du bloc. */
     int v; /*!< Champ concernant la vitesse de l'image. */
+    SDL_Rect prec; /*!< Champ concernant les coordonnées précédentes du joueur. */
+    bool saut; /*!< Champ vérifiant si le joueur est en saut. */
+    int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
+    int ground; /*!< Le sol sur lequel il doit atterrir. */
 };
 typedef struct sprite_s sprite_t;
 
