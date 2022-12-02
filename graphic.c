@@ -47,13 +47,21 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
             // Affiche le bloc s'il y a une collision entre celui-ci et la caméra
             if (onCamera) {
                 handle_animations(world, &world->blocks[i][j]);
-                if(world->blocks[i][j].textureIndex == 10 || world->blocks[i][j].textureIndex == 11){
-                    blob_movement(world, &world->blocks[i][j]);
-                    handle_collision(world, &world->blocks[i][j]);
-                }
                 block.x -= world->cam->x;
                 block.y -= world->cam->y;
-                SDL_RenderCopy(renderer, ressources->blocks, &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
+
+                // Gérer les flips des blobs ainsi que leur déplacement/collisions
+                if (world->blocks[i][j].textureIndex == 10 || world->blocks[i][j].textureIndex == 11) {
+                    blob_movement(world, &world->blocks[i][j]);
+                    handle_collision(world, &world->blocks[i][j]);
+
+                    // Affiche le joueur selon la caméra
+                    SDL_RendererFlip flip = world->blocks[i][j].isright == false ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+                    SDL_RenderCopyEx(renderer, ressources->blocks,
+                                     &world->textures[world->blocks[i][j].textureIndex].SrcR, &block, 0., NULL, flip);
+                } else
+                    SDL_RenderCopy(renderer, ressources->blocks,
+                                   &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
             }
         }
     }
