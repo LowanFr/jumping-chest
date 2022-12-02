@@ -31,7 +31,7 @@ void player_movement(keyboard_status_t *touches, sprite_t *player);
  * @brief Vérification de toutes les collisions.
  * @param world Le monde
  */
-void handle_collision(world_t *world);
+void handle_collision(world_t *world, sprite_t *player);
 
 /**
  * @brief Vérification de collision avec un bloc solide.

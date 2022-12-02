@@ -86,7 +86,7 @@ int main() {
         // Déplacement du joueur
         player_movement(&keyboard, world.player);
         repositioning_camera(&world);
-        handle_collision(&world);
+        handle_collision(&world, world.player);
 
         // Ralentissement pour un affichage fluide
         if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
