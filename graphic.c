@@ -35,12 +35,12 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     // Affiche l'arrière-plan
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
 
-    // Affiche tous les blocs présents sur la caméra
+    // Affiche tous les blocs présents sur la caméra (et un peu plus haut pour les sauts des blobs)
     for (int i = 0; i < world->map->nb_row; ++i) {
         for (int j = 0; j < world->map->nb_col; ++j) {
             SDL_Rect block = world->blocks[i][j].DestR;
             bool onCamera = block.y <= world->cam->y + world->cam->h &&
-                            block.y + block.h >= world->cam->y &&
+                            block.y + block.h >= world->cam->y - SIZE_TEXTURES * 4 &&
                             block.x <= world->cam->x + world->cam->w &&
                             block.x + block.w >= world->cam->x;
 
@@ -56,7 +56,8 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
                     handle_collision(world, &world->blocks[i][j]);
 
                     // Affiche le joueur selon la caméra
-                    SDL_RendererFlip flip = world->blocks[i][j].isright == false ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+                    SDL_RendererFlip flip =
+                            world->blocks[i][j].DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
                     SDL_RenderCopyEx(renderer, ressources->blocks,
                                      &world->textures[world->blocks[i][j].textureIndex].SrcR, &block, 0., NULL, flip);
                 } else

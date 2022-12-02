@@ -50,9 +50,10 @@ void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite);
 
 /**
  * @brief Gestion des collisions entre le joueur et les pièces.
+ * @param world Le monde
  * @param player Le joueur
  * @param sprite Le bloc
  */
-void handle_collision_pieces(sprite_t *player, sprite_t *sprite);
+void handle_collision_pieces(world_t *world, sprite_t *player, sprite_t *sprite);
 
 #endif

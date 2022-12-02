@@ -55,7 +55,7 @@ void handle_collision(world_t *world, sprite_t *entity) {
             if (!condCollision1 || !condCollision2) continue;
 
             handle_collision_blobs(world, entity, sprite);
-            handle_collision_pieces(entity, sprite);
+            handle_collision_pieces(world, entity, sprite);
             handle_collision_solidBlock(entity, sprite);
         }
     }
@@ -64,7 +64,7 @@ void handle_collision(world_t *world, sprite_t *entity) {
     if (world->hearts == 0) world->end = true;
 }
 
-void handle_collision_pieces(sprite_t *player, sprite_t *sprite) {
+void handle_collision_pieces(world_t *world, sprite_t *player, sprite_t *sprite) {
     // Vérifie que l'entité est le joueur et que le bloc est une pièce
     int textureIndex = sprite->textureIndex;
     if (textureIndex < 6 || textureIndex > 9 || player->textureIndex != -1) return;
@@ -81,6 +81,7 @@ void handle_collision_pieces(sprite_t *player, sprite_t *sprite) {
     if (!condCollision1 || !condCollision2) return;
 
     // Collision
+    world->scores++;
     sprite->textureIndex = 0;
 }
 
@@ -104,6 +105,7 @@ void handle_collision_blobs(world_t *world, sprite_t *player, sprite_t *blob) {
     // Collision en haut du bloc
     if (blobImg->y < playerImg->y + playerImg->h && playerImg->y < blobImg->y &&
         player->prec.y + player->prec.h <= blobImg->y) {
+        world->scores += 10;
         blob->textureIndex = 0;
     }
 

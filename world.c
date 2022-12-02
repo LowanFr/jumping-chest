@@ -11,6 +11,7 @@ void init_world(world_t *world) {
     world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
     world->cycles = 0;
     world->hearts = 3;
+    world->scores = 0;
 
     // Initialisation des images de tous les blocs
     for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
@@ -38,7 +39,7 @@ void init_world(world_t *world) {
             sprite_t sprite;
             int textureIndex = world->map->tab[i][j];
             SDL_Rect SrcR = world->textures[textureIndex].SrcR;
-            init_sprite(&sprite, SrcR.x, SrcR.y,SrcR.w, SrcR.h,j * SIZE_TEXTURES,
+            init_sprite(&sprite, SrcR.x, SrcR.y, SrcR.w, SrcR.h, j * SIZE_TEXTURES,
                         i * SIZE_TEXTURES, SIZE_TEXTURES, SIZE_TEXTURES, textureIndex);
             world->blocks[i][j] = sprite;
         }
@@ -81,18 +82,14 @@ void repositioning_camera(world_t *world) {
     world->cam->y = world->player->prec.y - world->cam->h / 2;
 }
 
-void blob_movement(world_t *world, sprite_t *sprite){
+void blob_movement(world_t *world, sprite_t *sprite) {
     sprite->prec = sprite->DestR;
 
-    if(world->cycles %180 == 0){
+    if (world->cycles % 180 == 0) {
         sprite->saut = true;
         sprite->ground = sprite->DestR.y;
-        if(world->player->DestR.x > sprite->DestR.x){
-            sprite->isright = true;
-        }
-        if(world->player->DestR.x < sprite->DestR.x){
-            sprite->isright = false;
-        }
+        if (world->player->DestR.x >= sprite->DestR.x) sprite->isright = true;
+        else sprite->isright = false;
     }
 
     // Vérifie si le blob ne saute pas (gravité)
@@ -103,13 +100,10 @@ void blob_movement(world_t *world, sprite_t *sprite){
     // Vérifie la gravité lors d'un saut
     if (sprite->saut == true) {
         sprite->DestR.y = (int) round(sprite->ground - JUMP_BLOB_SPEED * sprite->timeSinceJumpStart
-                                              +
-                                              0.5 * GRAVITY * sprite->timeSinceJumpStart * sprite->timeSinceJumpStart);
+                                      +
+                                      0.5 * GRAVITY * sprite->timeSinceJumpStart * sprite->timeSinceJumpStart);
         sprite->timeSinceJumpStart++;
-        if(sprite->isright == true){
-            sprite->DestR.x += sprite->v;
-        }else{
-            sprite->DestR.x -= sprite->v;
-        }
+        if (sprite->isright == true) sprite->DestR.x += sprite->v;
+        else sprite->DestR.x -= sprite->v;
     }
 }
