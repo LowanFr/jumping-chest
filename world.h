@@ -55,6 +55,11 @@
 #define SHIFT_TEXTURE 4
 
 /**
+ * @brief L'indice de l'image du joueur dans la tile-map
+ */
+#define TEXTURE_INDEX_PLAYER (-1)
+
+/**
  * @brief Définition de la caméra avec ses coordonnées et ses dimensions
  */
 struct cam_s {
@@ -71,6 +76,7 @@ typedef struct cam_s cam_t;
 struct sprite_s {
     SDL_Rect DestR; /*!< Champ concernant la destination de l'image. */
     SDL_Rect SrcR; /*!< Champ concernant la source de l'image. */
+    int textureIndex; /*!< Champ concernant l'index de la texture du bloc. */
     int v; /*!< Champ concernant la vitesse de l'image. */
 };
 typedef struct sprite_s sprite_t;
@@ -143,7 +149,8 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  * @param y2 L'ordonnée pour la destination de l'image
  * @param w2 La longueur pour la destination de l'image
  * @param h2 La hauteur pour la destination de l'image
+ * @param textureIndex L'indice de la texture de l'image
  */
-void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
+void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex);
 
 #endif

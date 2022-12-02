@@ -50,10 +50,10 @@ void handle_animations(world_t *world, int i, int j);
 
 /**
  * @brief Gère l'animation d'une pièce.
- * @param world Les données du monde
+ * @param sprites Les données des images
  * @param i L'abscisse de la pièce
  * @param j L'ordonnée de la pièce
  */
-void coin_animations(int **tab, int i, int j);
+void coin_animations(sprite_t **sprites, int i, int j);
 
 #endif

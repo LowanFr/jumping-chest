@@ -53,27 +53,30 @@ void handle_collision(world_t *world, player_t *player) {
             handle_collision_pieces(world, player, i, j);
         }
     }
+
 }
 
-void handle_collision_pieces(world_t *world, player_t *player, int i, int j) {
+void handle_collision_pieces(world_t *world, player_t *playerData, int i, int j) {
     // Vérifie que le bloc existe
     if (i >= world->map->nb_row || i < 0 || j >= world->map->nb_col || j < 0) return;
 
-    int nb = world->map->tab[i][j];
-    SDL_Rect DestR = world->blocks[i][j].DestR;
+    // Vérifie que c'est une pièce
+    int textureIndex = world->blocks[i][j].textureIndex;
+    if (textureIndex < 6 || textureIndex > 9) return;
+
+    // Récupère les deux rectangles
+    SDL_Rect block = world->blocks[i][j].DestR;
+    SDL_Rect player = playerData->sprite->DestR;
 
     // Collision en bas
-    bool condCollision1 = DestR.y < player->sprite->DestR.y + player->sprite->DestR.h &&
-                          DestR.y + DestR.h > player->sprite->DestR.y;
-    bool condCollision2 = DestR.x < player->sprite->DestR.x + player->sprite->DestR.w &&
-                          DestR.x + DestR.w > player->sprite->DestR.x;
-    bool condCollision3 = nb >= 6 && nb <= 9;
+    bool condCollision1 = block.y < player.y + player.h && block.y + block.h > player.y;
+    bool condCollision2 = block.x < player.x + player.w && block.x + block.w > player.x;
 
     // Vérifie qu'il y a une collision et que c'est bloc solide
-    if (!condCollision1 || !condCollision2 || !condCollision3) return;
+    if (!condCollision1 || !condCollision2) return;
 
     // Collision
-    world->map->tab[i][j] = 0;
+    world->blocks[i][j].textureIndex = 0;
 }
 
 
