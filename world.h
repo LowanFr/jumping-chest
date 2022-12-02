@@ -122,10 +122,9 @@ typedef struct ressources_s ressources_t;
 
 /**
  * @brief Repositionnement de la caméra en se basant sur les coordonnées de l'utilisateur.
- * @param camera La caméra
- * @param player Le joueur
+ * @param world Le monde
  */
-void repositioning_camera(cam_t *camera, SDL_Rect *player);
+void repositioning_camera(world_t *world);
 
 /**
  * @brief Initialisation du monde.

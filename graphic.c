@@ -46,7 +46,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
 
             // Affiche le bloc s'il y a une collision entre celui-ci et la caméra
             if (onCamera) {
-                handle_animations(world, i, j);
+                handle_animations(world, &world->blocks[i][j]);
                 block.x -= world->cam->x;
                 block.y -= world->cam->y;
                 SDL_RenderCopy(renderer, ressources->blocks, &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
@@ -68,15 +68,15 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
     update_screen(renderer);
 }
 
-void handle_animations(world_t *world, int i, int j) {
+void handle_animations(world_t *world, sprite_t *block) {
     // Anime les pièces tous les 30 cycles
-    if (world->cycles % 30 == 0) coin_animations(world->blocks, i, j);
+    if (world->cycles % 30 == 0) coin_animations(block);
 }
 
-void coin_animations(sprite_t **sprites, int i, int j) {
+void coin_animations(sprite_t *block) {
     // Itère l'image de la pièce
-    if (sprites[i][j].textureIndex >= 6 && sprites[i][j].textureIndex <= 9) {
-        sprites[i][j].textureIndex++;
-        if (sprites[i][j].textureIndex == 10) sprites[i][j].textureIndex = 6; // Recommence le cycle
+    if (block->textureIndex >= 6 && block->textureIndex <= 9) {
+        block->textureIndex++;
+        if (block->textureIndex == 10) block->textureIndex = 6; // Recommence le cycle
     }
 }

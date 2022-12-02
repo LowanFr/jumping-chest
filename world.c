@@ -74,7 +74,7 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
     sprite->textureIndex = textureIndex;
 }
 
-void repositioning_camera(cam_t *camera, SDL_Rect *player) {
-    camera->x = player->x - camera->w / 2;
-    camera->y = player->y - camera->h / 2;
+void repositioning_camera(world_t *world) {
+    world->cam->x = world->player->prec.x - world->cam->w / 2;
+    world->cam->y = world->player->prec.y - world->cam->h / 2;
 }
