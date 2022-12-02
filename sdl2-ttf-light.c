@@ -36,3 +36,7 @@ void apply_text(SDL_Renderer *renderer, int x, int y, int w, int h, const char *
 void clean_font(TTF_Font *font) {
     TTF_CloseFont(font);
 }
+
+void clean_ttf() {
+    TTF_Quit();
+}

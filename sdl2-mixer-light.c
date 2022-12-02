@@ -28,4 +28,5 @@ void clean_sound(Mix_Chunk *sound) {
 
 void clean_mixer() {
     Mix_CloseAudio();
+    Mix_Quit();
 }

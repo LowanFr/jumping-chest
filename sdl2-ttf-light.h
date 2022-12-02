@@ -42,4 +42,9 @@ void apply_text(SDL_Renderer *renderer, int x, int y, int w, int h, const char *
  */
 void clean_font(TTF_Font *font);
 
+/**
+ * @brief Libère la mémoire de SDL2 TTF
+ */
+void clean_ttf();
+
 #endif

@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include "player.h"
 #include "graphic.h"
+#include "sdl2-ttf-light.h"
+#include "sdl2-mixer-light.h"
 
 /**
  * @brief Fichier d'exécution du jeu vidéo.
@@ -41,6 +43,8 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_mouse(mouse);
     init_ressources(*renderer, ressources);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
+    init_ttf();
+    init_mixer();
 }
 
 void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, world_t *world) {
@@ -56,6 +60,8 @@ void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources,
     clean_ressources(ressources);
 
     // Quitter SDL
+    clean_mixer();
+    clean_ttf();
     clean_sdl(renderer, window);
 }
 
