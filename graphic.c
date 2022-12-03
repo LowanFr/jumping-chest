@@ -5,6 +5,7 @@
  * @date 30 Novembre 2022
  */
 #include "graphic.h"
+#include <dirent.h>
 
 SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer) {
     // Charge l'image à partir du chemin
@@ -105,17 +106,55 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
     // Affiche l'arrière-plan
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
 
-    for (int i = 0; i < 3; i++) {
-        SDL_Rect DestR;
-        DestR.x = (1080 - 375 / 2) / 2;
-        DestR.y = 220 + i * 90;
-        DestR.w = 375;
-        DestR.h = 75;
+    bool save = false;
+    struct dirent *dir;
+    DIR *d = opendir("../backups");
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            if (strcmp(dir->d_name, ".gitkeep") == 0 || strcmp(dir->d_name, "..") == 0 ||
+                strcmp(dir->d_name, ".") == 0)
+                continue;
+            save = true;
+        }
+        closedir(d);
+    }
 
-        // Display button
-        if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &DestR);
-        else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &DestR);
-        else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &DestR);
+    for (int i = 0; i < 4; i++) {
+        if (world->menu) {
+            SDL_Rect DestR;
+            DestR.x = (1080 - 375 / 2) / 2;
+            DestR.y = i != 3 ? 220 + i * 90 : 310;
+            DestR.w = 375;
+            DestR.h = 75;
+
+            // Affiche le bouton
+            if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &DestR);
+            else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &DestR);
+            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &DestR);
+
+            // Défini le bouton
+            world->buttons[i].enable = i < 3;
+            world->buttons[i].DestR = DestR;
+            world->buttons[i].type = i;
+        }
+
+        if (world->pause) {
+            SDL_Rect DestR;
+            DestR.x = (1080 - 375 / 2) / 2;
+            DestR.y = i != 3 ? 220 + i * 90 : 310;
+            DestR.w = 375;
+            DestR.h = 75;
+
+            // Affiche le bouton
+            if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &DestR);
+            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &DestR);
+            else if (i == 3) SDL_RenderCopy(renderer, ressources->save, NULL, &DestR);
+
+            // Défini le bouton
+            world->buttons[i].enable = i < 3;
+            world->buttons[i].DestR = DestR;
+            world->buttons[i].type = i;
+        }
     }
 
     // Met à jour l'écran

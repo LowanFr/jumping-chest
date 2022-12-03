@@ -12,12 +12,22 @@ void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event)
     switch (event->type) {
         case SDL_QUIT: // Fermeture de la fenêtre
             world->end = true;
+            world->pause = false;
+            world->menu = false;
             break;
 
         case SDL_KEYDOWN: // Touches appuyées
             switch (event->key.keysym.sym) {
                 case SDLK_ESCAPE:
                     world->end = true;
+                    if (world->menu) {
+                        world->menu = false;
+                    } else if (world->pause) {
+                        world->pause = false;
+                        world->menu = true;
+                    } else if (!world->pause) {
+                        world->pause = true;
+                    }
                     break;
                 case SDLK_LEFT:
                     keyboard->lastIsLeft = true;
@@ -103,9 +113,30 @@ void handle_event(mouse_status_t *mouse, keyboard_status_t *keyboard, world_t *w
 }
 
 void handle_button(world_t *world, mouse_status_t *mouseStatus) {
+    // Vérifie qu'il y a un clic gauche
     if (!mouseStatus->left) return;
 
-    if (mouseStatus->x >= 446 && mouseStatus->x <= 446 + 375) {
+    // Parcours tous les boutons
+    for (int i = 0; i < 4; i++) {
+        // Vérifie que le bouton est activé
+        button_t button = world->buttons[i];
+        if (!button.enable) continue;
 
+        // Vérifie une collision entre le bouton et la souris
+        bool cond1 = mouseStatus->x <= button.DestR.x + button.DestR.w && mouseStatus->x >= button.DestR.x;
+        bool cond2 = mouseStatus->y <= button.DestR.y + button.DestR.h && mouseStatus->y >= button.DestR.y;
+        if (!cond1 || !cond2) continue;
+
+        // Bouton de nouvelle partie
+        if (button.type == 1) {
+            world->menu = false;
+            world->end = false;
+        }
+
+        if (button.type == 2 && world->menu) world->menu = false;
+        if (button.type == 2 && world->pause) {
+            world->menu = true;
+            world->pause = false;
+        }
     }
 }

@@ -7,12 +7,14 @@
 #include "world.h"
 
 void init_world(world_t *world) {
-    world->end = false;
+    world->end = true;
     world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
     world->cycles = 0;
     world->hearts = 3;
     world->scores = 0;
     world->buttons = calloc(4, sizeof(button_t));
+    world->menu = true;
+    world->pause = false;
 
     // Initialisation des images de tous les blocs
     for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {

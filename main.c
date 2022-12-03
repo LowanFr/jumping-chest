@@ -80,13 +80,13 @@ int main() {
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera);
 
     // Boucle du menu
-    while (!world.end) {
+    while (world.pause || world.menu) {
         // Actualisation du menu
         refresh_menu(&world, renderer, &ressources);
         handle_event(&mouse, &keyboard, &world, &event);
 
         // Boucle principal
-        while (!world.end && world.start) {
+        while (!world.end) {
             refresh_graphics(renderer, &world, &ressources, &keyboard);
 
             // Exécution de tous les événements
@@ -101,6 +101,10 @@ int main() {
             if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
             delay = (int) SDL_GetTicks();
         }
+
+        // Ralentissement pour un affichage fluide
+        if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
+        delay = (int) SDL_GetTicks();
     }
 
     // Libère toute la mémoire utilisée pour le monde

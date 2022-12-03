@@ -73,6 +73,7 @@
 struct button_s {
     bool enable; /*!< Champ concernant l'état du bouton. */
     int type; /*!< Champ concernant le type du bouton. */
+    SDL_Rect DestR; /*!< Champ concernant la destination du bouton. */
 };
 typedef struct button_s button_t;
 
@@ -126,8 +127,9 @@ struct world_s {
     int hearts; /*!<  Champ désignant la map du jeu. */
     int scores; /*!<  Champ désignant le score. */
     bool end; /*!<  Champ désignant la fin de la partie. */
-    bool start; /*!<  Champ désignant le début de la partie. */
     button_t *buttons; /*!<  Champ désignant les boutons */
+    bool menu;
+    bool pause;
 };
 typedef struct world_s world_t;
 
