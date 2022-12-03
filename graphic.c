@@ -121,39 +121,19 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
 
     for (int i = 0; i < 4; i++) {
         if (world->menu) {
-            SDL_Rect DestR;
-            DestR.x = (1080 - 375 / 2) / 2;
-            DestR.y = i != 3 ? 220 + i * 90 : 310;
-            DestR.w = 375;
-            DestR.h = 75;
 
             // Affiche le bouton
-            if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &DestR);
-            else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &DestR);
-            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &DestR);
-
-            // Défini le bouton
-            world->buttons[i].enable = i < 3;
-            world->buttons[i].DestR = DestR;
-            world->buttons[i].type = i;
+            if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
+            else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &world->buttons[i].DestR);
+            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
         }
 
         if (world->pause) {
-            SDL_Rect DestR;
-            DestR.x = (1080 - 375 / 2) / 2;
-            DestR.y = i != 3 ? 220 + i * 90 : 310;
-            DestR.w = 375;
-            DestR.h = 75;
 
             // Affiche le bouton
-            if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &DestR);
-            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &DestR);
-            else if (i == 3) SDL_RenderCopy(renderer, ressources->save, NULL, &DestR);
-
-            // Défini le bouton
-            world->buttons[i].enable = i < 3;
-            world->buttons[i].DestR = DestR;
-            world->buttons[i].type = i;
+            if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
+            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
+            else if (i == 3) SDL_RenderCopy(renderer, ressources->save, NULL, &world->buttons[i].DestR);
         }
     }
 

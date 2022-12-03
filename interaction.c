@@ -75,7 +75,7 @@ void init_mouse(mouse_status_t *mouse) {
 
 void refresh_mouse(mouse_status_t *mouse, SDL_Event *event) {
     // Actualisation des coordonnées de la souris
-    SDL_GetGlobalMouseState(&mouse->x, &mouse->y);
+    SDL_GetMouseState(&mouse->x, &mouse->y);
 
     // Effectue des actions sur le type d'événements
     switch (event->type) {
@@ -120,7 +120,6 @@ void handle_button(world_t *world, mouse_status_t *mouseStatus) {
     for (int i = 0; i < 4; i++) {
         // Vérifie que le bouton est activé
         button_t button = world->buttons[i];
-        if (!button.enable) continue;
 
         // Vérifie une collision entre le bouton et la souris
         bool cond1 = mouseStatus->x <= button.DestR.x + button.DestR.w && mouseStatus->x >= button.DestR.x;

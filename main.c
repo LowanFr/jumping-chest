@@ -91,6 +91,7 @@ int main() {
 
             // Exécution de tous les événements
             handle_event(&mouse, &keyboard, &world, &event);
+            
 
             // Déplacement du joueur
             player_movement(&keyboard, world.player);
