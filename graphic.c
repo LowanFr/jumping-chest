@@ -121,7 +121,6 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
 
     for (int i = 0; i < 4; i++) {
         if (world->menu) {
-
             // Affiche le bouton
             if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
             else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &world->buttons[i].DestR);
@@ -129,7 +128,6 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
         }
 
         if (world->pause) {
-
             // Affiche le bouton
             if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
             else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);

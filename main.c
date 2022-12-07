@@ -37,7 +37,7 @@
 void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world,
           keyboard_status_t *keyboard, mouse_status_t *mouse, cam_t *camera) {
     init_sdl(window, renderer, SCREEN_W, SCREEN_H);
-    init_world(world);
+    init_world(world, false);
     init_keyboard(keyboard);
     init_mouse(mouse);
     init_ressources(*renderer, ressources);

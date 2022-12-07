@@ -157,8 +157,9 @@ void repositioning_camera(world_t *world);
 /**
  * @brief Initialisation du monde.
  * @param world Le monde
+ * @param new_game Si c'est une nouvelle partie
  */
-void init_world(world_t *world);
+void init_world(world_t *world, bool new_game);
 
 /**
  * @brief Initialisation de la caméra.

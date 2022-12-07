@@ -6,49 +6,54 @@
  */
 #include "world.h"
 
-void init_world(world_t *world) {
-    world->end = true;
-    world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
+void init_world(world_t *world, bool new_game) {
+    if (!new_game) {
+        // Initialisation des images de tous les blocs
+        world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
+        for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
+            init_sprite(&world->textures[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
+                        Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11),
+                        SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i);
+        }
+
+        world->player = calloc(1, sizeof(sprite_t));
+
+        // Définition des boutons pour le menu
+        world->buttons = calloc(4, sizeof(button_t));
+        for (int i = 0; i < 4; ++i) {
+            world->buttons[i].DestR.x = (1080 - 375 / 2) / 2;
+            world->buttons[i].DestR.y = i != 3 ? 220 + i * 90 : 310;
+            world->buttons[i].DestR.w = 375;
+            world->buttons[i].DestR.h = 75;
+            world->buttons[i].type = i;
+            world->buttons[i].enable = i < 3;
+        }
+
+        // Récupération de la carte
+        world->map = malloc(sizeof(map_t));
+        world->map->tab = lire_fichier("../assets/map.txt");
+
+        // Récupération de la taille de la map
+        taille_fichier("../assets/map.txt", &world->map->nb_row, &world->map->nb_col);
+
+        // Initialisation de tous les blocs sur la map
+        world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
+        for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
+    }
+
     world->cycles = 0;
     world->hearts = 3;
     world->scores = 0;
-
-    world->menu = true;
+    world->end = !new_game;
+    world->menu = !new_game;
     world->pause = false;
 
-    //Définition des boutons pour le menu
-    world->buttons = calloc(4, sizeof(button_t));
-    for(int i = 0; i < 4; ++i){
-        world->buttons[i].DestR.x = (1080 - 375 / 2) / 2;
-        world->buttons[i].DestR.y = i != 3 ? 220 + i * 90 : 310;
-        world->buttons[i].DestR.w = 375;
-        world->buttons[i].DestR.h = 75;
-        world->buttons[i].type = i;
-        world->buttons[i].enable = i < 3;
-    }
-
-    // Initialisation des images de tous les blocs
-    for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
-        init_sprite(&world->textures[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
-                    Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11),
-                    SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i);
-    }
-
     // Initialisation de l'image du joueur
-    world->player = calloc(1, sizeof(sprite_t));
     init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, 350, 720 - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
                 HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER);
 
-    world->map = malloc(sizeof(map_t));
-    world->map->tab = lire_fichier("../assets/map.txt");
-
-    // Récupération de la taille de la map
-    taille_fichier("../assets/map.txt", &world->map->nb_row, &world->map->nb_col);
-
     // Initialisation de tous les blocs sur la map
-    world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
     for (int i = 0; i < world->map->nb_row; i++) {
-        world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
         for (int j = 0; j < world->map->nb_col; ++j) {
             sprite_t sprite;
             int textureIndex = world->map->tab[i][j];

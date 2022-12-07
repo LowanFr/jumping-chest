@@ -131,6 +131,7 @@ void handle_button(world_t *world, mouse_status_t *mouseStatus) {
         if (button.type == 1) {
             world->menu = false;
             world->end = false;
+            init_world(world, true);
         }
 
         if (button.type == 2 && world->menu) world->menu = false;
