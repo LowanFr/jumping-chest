@@ -6,7 +6,7 @@
  */
 #include "world.h"
 
-void init_world(world_t *world, bool new_game) {
+void init_world(game_t *game, world_t *world, bool new_game) {
     if (!new_game) {
         // Initialisation des images de tous les blocs
         world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
@@ -29,12 +29,16 @@ void init_world(world_t *world, bool new_game) {
             world->buttons[i].enable = i < 3;
         }
 
+        // Défini le nom de la carte
+        char mapPath[100];
+        sprintf(mapPath, "../assets/map-%s.txt", game->level);
+
         // Récupération de la carte
         world->map = malloc(sizeof(map_t));
-        world->map->tab = lire_fichier("../assets/map.txt");
+        world->map->tab = lire_fichier(mapPath);
 
         // Récupération de la taille de la map
-        taille_fichier("../assets/map.txt", &world->map->nb_row, &world->map->nb_col);
+        taille_fichier(mapPath, &world->map->nb_row, &world->map->nb_col);
 
         // Initialisation de tous les blocs sur la map
         world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
@@ -44,7 +48,7 @@ void init_world(world_t *world, bool new_game) {
     world->cycles = 0;
     world->hearts = 3;
     world->scores = 0;
-    world->end = !new_game;
+    world->end = !new_game || strcmp(game->level, "END") == 0;
     world->menu = !new_game;
     world->pause = false;
 
@@ -125,4 +129,36 @@ void blob_movement(world_t *world, sprite_t *sprite) {
         if (sprite->isright == true) sprite->DestR.x += sprite->v;
         else sprite->DestR.x -= sprite->v;
     }
+}
+
+void clean_data(world_t *world) {
+    // Libère toute la mémoire utilisée pour le monde
+    desallouer_tab_2D(world->map->tab, world->map->nb_row);
+    for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]); // Libère toutes les lignes
+    free(world->blocks);
+    free(world->map);
+    free(world->textures);
+    free(world->player);
+}
+
+void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
+    // Défini le nom de la carte
+    char mapPathBlocks[100];
+    char mapPathBG[100];
+    sprintf(mapPathBlocks, "../assets/%s.bmp", game->level);
+    sprintf(mapPathBG, "../assets/%s_bg.bmp", game->level);
+
+    // Défini les ressources liées à l'image
+    ressources->blocks = load_image(mapPathBlocks, renderer);
+    ressources->background = load_image(mapPathBG, renderer);
+}
+
+SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer) {
+    // Charge l'image à partir du chemin
+    SDL_Surface *surface = SDL_LoadBMP(fileName);
+
+    // Converti la surface en texture
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    return texture;
 }

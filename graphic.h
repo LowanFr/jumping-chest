@@ -27,19 +27,13 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources);
 /**
  * @brief Rafraichit l'écran en fonction de l'état des données du monde.
  * @param renderer Le moniteur de rendu
+ * @param game La partie
  * @param world Les données du monde
  * @param ressources Les ressources du jeu
  * @param keyboard Le statut du clavier
  */
-void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard);
-
-/**
- * @brief Charge une image .BMP.
- * @param fileName Le nom du fichier
- * @param renderer Le moniteur de rendu
- * @return
- */
-SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer);
+void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,
+                      keyboard_status_t *keyboard);
 
 /**
  * @brief Gère toutes les animations.

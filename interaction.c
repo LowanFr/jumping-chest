@@ -103,16 +103,45 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event) {
     }
 }
 
-void handle_event(mouse_status_t *mouse, keyboard_status_t *keyboard, world_t *world, SDL_Event *event) {
+void handle_event(SDL_Renderer *renderer, ressources_t *ressources,
+                  mouse_status_t *mouse, keyboard_status_t *keyboard, game_t *game, world_t *world, SDL_Event *event) {
     // Exécute tous les événements en attente à chaque cycle
     while (SDL_PollEvent(event)) {
         refresh_keys(world, keyboard, event);
         refresh_mouse(mouse, event);
-        handle_button(world, mouse);
+        handle_button(renderer, ressources, game, world, mouse);
     }
 }
 
-void handle_button(world_t *world, mouse_status_t *mouseStatus) {
+void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
+                   mouse_status_t *mouseStatus) {
+    if (mouseStatus->right) {
+        for (int i = 0; i < world->map->nb_row; i++) {
+            for (int j = 0; j < world->map->nb_col; j++) {
+                // Récupère le block
+                sprite_t *block = &world->blocks[i][j];
+                if (block->textureIndex != 4) continue;
+
+                // Vérifie une collision entre le bouton et la souris
+                bool cond1 = mouseStatus->x <= block->DestR.x - world->cam->x + block->DestR.w &&
+                             mouseStatus->x >= block->DestR.x - world->cam->x;
+                bool cond2 = mouseStatus->y <= block->DestR.y - world->cam->y + block->DestR.h &&
+                             mouseStatus->y >= block->DestR.y - world->cam->y;
+                if (!cond1 || !cond2) continue;
+
+                block->textureIndex = 5;
+                SDL_Delay(2000);
+                clean_data(world);
+                if (strcmp(game->level, "classic") == 0) game->level = "snow";
+                else if (strcmp(game->level, "snow") == 0) game->level = "lava";
+                else game->level = "END";
+
+                new_level(renderer, game, ressources);
+                init_world(game, world, false);
+            }
+        }
+    }
+
     // Vérifie qu'il y a un clic gauche
     if (!mouseStatus->left) return;
 
@@ -131,7 +160,7 @@ void handle_button(world_t *world, mouse_status_t *mouseStatus) {
         if (button.type == 1) {
             world->menu = false;
             world->end = false;
-            init_world(world, true);
+            init_world(game, world, true);
         }
 
         if (button.type == 2 && world->menu) world->menu = false;

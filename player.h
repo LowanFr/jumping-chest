@@ -29,17 +29,19 @@ void player_movement(keyboard_status_t *touches, sprite_t *player);
 
 /**
  * @brief Vérification de toutes les collisions.
+ * @param game La partie
  * @param world Le monde
  */
-void handle_collision(world_t *world, sprite_t *player);
+void handle_collision(game_t *game, world_t *world, sprite_t *player);
 
 /**
  * @brief Vérification des collisions entre le joueur et les pièces
+ * @param game La partie
  * @param world Le monde
  * @param player Le joueur
  * @param blob Le blob
  */
-void handle_collision_blobs(world_t *world, sprite_t *player, sprite_t *blob);
+void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, sprite_t *blob);
 
 /**
  * @brief Vérification de collision avec un bloc solide.
@@ -50,10 +52,10 @@ void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite);
 
 /**
  * @brief Gestion des collisions entre le joueur et les pièces.
- * @param world Le monde
+ * @param game La partie
  * @param player Le joueur
  * @param sprite Le bloc
  */
-void handle_collision_pieces(world_t *world, sprite_t *player, sprite_t *sprite);
+void handle_collision_pieces(game_t *game, sprite_t *player, sprite_t *sprite);
 
 #endif

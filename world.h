@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "sdl2-light.h"
 #include "map.h"
+#include "game.h"
 
 /**
  * @brief La largeur de l'image du joueur
@@ -156,10 +157,11 @@ void repositioning_camera(world_t *world);
 
 /**
  * @brief Initialisation du monde.
+ * @param game La partie
  * @param world Le monde
  * @param new_game Si c'est une nouvelle partie
  */
-void init_world(world_t *world, bool new_game);
+void init_world(game_t *game, world_t *world, bool new_game);
 
 /**
  * @brief Initialisation de la caméra.
@@ -185,6 +187,33 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  */
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex);
 
+/**
+ * @brief Déplacement des blobs.
+ * @param world Le monde
+ * @param sprite L'image
+ */
 void blob_movement(world_t *world, sprite_t *sprite);
+
+/**
+ * @brief Libération de la mémoire du monde
+ * @param world Le monde
+ */
+void clean_data(world_t *world);
+
+/**
+ * @brief Chargement des ressources du nouveau niveau.
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param ressources Les ressources
+ */
+void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources);
+
+/**
+ * @brief Charge une image .BMP.
+ * @param fileName Le nom du fichier
+ * @param renderer Le moniteur de rendu
+ * @return
+ */
+SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer);
 
 #endif

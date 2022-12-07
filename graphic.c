@@ -7,16 +7,6 @@
 #include "graphic.h"
 #include <dirent.h>
 
-SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer) {
-    // Charge l'image à partir du chemin
-    SDL_Surface *surface = SDL_LoadBMP(fileName);
-
-    // Converti la surface en texture
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    SDL_FreeSurface(surface);
-    return texture;
-}
-
 void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->background);
     clean_texture(ressources->player);
@@ -33,7 +23,8 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
     ressources->newGame = load_image("../assets/new-button.bmp", renderer);
 }
 
-void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard) {
+void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,
+                      keyboard_status_t *keyboard) {
     // Vide le moteur de rendu
     clear_renderer(renderer);
 
@@ -58,7 +49,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world, ressources_t *ress
                 // Gérer les flips des blobs ainsi que leur déplacement/collisions
                 if (world->blocks[i][j].textureIndex == 10 || world->blocks[i][j].textureIndex == 11) {
                     blob_movement(world, &world->blocks[i][j]);
-                    handle_collision(world, &world->blocks[i][j]);
+                    handle_collision(game, world, &world->blocks[i][j]);
 
                     // Affiche le joueur selon la caméra
                     SDL_RendererFlip flip =

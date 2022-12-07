@@ -33,11 +33,13 @@
  * @param world Le monde
  * @param keys Les touches du clavier
  * @param camera La caméra
+ * @param game La partie
  */
 void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world,
-          keyboard_status_t *keyboard, mouse_status_t *mouse, cam_t *camera) {
+          keyboard_status_t *keyboard, mouse_status_t *mouse, cam_t *camera, game_t *game) {
     init_sdl(window, renderer, SCREEN_W, SCREEN_H);
-    init_world(world, false);
+    init_game(game);
+    init_world(game, world, false);
     init_keyboard(keyboard);
     init_mouse(mouse);
     init_ressources(*renderer, ressources);
@@ -46,13 +48,8 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
 }
 
 void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, world_t *world) {
-    // Libère toute la mémoire utilisée pour le monde
-    desallouer_tab_2D(world->map->tab, world->map->nb_row);
-    for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]); // Libère toutes les lignes
-    free(world->blocks);
-    free(world->map);
-    free(world->textures);
-    free(world->player);
+    // Libère la mémoire de la partie
+    clean_data(world);
 
     // Libère l'espace des ressources
     clean_ressources(ressources);
@@ -74,28 +71,29 @@ int main() {
     cam_t camera;
     keyboard_status_t keyboard;
     mouse_status_t mouse;
+    game_t game;
     int delay = 0;
 
     // Initialisation du jeu
-    init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera);
+    init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
 
     // Boucle du menu
     while (world.pause || world.menu) {
         // Actualisation du menu
         refresh_menu(&world, renderer, &ressources);
-        handle_event(&mouse, &keyboard, &world, &event);
+        handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
 
         // Boucle principal
         while (!world.end) {
-            refresh_graphics(renderer, &world, &ressources, &keyboard);
+            refresh_graphics(renderer, &game, &world, &ressources, &keyboard);
 
             // Exécution de tous les événements
-            handle_event(&mouse, &keyboard, &world, &event);
+            handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
 
             // Déplacement du joueur
             player_movement(&keyboard, world.player);
             repositioning_camera(&world);
-            handle_collision(&world, world.player);
+            handle_collision(&game, &world, world.player);
 
             // Ralentissement pour un affichage fluide
             if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
