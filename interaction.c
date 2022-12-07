@@ -120,6 +120,7 @@ void handle_button(world_t *world, mouse_status_t *mouseStatus) {
     for (int i = 0; i < 4; i++) {
         // Vérifie que le bouton est activé
         button_t button = world->buttons[i];
+        if (!button.enable) continue;
 
         // Vérifie une collision entre le bouton et la souris
         bool cond1 = mouseStatus->x <= button.DestR.x + button.DestR.w && mouseStatus->x >= button.DestR.x;
