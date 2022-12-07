@@ -130,14 +130,7 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
                 if (!cond1 || !cond2) continue;
 
                 block->textureIndex = 5;
-                SDL_Delay(2000);
-                clean_data(world);
-                if (strcmp(game->level, "classic") == 0) game->level = "snow";
-                else if (strcmp(game->level, "snow") == 0) game->level = "lava";
-                else game->level = "END";
-
-                new_level(renderer, game, ressources);
-                init_world(game, world, false);
+                world->newLevel = true;
             }
         }
     }

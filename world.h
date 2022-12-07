@@ -126,11 +126,12 @@ struct world_s {
     map_t *map; /*!<  Champ désignant la map du jeu. */
     int cycles; /*!<  Champ désignant le nombre de cycle de jeu. */
     int hearts; /*!<  Champ désignant la map du jeu. */
-    int scores; /*!<  Champ désignant le score. */
-    bool end; /*!<  Champ désignant la fin de la partie. */
     button_t *buttons; /*!<  Champ désignant les boutons */
+    bool end; /*!<  Champ désignant la fin de la partie. */
     bool menu;
     bool pause;
+    bool newLevel;
+
 };
 typedef struct world_s world_t;
 
@@ -205,8 +206,18 @@ void clean_data(world_t *world);
  * @param renderer Le moteur de rendu
  * @param game La partie
  * @param ressources Les ressources
+ * @param restart Si la partie redémarre
  */
-void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources);
+void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources, bool restart);
+
+/**
+ * @brief Actualisation des ressources du niveau
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param ressources Les ressources
+ * @param world Le monde
+ */
+void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources, world_t *world);
 
 /**
  * @brief Charge une image .BMP.

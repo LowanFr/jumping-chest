@@ -85,7 +85,11 @@ int main() {
 
         // Boucle principal
         while (!world.end) {
+            // Mise à jour de l'affichage
             refresh_graphics(renderer, &game, &world, &ressources, &keyboard);
+
+            // Mise à jour du niveau si besoin avec les nouvelles textures
+            refresh_level(renderer, &game, &ressources, &world);
 
             // Exécution de tous les événements
             handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);

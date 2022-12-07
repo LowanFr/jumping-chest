@@ -47,10 +47,10 @@ void init_world(game_t *game, world_t *world, bool new_game) {
 
     world->cycles = 0;
     world->hearts = 3;
-    world->scores = 0;
-    world->end = !new_game || strcmp(game->level, "END") == 0;
+    world->end = !new_game && !world->newLevel;
     world->menu = !new_game;
     world->pause = false;
+    world->newLevel = false;
 
     // Initialisation de l'image du joueur
     init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, 350, 720 - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
@@ -141,16 +141,43 @@ void clean_data(world_t *world) {
     free(world->player);
 }
 
-void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
-    // Défini le nom de la carte
-    char mapPathBlocks[100];
-    char mapPathBG[100];
-    sprintf(mapPathBlocks, "../assets/%s.bmp", game->level);
-    sprintf(mapPathBG, "../assets/%s_bg.bmp", game->level);
+void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources, bool restart) {
+    char mapPathBlocks[100] = "../assets/classic.bmp";
+    char mapPathBG[100] = "../assets/classic_bg.bmp";
+    if (!restart) {
+        // Défini le nom de la carte
+        sprintf(mapPathBlocks, "../assets/%s.bmp", game->level);
+        sprintf(mapPathBG, "../assets/%s_bg.bmp", game->level);
+    }
 
     // Défini les ressources liées à l'image
     ressources->blocks = load_image(mapPathBlocks, renderer);
     ressources->background = load_image(mapPathBG, renderer);
+}
+
+void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources, world_t *world) {
+    // Mise à jour du niveau si besoin avec les nouvelles textures
+    if (world->newLevel) {
+        // Pause pendant 2sec
+        SDL_Delay(2000);
+
+        // Modifie les textures en fonction du niveau
+        if (strcmp(game->level, "classic") == 0) game->level = "snow";
+        else if (strcmp(game->level, "snow") == 0) game->level = "lava";
+        else game->level = "END";
+
+        // Vérifie si s'il y a un prochain niveau
+        if (strcmp(game->level, "END") != 0) {
+            clean_data(world);
+            new_level(renderer, game, ressources, false);
+            init_world(game, world, false);
+        } else {
+            new_level(renderer, game, ressources, true);
+            game->level = "classic";
+            world->end = true;
+            world->menu = true;
+        }
+    }
 }
 
 SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer) {
