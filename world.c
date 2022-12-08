@@ -136,6 +136,7 @@ void clean_data(world_t *world) {
     // Libère toute la mémoire utilisée pour le monde
     desallouer_tab_2D(world->map->tab, world->map->nb_row);
     for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]); // Libère toutes les lignes
+    free(world->buttons);
     free(world->blocks);
     free(world->map);
     free(world->textures);
