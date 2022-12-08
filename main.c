@@ -38,13 +38,14 @@
 void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world,
           keyboard_status_t *keyboard, mouse_status_t *mouse, cam_t *camera, game_t *game) {
     init_sdl(window, renderer, SCREEN_W, SCREEN_H);
+    init_ttf();
     init_game(game);
-    init_world(game, world, false);
     init_keyboard(keyboard);
     init_mouse(mouse);
     init_ressources(*renderer, ressources);
+    world->newLevel = false;
+    init_world(game, world, false);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
-    init_ttf();
 }
 
 void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, world_t *world) {
