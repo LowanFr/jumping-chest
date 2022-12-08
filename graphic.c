@@ -64,7 +64,8 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
     }
 
     // Incrémente le nombre de cycles
-    world->cycles++;
+    if (world->cycles == 180) world->cycles = 0;
+    else world->cycles++;
 
     // Affiche le joueur selon la caméra
     SDL_RendererFlip flip = keyboard->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
@@ -80,6 +81,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 void handle_animations(world_t *world, sprite_t *block) {
     // Anime les pièces tous les 30 cycles
     if (world->cycles % 30 == 0) coin_animations(block);
+    if (world->cycles % 60 == 0) blobs_animations(block);
 }
 
 void coin_animations(sprite_t *block) {
@@ -128,4 +130,12 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
 
     // Met à jour l'écran
     update_screen(renderer);
+}
+
+void blobs_animations(sprite_t *block) {
+    // Itère l'image de la pièce
+    if (block->textureIndex >= 10 && block->textureIndex <= 11) {
+        block->textureIndex++;
+        if (block->textureIndex == 12) block->textureIndex = 10; // Recommence le cycle
+    }
 }

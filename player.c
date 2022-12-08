@@ -10,11 +10,24 @@ void player_movement(keyboard_status_t *touches, sprite_t *player) {
     // Sauvegarde des coordonnées précédentes
     player->prec = player->DestR;
 
-    // Vérifie le déplacement à gauche
-    if (touches->left) player->DestR.x -= player->v;
+    if (player->isAttacked == false) {
+        // Vérifie le déplacement à gauche
+        if (touches->left) player->DestR.x -= player->v;
 
-    // Vérifie le déplacement à droite
-    if (touches->right) player->DestR.x += player->v;
+        // Vérifie le déplacement à droite
+        if (touches->right) player->DestR.x += player->v;
+    } else {
+        if (player->isright) player->DestR.x -= player->v;
+        else player->DestR.x += player->v;
+    }
+
+    // Vérifie la gravité lors d'un saut
+    if (player->saut == true) {
+        player->DestR.y = (int) round(player->ground - JUMP_SPEED * player->timeSinceJumpStart
+                                      +
+                                      0.5 * GRAVITY * player->timeSinceJumpStart * player->timeSinceJumpStart);
+        player->timeSinceJumpStart++;
+    }
 
     // Vérifie un saut
     if (touches->space && player->timeSinceJumpStart == 0) {
@@ -25,14 +38,6 @@ void player_movement(keyboard_status_t *touches, sprite_t *player) {
     // Vérifie si le joueur ne saute pas (gravité)
     if (player->saut == false) {
         player->DestR.y += player->timeSinceJumpStart * GRAVITY;
-        player->timeSinceJumpStart++;
-    }
-
-    // Vérifie la gravité lors d'un saut
-    if (player->saut == true) {
-        player->DestR.y = (int) round(player->ground - JUMP_SPEED * player->timeSinceJumpStart
-                                      +
-                                      0.5 * GRAVITY * player->timeSinceJumpStart * player->timeSinceJumpStart);
         player->timeSinceJumpStart++;
     }
 }
@@ -54,9 +59,9 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity) {
             // Aucune collision
             if (!condCollision1 || !condCollision2) continue;
 
+            handle_collision_solidBlock(entity, sprite);
             handle_collision_blobs(game, world, entity, sprite);
             handle_collision_pieces(game, entity, sprite);
-            handle_collision_solidBlock(entity, sprite);
         }
     }
 
@@ -106,25 +111,58 @@ void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, spri
     if (blobImg->y < playerImg->y + playerImg->h && playerImg->y < blobImg->y &&
         player->prec.y + player->prec.h <= blobImg->y) {
         game->score += 10;
+        player->saut = true;
+        player->ground = player->DestR.y;
+        player->timeSinceJumpStart = 0;
         blob->textureIndex = 0;
     }
 
         // Collision à gauche du bloc
     else if (blobImg->x < playerImg->x + playerImg->w && blobImg->x > playerImg->x &&
-             player->prec.x + player->prec.w <= blobImg->x) {
+             player->prec.x + player->prec.w <= blob->prec.x && player->isAttacked == false) {
+        player->isright = true;
+        player->prec.x = blobImg->x - player->prec.w;
+        player->DestR.x = player->prec.x;
+        player->DestR.y = player->prec.y;
         world->hearts--;
+        player->saut = true;
+        player->isAttacked = true;
+        player->ground = player->prec.y;
+        player->timeSinceJumpStart = 0;
     }
 
         // Collision à droite du bloc
     else if (blobImg->x + blobImg->w > playerImg->x && blobImg->x < playerImg->x &&
-             player->prec.x >= blobImg->x + blobImg->w) {
+             player->prec.x >= blob->prec.x + blobImg->w && player->isAttacked == false) {
+        player->isright = false;
+        player->prec.x = blobImg->x + blobImg->w;
+        player->DestR.x = player->prec.x;
+        player->DestR.y = player->prec.y;
         world->hearts--;
+        player->saut = true;
+        player->ground = player->prec.y;
+        player->isAttacked = true;
+        player->timeSinceJumpStart = 0;
     }
 
         // Collision en bas du bloc
     else if (blobImg->y + blobImg->h > playerImg->y && playerImg->y > blobImg->y &&
-             player->prec.y >= blobImg->y + blobImg->h) {
+             player->DestR.y >= blob->prec.y + blob->prec.h) {
+        if (player->DestR.x + player->DestR.w / 2 > blobImg->x + blobImg->w) {
+            player->isright = false;
+            player->prec.x = blobImg->x + blobImg->w;
+
+        } else {
+            player->isright = true;
+            player->prec.x = blobImg->x - player->prec.w;
+        }
+        player->DestR.x = player->prec.x;
+        player->DestR.y = player->prec.y;
         world->hearts--;
+        player->saut = true;
+        player->ground = player->prec.y;
+        player->isAttacked = true;
+        player->timeSinceJumpStart = 0;
     }
 }
 
@@ -156,8 +194,8 @@ void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite) {
         player->prec.y = block->y - player->prec.h;
         playerImg->y = player->prec.y;
         player->timeSinceJumpStart = 0;
+        if (player->isAttacked) player->isAttacked = false;
     }
-
         // Collision à gauche du bloc
     else if (block->x < playerImg->x + playerImg->w && // Côté gauche du bloc est inférieur au côté droit du player
              block->x > playerImg->x && // Coté gauche du bloc est inférieur au côté droit du joueur

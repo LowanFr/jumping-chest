@@ -56,4 +56,10 @@ void coin_animations(sprite_t *block);
  */
 void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressources);
 
+/**
+ * @brief Gère l'animation d'un blob.
+ * @param block Le blob
+ */
+void blobs_animations(sprite_t *block);
+
 #endif

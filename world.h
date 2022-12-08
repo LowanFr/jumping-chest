@@ -102,6 +102,7 @@ struct sprite_s {
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */
     bool isright;
+    bool isAttacked;
 };
 typedef struct sprite_s sprite_t;
 

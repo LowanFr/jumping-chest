@@ -98,6 +98,7 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
     sprite->v = SPEED_X_WALK;
     sprite->textureIndex = textureIndex;
     sprite->isright = true;
+    sprite->isAttacked = false;
 }
 
 void repositioning_camera(world_t *world) {
