@@ -149,6 +149,14 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
         bool cond2 = mouseStatus->y <= button.DestR.y + button.DestR.h && mouseStatus->y >= button.DestR.y;
         if (!cond1 || !cond2) continue;
 
+        // Bouton reprendre une partie
+        if (button.type == 0) {
+            if (world->pause == true) {
+                world->pause = false;
+                world->end = false;
+            }
+        }
+
         // Bouton de nouvelle partie
         if (button.type == 1) {
             world->menu = false;
@@ -157,6 +165,7 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
             init_ressources(renderer, ressources, true);
         }
 
+        // Bouton pour quitter
         if (button.type == 2 && world->menu) world->menu = false;
         if (button.type == 2 && world->pause) {
             world->menu = true;
