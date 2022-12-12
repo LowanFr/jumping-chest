@@ -48,7 +48,7 @@ void init_world(game_t *game, world_t *world, bool new_game) {
     world->cycles = 0;
     world->hearts = 3;
     world->end = !new_game && !world->newLevel;
-    world->menu = !new_game;
+    world->menu = !new_game && !world->newLevel;
     world->pause = false;
     world->newLevel = false;
 
