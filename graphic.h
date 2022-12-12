@@ -8,7 +8,6 @@
  * @date 30 Novembre 2022
  */
 #include "world.h"
-#include "interaction.h"
 #include "player.h"
 
 /**
@@ -21,8 +20,9 @@ void clean_ressources(ressources_t *ressources);
  * @brief Initialise les ressources.
  * @param renderer Le moniteur de rendu
  * @param ressources Les ressources du jeu
+ * @param newLevel Si les ressources sont liées à un prochain niveau
 */
-void init_ressources(SDL_Renderer *renderer, ressources_t *ressources);
+void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, bool newLevel);
 
 /**
  * @brief Rafraichit l'écran en fonction de l'état des données du monde.

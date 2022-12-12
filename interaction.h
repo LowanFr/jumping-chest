@@ -10,29 +10,7 @@
 
 #include <stdbool.h>
 #include <SDL.h>
-#include "world.h"
-
-/**
- * @brief Définition d'un clavier avec les touches majeures.
- */
-struct keyboard_status_s {
-    bool left; /*!< Champ concernant la flèche gauche. */
-    bool right; /*!< Champ concernant la flèche droite. */
-    bool space; /*!< Champ concernant l'espace'. */
-    bool lastIsLeft; /*!< Champ concernant la dernière touche appuyé. */
-};
-typedef struct keyboard_status_s keyboard_status_t;
-
-/**
- * @brief Définition d'une souris avec les boutons et les coordonnées.
- */
-struct mouse_status_s {
-    bool right; /*!< Champ concernant l'état du click gauche. */
-    bool left; /*!< Champ concernant l'état du click droit. */
-    int x; /*!< Champ concernant l'abscisse de la souris'. */
-    int y; /*!< Champ concernant l'ordonnée de la souris. */
-};
-typedef struct mouse_status_s mouse_status_t;
+#include "graphic.h"
 
 /**
  * @brief Actualisation des actions sur le clavier.

@@ -154,6 +154,7 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
             world->menu = false;
             world->end = false;
             init_world(game, world, true);
+            init_ressources(renderer, ressources, true);
         }
 
         if (button.type == 2 && world->menu) world->menu = false;

@@ -11,16 +11,23 @@ void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->background);
     clean_texture(ressources->player);
     clean_texture(ressources->blocks);
+    clean_texture(ressources->exit);
+    clean_texture(ressources->save);
+    clean_texture(ressources->resume);
+    clean_texture(ressources->newGame);
 }
 
-void init_ressources(SDL_Renderer *renderer, ressources_t *ressources) {
+void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, bool newLevel) {
+    // Recommence le prochain niveau avec les ressources de base
+    if (newLevel) clean_ressources(ressources);
+
     ressources->background = load_image("../assets/classic_bg.bmp", renderer);
     ressources->player = load_image("../assets/player.bmp", renderer);
     ressources->blocks = load_image("../assets/classic.bmp", renderer);
-    ressources->exit = load_image("../assets/exit-button.bmp", renderer);
-    ressources->save = load_image("../assets/save-button.bmp", renderer);
-    ressources->resume = load_image("../assets/resume-button.bmp", renderer);
-    ressources->newGame = load_image("../assets/new-button.bmp", renderer);
+    ressources->exit = load_image("../assets/button-exit.bmp", renderer);
+    ressources->save = load_image("../assets/button-save.bmp", renderer);
+    ressources->resume = load_image("../assets/button-resume.bmp", renderer);
+    ressources->newGame = load_image("../assets/button-new.bmp", renderer);
 }
 
 void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,

@@ -42,7 +42,7 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_game(game);
     init_keyboard(keyboard);
     init_mouse(mouse);
-    init_ressources(*renderer, ressources);
+    init_ressources(*renderer, ressources, false);
     world->newLevel = false;
     init_world(game, world, false);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
