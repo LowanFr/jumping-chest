@@ -90,6 +90,33 @@ void handle_collision_pieces(game_t *game, sprite_t *player, sprite_t *sprite) {
     sprite->textureIndex = 0;
 }
 
+void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob, char cote){
+    SDL_Rect *blobImg = &blob->DestR;
+    
+    player->DestR.x = player->prec.x;
+    player->DestR.y = player->prec.y;
+    world->hearts--;
+    player->saut = true;
+    player->ground = player->prec.y;
+    player->isAttacked = true;
+    player->timeSinceJumpStart = 0;
+    if(cote == 'g'){
+        player->isright = true;
+        player->prec.x = blobImg->x - player->prec.w;
+    }else if(cote == 'd'){
+        player->isright = false;
+        player->prec.x = blobImg->x + blobImg->w;
+    }else if(cote == 'b'){
+        if (player->DestR.x + player->DestR.w / 2 > blobImg->x + blobImg->w) {
+            player->isright = false;
+            player->prec.x = blobImg->x + blobImg->w;
+
+        } else {
+            player->isright = true;
+            player->prec.x = blobImg->x - player->prec.w;
+        }
+    }
+}
 void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, sprite_t *blob) {
     if (player->textureIndex != -1) return;
 
@@ -120,49 +147,21 @@ void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, spri
         // Collision à gauche du bloc
     else if (blobImg->x < playerImg->x + playerImg->w && blobImg->x > playerImg->x &&
              player->prec.x + player->prec.w <= blob->prec.x && player->isAttacked == false) {
-        player->isright = true;
-        player->prec.x = blobImg->x - player->prec.w;
-        player->DestR.x = player->prec.x;
-        player->DestR.y = player->prec.y;
-        world->hearts--;
-        player->saut = true;
-        player->isAttacked = true;
-        player->ground = player->prec.y;
-        player->timeSinceJumpStart = 0;
+        change_state(game, world, player, blob, 'g');
+        
     }
 
         // Collision à droite du bloc
     else if (blobImg->x + blobImg->w > playerImg->x && blobImg->x < playerImg->x &&
-             player->prec.x >= blob->prec.x + blobImg->w && player->isAttacked == false) {
-        player->isright = false;
-        player->prec.x = blobImg->x + blobImg->w;
-        player->DestR.x = player->prec.x;
-        player->DestR.y = player->prec.y;
-        world->hearts--;
-        player->saut = true;
-        player->ground = player->prec.y;
-        player->isAttacked = true;
-        player->timeSinceJumpStart = 0;
+        player->prec.x >= blob->prec.x + blobImg->w && player->isAttacked == false) {
+        change_state(game, world, player, blob, 'd');
     }
 
         // Collision en bas du bloc
     else if (blobImg->y + blobImg->h > playerImg->y && playerImg->y > blobImg->y &&
              player->DestR.y >= blob->prec.y + blob->prec.h) {
-        if (player->DestR.x + player->DestR.w / 2 > blobImg->x + blobImg->w) {
-            player->isright = false;
-            player->prec.x = blobImg->x + blobImg->w;
-
-        } else {
-            player->isright = true;
-            player->prec.x = blobImg->x - player->prec.w;
-        }
-        player->DestR.x = player->prec.x;
-        player->DestR.y = player->prec.y;
-        world->hearts--;
-        player->saut = true;
-        player->ground = player->prec.y;
-        player->isAttacked = true;
-        player->timeSinceJumpStart = 0;
+        
+        change_state(game, world, player, blob, 'b');
     }
 }
 

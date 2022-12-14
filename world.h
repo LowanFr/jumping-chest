@@ -12,6 +12,7 @@
 #include <SDL.h>
 #include <stdbool.h>
 #include "sdl2-light.h"
+#include "sdl2-ttf-light.h"
 #include "map.h"
 #include "game.h"
 
@@ -147,6 +148,7 @@ struct ressources_s {
     SDL_Texture *resume; /*!< Ressource liée à l'image du bouton pour reprendre une partie. */
     SDL_Texture *save; /*!< Ressource liée à l'image du bouton de sauvegarde. */
     SDL_Texture *exit; /*!< Ressource liée à l'image du bouton pour quitter. */
+    TTF_Font * score; /*!< Ressource liée au texte de la vie */
 };
 typedef struct ressources_s ressources_t;
 

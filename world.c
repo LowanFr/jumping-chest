@@ -127,8 +127,11 @@ void blob_movement(world_t *world, sprite_t *sprite) {
                                       +
                                       0.5 * GRAVITY * sprite->timeSinceJumpStart * sprite->timeSinceJumpStart);
         sprite->timeSinceJumpStart++;
-        if (sprite->isright == true) sprite->DestR.x += sprite->v;
-        else sprite->DestR.x -= sprite->v;
+        if(world->player->isAttacked == false){
+            if (sprite->isright == true ) sprite->DestR.x += sprite->v;
+            else sprite->DestR.x -= sprite->v;
+        }
+        
     }
 }
 

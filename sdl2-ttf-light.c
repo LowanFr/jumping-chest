@@ -22,7 +22,7 @@ TTF_Font *load_font(const char *path, int font_size) {
 }
 
 void apply_text(SDL_Renderer *renderer, int x, int y, int w, int h, const char *text, TTF_Font *font) {
-    SDL_Color color = {255, 0, 255};
+    SDL_Color color = {0, 0, 0};
 
     SDL_Surface *surface = TTF_RenderText_Solid(font, text, color);
     //printf("FFFFF\n");

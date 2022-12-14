@@ -15,6 +15,7 @@ void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->save);
     clean_texture(ressources->resume);
     clean_texture(ressources->newGame);
+    clean_font(ressources->score);
 }
 
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, bool newLevel) {
@@ -28,6 +29,7 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, bool newL
     ressources->save = load_image("../assets/button-save.bmp", renderer);
     ressources->resume = load_image("../assets/button-resume.bmp", renderer);
     ressources->newGame = load_image("../assets/button-new.bmp", renderer);
+    ressources->score = load_font("../assets/font.TTF", 200);
 }
 
 void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,
@@ -66,9 +68,25 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
                 } else
                     SDL_RenderCopy(renderer, ressources->blocks,
                                    &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
+         
             }
         }
     }
+    char buff[20];
+    sprintf(buff, "SCORE : %d", game->score);
+    
+    apply_text(renderer, 10, 10, 150, 50, buff ,ressources->score);
+    
+    for(int i = 0; i < world->hearts; ++i){
+        SDL_Rect pos_lives;
+        pos_lives.x = SCREEN_W - 100 - i*(WIDTH_PLAYER + 20) ;
+        pos_lives.y = 10;
+        pos_lives.w = WIDTH_PLAYER * 0.7;
+        pos_lives.h = HEIGHT_PLAYER * 0.7;
+        SDL_RenderCopy(renderer, ressources->player,
+                    &world->player->SrcR, &pos_lives);
+    }
+
 
     // Incrémente le nombre de cycles
     if (world->cycles == 180) world->cycles = 0;

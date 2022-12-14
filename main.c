@@ -15,15 +15,7 @@
  */
 #define FPS 60
 
-/**
- * @brief La hauteur de l'écran.
- */
-#define SCREEN_H 720
 
-/**
- * @brief La largeur de l'écran.
- */
-#define SCREEN_W 1280
 
 /**
  * @brief Initialisation du jeu.
@@ -74,10 +66,11 @@ int main() {
     mouse_status_t mouse;
     game_t game;
     int delay = 0;
+    
 
     // Initialisation du jeu
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
-
+    
     // Boucle du menu
     while (world.pause || world.menu) {
         // Actualisation du menu
