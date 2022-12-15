@@ -15,6 +15,7 @@ void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->save);
     clean_texture(ressources->resume);
     clean_texture(ressources->newGame);
+    clean_texture(ressources->letter_e);
     clean_font(ressources->score);
 }
 
@@ -29,7 +30,8 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, bool newL
     ressources->save = load_image("../assets/button-save.bmp", renderer);
     ressources->resume = load_image("../assets/button-resume.bmp", renderer);
     ressources->newGame = load_image("../assets/button-new.bmp", renderer);
-    ressources->score = load_font("../assets/font.TTF", 200);
+    ressources->letter_e = load_image("../assets/lettre.bmp", renderer);
+    ressources->score = load_font("../assets/font.ttf", 200);
 }
 
 void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,
@@ -58,17 +60,25 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
                 // Gérer les flips des blobs ainsi que leur déplacement/collisions
                 if (world->blocks[i][j].textureIndex == 10 || world->blocks[i][j].textureIndex == 11) {
                     blob_movement(world, &world->blocks[i][j]);
-                    handle_collision(game, world, &world->blocks[i][j]);
+                    handle_collision(game, world, &world->blocks[i][j], keyboard);
 
                     // Affiche le joueur selon la caméra
                     SDL_RendererFlip flip =
                             world->blocks[i][j].DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+    
                     SDL_RenderCopyEx(renderer, ressources->blocks,
                                      &world->textures[world->blocks[i][j].textureIndex].SrcR, &block, 0., NULL, flip);
-                } else
+                }else{
+                    if(world->blocks[i][j].textureIndex == 4 && world->blocks[i][j].print_e == true){
+                        world->letter_e->DestR.x = block.x + 4;
+                        world->letter_e->DestR.y = block.y - 50;
+
+                        SDL_RenderCopy(renderer, ressources->letter_e,
+                                   &world->letter_e->SrcR, &world->letter_e->DestR);
+                    }
                     SDL_RenderCopy(renderer, ressources->blocks,
                                    &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
-         
+                }
             }
         }
     }
@@ -86,7 +96,6 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
         SDL_RenderCopy(renderer, ressources->player,
                     &world->player->SrcR, &pos_lives);
     }
-
 
     // Incrémente le nombre de cycles
     if (world->cycles == 180) world->cycles = 0;

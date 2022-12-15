@@ -20,6 +20,8 @@
  */
 #define JUMP_SPEED 30
 
+
+
 /**
  * @brief Gestion du déplacement du joueur.
  * @param touches Les touches
@@ -31,7 +33,14 @@ void player_movement(keyboard_status_t *touches, sprite_t *player);
  * @brief Vérification de toutes les collisions.
  * @param world Le monde
  */
-void handle_collision(game_t *game, world_t *world, sprite_t *player);
+void handle_collision(game_t *game, world_t *world, sprite_t *player, keyboard_status_t *key);
+
+/**
+ * @brief Vérification de collision avec un coffre
+ * @param player Le joueur
+ * @param sprite Le bloc
+ */
+void handle_collision_chest(world_t *world, sprite_t *player, sprite_t *sprite, keyboard_status_t *key);
 
 /**
  * @brief Vérification des collisions entre le joueur et les pièces

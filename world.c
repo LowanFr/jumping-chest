@@ -13,10 +13,13 @@ void init_world(game_t *game, world_t *world, bool new_game) {
         for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
             init_sprite(&world->textures[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
                         Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11),
-                        SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i);
+                        SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i, false);
         }
 
         world->player = calloc(1, sizeof(sprite_t));
+        world->letter_e = calloc(1, sizeof(sprite_t));
+
+        init_sprite(world->letter_e, 0, 0, 512, 512, 0, 0, 56, 56, 0, false);
 
         // Définition des boutons pour le menu
         world->buttons = calloc(4, sizeof(button_t));
@@ -51,10 +54,11 @@ void init_world(game_t *game, world_t *world, bool new_game) {
     world->menu = !new_game && !world->newLevel;
     world->pause = false;
     world->newLevel = false;
+    
 
     // Initialisation de l'image du joueur
     init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, 350, 720 - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
-                HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER);
+                HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER, false);
 
     // Initialisation de tous les blocs sur la map
     for (int i = 0; i < world->map->nb_row; i++) {
@@ -63,7 +67,7 @@ void init_world(game_t *game, world_t *world, bool new_game) {
             int textureIndex = world->map->tab[i][j];
             SDL_Rect SrcR = world->textures[textureIndex].SrcR;
             init_sprite(&sprite, SrcR.x, SrcR.y, SrcR.w, SrcR.h, j * SIZE_TEXTURES,
-                        i * SIZE_TEXTURES, SIZE_TEXTURES, SIZE_TEXTURES, textureIndex);
+                        i * SIZE_TEXTURES, SIZE_TEXTURES, SIZE_TEXTURES, textureIndex, false);
             world->blocks[i][j] = sprite;
         }
     }
@@ -77,7 +81,7 @@ void init_cam(world_t *world, cam_t *cam, int w, int h) {
     world->cam = cam;
 }
 
-void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex) {
+void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex, bool print_e) {
     // Définition du rectangle de source
     sprite->SrcR.x = x1;
     sprite->SrcR.y = y1;
@@ -99,6 +103,7 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
     sprite->textureIndex = textureIndex;
     sprite->isright = true;
     sprite->isAttacked = false;
+    sprite->print_e = print_e;
 }
 
 void repositioning_camera(world_t *world) {

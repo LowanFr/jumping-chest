@@ -40,6 +40,9 @@ void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event)
                     keyboard->lastIsLeft = false;
                     keyboard->right = true;
                     break;
+                case SDLK_e:
+                    keyboard->e = true;
+                    break;
             }
             break;
 
@@ -54,6 +57,9 @@ void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event)
                 case SDLK_RIGHT:
                     keyboard->right = false;
                     break;
+                case SDLK_e:
+                    keyboard->e = false;
+                    break;
             }
             break;
     }
@@ -64,6 +70,7 @@ void init_keyboard(keyboard_status_t *keyboard) {
     keyboard->left = false;
     keyboard->space = false;
     keyboard->lastIsLeft = false;
+    keyboard->e = false;
 }
 
 void init_mouse(mouse_status_t *mouse) {
@@ -115,25 +122,6 @@ void handle_event(SDL_Renderer *renderer, ressources_t *ressources,
 
 void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
                    mouse_status_t *mouseStatus) {
-    if (mouseStatus->right) {
-        for (int i = 0; i < world->map->nb_row; i++) {
-            for (int j = 0; j < world->map->nb_col; j++) {
-                // Récupère le block
-                sprite_t *block = &world->blocks[i][j];
-                if (block->textureIndex != 4) continue;
-
-                // Vérifie une collision entre le bouton et la souris
-                bool cond1 = mouseStatus->x <= block->DestR.x - world->cam->x + block->DestR.w &&
-                             mouseStatus->x >= block->DestR.x - world->cam->x;
-                bool cond2 = mouseStatus->y <= block->DestR.y - world->cam->y + block->DestR.h &&
-                             mouseStatus->y >= block->DestR.y - world->cam->y;
-                if (!cond1 || !cond2) continue;
-
-                block->textureIndex = 5;
-                world->newLevel = true;
-            }
-        }
-    }
 
     // Vérifie qu'il y a un clic gauche
     if (!mouseStatus->left) return;

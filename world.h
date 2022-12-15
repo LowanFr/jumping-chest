@@ -104,6 +104,7 @@ struct sprite_s {
     int ground; /*!< Le sol sur lequel il doit atterrir. */
     bool isright;
     bool isAttacked;
+    bool print_e;
 };
 typedef struct sprite_s sprite_t;
 
@@ -124,6 +125,7 @@ struct world_s {
     sprite_t *textures; /*!<  Champ désignant toutes les images des blocs. */
     sprite_t **blocks; /*!<  Champ désignant toutes les images des blocks. */
     sprite_t *player; /*!<  Champ désignant l'image du joueur. */
+    sprite_t *letter_e; /*!< Champ liée à l'image de la lettre E*/
     cam_t *cam; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
     int cycles; /*!<  Champ désignant le nombre de cycle de jeu. */
@@ -148,6 +150,7 @@ struct ressources_s {
     SDL_Texture *resume; /*!< Ressource liée à l'image du bouton pour reprendre une partie. */
     SDL_Texture *save; /*!< Ressource liée à l'image du bouton de sauvegarde. */
     SDL_Texture *exit; /*!< Ressource liée à l'image du bouton pour quitter. */
+    SDL_Texture *letter_e; /*!< Ressource liée à l'image de la lettre E*/
     TTF_Font * score; /*!< Ressource liée au texte de la vie */
 };
 typedef struct ressources_s ressources_t;
@@ -160,6 +163,7 @@ struct keyboard_status_s {
     bool right; /*!< Champ concernant la flèche droite. */
     bool space; /*!< Champ concernant l'espace'. */
     bool lastIsLeft; /*!< Champ concernant la dernière touche appuyé. */
+    bool e;
 };
 typedef struct keyboard_status_s keyboard_status_t;
 
@@ -210,7 +214,7 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  * @param h2 La hauteur pour la destination de l'image
  * @param textureIndex L'indice de la texture de l'image
  */
-void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex);
+void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex, bool print_e);
 
 /**
  * @brief Déplacement des blobs.
