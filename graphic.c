@@ -87,6 +87,11 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     apply_text(renderer, 10, 10, 150, 50, buff ,ressources->score);
 
+    if(world->counter_score_vie >= 100){
+        world->hearts++;
+        world->counter_score_vie = 0;
+    }
+
     for(int i = 0; i < world->hearts; ++i){
         SDL_Rect pos_lives;
         pos_lives.x = SCREEN_W - 100 - i*(WIDTH_PLAYER + 20) ;

@@ -118,6 +118,7 @@ void handle_event(SDL_Renderer *renderer, ressources_t *ressources,
         refresh_mouse(mouse, event);
         handle_button(renderer, ressources, game, world, mouse);
     }
+    
 }
 
 void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
@@ -167,7 +168,7 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
         }
 
         // Bouton de nouvelle partie
-        if (button.type == 1) {
+        if (button.type == 1 && world->menu == true && world->end == true) {
             world->menu = false;
             world->end = false;
             init_world(game, world, true);

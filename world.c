@@ -8,6 +8,8 @@
 
 void init_world(game_t *game, world_t *world, bool new_game) {
     if (!new_game) {
+        printf("Je rentre dans new game \n");
+
         // Initialisation des images de tous les blocs
         world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
         for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
@@ -36,6 +38,7 @@ void init_world(game_t *game, world_t *world, bool new_game) {
         char mapPath[100];
         sprintf(mapPath, "../assets/map-%s.txt", game->level);
 
+
         // Récupération de la carte
         world->map = malloc(sizeof(map_t));
         world->map->tab = lire_fichier(mapPath);
@@ -46,10 +49,13 @@ void init_world(game_t *game, world_t *world, bool new_game) {
         // Initialisation de tous les blocs sur la map
         world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
         for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
+
+        world->counter_score_vie = 0;
     }
 
     world->cycles = 0;
     world->hearts = 3;
+    world->counter_score_vie = game->score % 100;
     world->end = !new_game && !world->newLevel;
     world->menu = !new_game && !world->newLevel;
     world->pause = false;

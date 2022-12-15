@@ -105,6 +105,7 @@ struct sprite_s {
     bool isright;
     bool isAttacked;
     bool print_e;
+    
 };
 typedef struct sprite_s sprite_t;
 
@@ -135,6 +136,7 @@ struct world_s {
     bool menu;
     bool pause;
     bool newLevel;
+    int counter_score_vie;
 
 };
 typedef struct world_s world_t;

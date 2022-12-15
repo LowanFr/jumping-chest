@@ -98,10 +98,6 @@ int main() {
             if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
             delay = (int) SDL_GetTicks();
         }
-
-        // Ralentissement pour un affichage fluide
-        if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
-        delay = (int) SDL_GetTicks();
     }
 
     // Libère toute la mémoire utilisée pour le monde
