@@ -19,13 +19,19 @@ void clean_ressources(ressources_t *ressources) {
     clean_font(ressources->score);
 }
 
-void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, bool newLevel) {
-    // Recommence le prochain niveau avec les ressources de base
-    if (newLevel) clean_ressources(ressources);
+void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *game) {
+    if (strcmp(game->level, "classic") != 0) clean_ressources(ressources);
 
-    ressources->background = load_image("../assets/classic_bg.bmp", renderer);
+    // Récupère les assets en fonction du niveau
+    char blocks[100] = "../assets/classic.bmp";
+    char background[100] = "../assets/classic_bg.bmp";
+    sprintf(blocks, "../assets/%s.bmp", game->level);
+    sprintf(background, "../assets/%s_bg.bmp", game->level);
+
+    ressources->blocks = load_image(blocks, renderer);
+    ressources->background = load_image(background, renderer);
+
     ressources->player = load_image("../assets/player.bmp", renderer);
-    ressources->blocks = load_image("../assets/classic.bmp", renderer);
     ressources->exit = load_image("../assets/button-exit.bmp", renderer);
     ressources->save = load_image("../assets/button-save.bmp", renderer);
     ressources->resume = load_image("../assets/button-resume.bmp", renderer);
@@ -65,16 +71,16 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
                     // Affiche le joueur selon la caméra
                     SDL_RendererFlip flip =
                             world->blocks[i][j].DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-    
+
                     SDL_RenderCopyEx(renderer, ressources->blocks,
                                      &world->textures[world->blocks[i][j].textureIndex].SrcR, &block, 0., NULL, flip);
-                }else{
-                    if(world->blocks[i][j].textureIndex == 4 && world->blocks[i][j].print_e == true){
+                } else {
+                    if (world->blocks[i][j].textureIndex == 4 && world->blocks[i][j].print_e == true) {
                         world->letter_e->DestR.x = block.x + 4;
                         world->letter_e->DestR.y = block.y - 50;
 
                         SDL_RenderCopy(renderer, ressources->letter_e,
-                                   &world->letter_e->SrcR, &world->letter_e->DestR);
+                                       &world->letter_e->SrcR, &world->letter_e->DestR);
                     }
                     SDL_RenderCopy(renderer, ressources->blocks,
                                    &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
@@ -85,21 +91,21 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
     char buff[20];
     sprintf(buff, "SCORE : %d", game->score);
 
-    apply_text(renderer, 10, 10, 150, 50, buff ,ressources->score);
+    apply_text(renderer, 10, 10, 150, 50, buff, ressources->score);
 
     if(world->counter_score_vie >= 100){
         world->hearts++;
         world->counter_score_vie = 0;
     }
 
-    for(int i = 0; i < world->hearts; ++i){
+    for (int i = 0; i < world->hearts; ++i) {
         SDL_Rect pos_lives;
-        pos_lives.x = SCREEN_W - 100 - i*(WIDTH_PLAYER + 20) ;
+        pos_lives.x = SCREEN_W - 100 - i * (WIDTH_PLAYER + 20);
         pos_lives.y = 10;
         pos_lives.w = WIDTH_PLAYER * 0.7;
         pos_lives.h = HEIGHT_PLAYER * 0.7;
         SDL_RenderCopy(renderer, ressources->player,
-                    &world->player->SrcR, &pos_lives);
+                       &world->player->SrcR, &pos_lives);
     }
 
     // Incrémente le nombre de cycles

@@ -46,4 +46,13 @@ void taille_fichier(const char *nameFile, int *nbRows, int *nbColumns);
  */
 int **lire_fichier(const char *nameFile);
 
+/**
+ * Écris une matrice d'entier dans un fichier
+ * @param nameFile Le chemin vers le fichier
+ * @param tab La matrice d'entier
+ * @param nb_cols Le nombre de colonne
+ * @param nb_rows Le nombre de ligne
+ */
+void ecrire_fichier(const char *nameFile, int **tab, int nb_cols, int nb_rows);
+
 #endif

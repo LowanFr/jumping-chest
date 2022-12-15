@@ -89,3 +89,18 @@ int **lire_fichier(const char *nameFile) {
 
     return tab;
 }
+
+void ecrire_fichier(const char *nameFile, int **tab, int nb_cols, int nb_rows) {
+    FILE *fichier = NULL;
+    fichier = fopen(nameFile, "w");
+
+    for (int i = 0; i < nb_rows; i++) {
+        for (int j = 0; j < nb_cols; ++j) {
+            char textureIndex[10];
+            sprintf(textureIndex, "%02d", tab[i][j]);
+            fputs(textureIndex, fichier);
+            if (j < nb_cols - 1) fputs(" ", fichier);
+        }
+        if (i < nb_rows - 1) fputs("\n", fichier);
+    }
+}

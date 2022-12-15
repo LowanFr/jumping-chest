@@ -74,7 +74,6 @@ void init_keyboard(keyboard_status_t *keyboard) {
 }
 
 void init_mouse(mouse_status_t *mouse) {
-    mouse->right = false;
     mouse->left = false;
     mouse->x = 0;
     mouse->y = 0;
@@ -91,9 +90,6 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event) {
                 case SDL_BUTTON_LEFT:
                     mouse->left = true;
                     break;
-                case SDL_BUTTON_RIGHT:
-                    mouse->right = true;
-                    break;
             }
             break;
 
@@ -102,11 +98,7 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event) {
                 case SDL_BUTTON_LEFT:
                     mouse->left = false;
                     break;
-                case SDL_BUTTON_RIGHT:
-                    mouse->right = false;
-                    break;
             }
-            break;
     }
 }
 
@@ -118,7 +110,7 @@ void handle_event(SDL_Renderer *renderer, ressources_t *ressources,
         refresh_mouse(mouse, event);
         handle_button(renderer, ressources, game, world, mouse);
     }
-    
+
 }
 
 void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
@@ -165,6 +157,10 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
 
             // Sauvegarde toutes les structures de données
             save_game(game, folder);
+            save_world(world, folder);
+
+            world->menu = true;
+            world->pause = false;
         }
 
         // Bouton de nouvelle partie
@@ -172,7 +168,7 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
             world->menu = false;
             world->end = false;
             init_world(game, world, true);
-            init_ressources(renderer, ressources, true);
+            init_ressources(renderer, ressources, game);
         }
 
         // Bouton pour quitter

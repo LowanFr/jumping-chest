@@ -16,7 +16,6 @@
 #define FPS 60
 
 
-
 /**
  * @brief Initialisation du jeu.
  * @param window La fenêtre
@@ -34,12 +33,21 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_game(game);
     init_keyboard(keyboard);
     init_mouse(mouse);
-    init_ressources(*renderer, ressources, false);
+    init_ressources(*renderer, ressources, game);
     world->newLevel = false;
+    world->hearts = 3;
     init_world(game, world, false);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
 }
 
+/**
+ * Libère la mémoire de tout le programme.
+ * @param window La fenêtre
+ * @param renderer Le moteur de rendu
+ * @param ressources Les ressources
+ * @param game Le jeu
+ * @param world Le monde
+ */
 void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world) {
     // Libère la mémoire de la partie
     clean_data(world);
@@ -51,6 +59,16 @@ void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources,
     // Quitter SDL
     clean_ttf();
     clean_sdl(renderer, window);
+}
+
+/**
+ * Applique des pauses pour être à 60 FPS
+ * @param delay Le délai
+ */
+void sleep(int *delay) {
+    // Ralentissement pour un affichage fluide
+    if (SDL_GetTicks() < (*delay + 1000 / FPS)) SDL_Delay((*delay + 1000 / FPS) - SDL_GetTicks());
+    *delay = (int) SDL_GetTicks();
 }
 
 /**
@@ -94,10 +112,9 @@ int main() {
             repositioning_camera(&world);
             handle_collision(&game, &world, world.player, &keyboard);
 
-            // Ralentissement pour un affichage fluide
-            if (SDL_GetTicks() < (delay + 1000 / FPS)) SDL_Delay((delay + 1000 / FPS) - SDL_GetTicks());
-            delay = (int) SDL_GetTicks();
+            sleep(&delay);
         }
+        sleep(&delay);
     }
 
     // Libère toute la mémoire utilisée pour le monde

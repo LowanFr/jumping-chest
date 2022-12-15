@@ -31,9 +31,9 @@ void clean_ressources(ressources_t *ressources);
  * @brief Initialise les ressources.
  * @param renderer Le moniteur de rendu
  * @param ressources Les ressources du jeu
- * @param newLevel Si les ressources sont liées à un prochain niveau
+ * @param game Le jeu
 */
-void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, bool newLevel);
+void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *game);
 
 /**
  * @brief Rafraichit l'écran en fonction de l'état des données du monde.

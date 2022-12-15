@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <SDL.h>
 #include <stdbool.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "sdl2-light.h"
 #include "sdl2-ttf-light.h"
 #include "map.h"
@@ -105,7 +107,7 @@ struct sprite_s {
     bool isright;
     bool isAttacked;
     bool print_e;
-    
+
 };
 typedef struct sprite_s sprite_t;
 
@@ -153,7 +155,7 @@ struct ressources_s {
     SDL_Texture *save; /*!< Ressource liée à l'image du bouton de sauvegarde. */
     SDL_Texture *exit; /*!< Ressource liée à l'image du bouton pour quitter. */
     SDL_Texture *letter_e; /*!< Ressource liée à l'image de la lettre E*/
-    TTF_Font * score; /*!< Ressource liée au texte de la vie */
+    TTF_Font *score; /*!< Ressource liée au texte de la vie */
 };
 typedef struct ressources_s ressources_t;
 
@@ -173,7 +175,6 @@ typedef struct keyboard_status_s keyboard_status_t;
  * @brief Définition d'une souris avec les boutons et les coordonnées.
  */
 struct mouse_status_s {
-    bool right; /*!< Champ concernant l'état du click gauche. */
     bool left; /*!< Champ concernant l'état du click droit. */
     int x; /*!< Champ concernant l'abscisse de la souris'. */
     int y; /*!< Champ concernant l'ordonnée de la souris. */
@@ -216,7 +217,8 @@ void init_cam(world_t *world, cam_t *camera, int h, int w);
  * @param h2 La hauteur pour la destination de l'image
  * @param textureIndex L'indice de la texture de l'image
  */
-void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex, bool print_e);
+void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex,
+                 bool print_e);
 
 /**
  * @brief Déplacement des blobs.
@@ -236,9 +238,8 @@ void clean_data(world_t *world);
  * @param renderer Le moteur de rendu
  * @param game La partie
  * @param ressources Les ressources
- * @param restart Si la partie redémarre
  */
-void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources, bool restart);
+void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources);
 
 /**
  * @brief Actualisation des ressources du niveau
@@ -256,5 +257,41 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
  * @return
  */
 SDL_Texture *load_image(const char *fileName, SDL_Renderer *renderer);
+
+/**
+ * @brief Exporte tous les blocs dans la map
+ * @param world Le monde
+ */
+void export_blocks_in_map(world_t *world);
+
+/**
+ * @brief Sauvegarde le monde
+ * @param world Le monde
+ * @param folder Le dossier
+ */
+void save_world(world_t *world, char folder[100]);
+
+/**
+ * @brief Sauvegarde les détails
+ * @param world Le monde
+ * @param folder Le dossier
+ */
+void save_details(world_t *world, char folder[100]);
+
+
+/**
+ * @brief Sauvegarde le joueur
+ * @param world Le monde
+ * @param folder Le dossier
+ */
+void save_player(world_t *world, char folder[100]);
+
+
+/**
+ * @brief Sauvegarde les blocks
+ * @param world Le monde
+ * @param folder Le dossier
+ */
+void save_blocks(world_t *world, char folder[100]);
 
 #endif
