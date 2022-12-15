@@ -10,6 +10,8 @@
 
 #include <stdbool.h>
 #include <SDL.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "graphic.h"
 
 /**

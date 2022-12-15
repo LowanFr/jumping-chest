@@ -8,8 +8,9 @@
  * @date 7 Décembre 2022
  */
 
-#include "stdio.h"
-#include "time.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 /**
  * @brief Définition d'une partie d'un joueur
@@ -28,5 +29,18 @@ typedef struct game_s game_t;
  * @param game La partie
  */
 void init_game(game_t *game);
+
+/**
+ * Sauvegarde l'état de la partie
+ * @param game La partie
+ * @param folder Le dossier de sauvegarde
+ */
+void save_game(game_t *game, char folder[100]);
+
+/**
+ * @brief Libérer la mémoire de la partie
+ * @param game La partie
+ */
+void clean_game(game_t *game);
 
 #endif

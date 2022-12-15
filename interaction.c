@@ -145,6 +145,27 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
             }
         }
 
+        // Bouton pour sauvegarder
+        if (button.type == 3) {
+            // Récupération de la date actuelle
+            time_t date = time(NULL);
+            struct tm tm = *localtime(&date);
+
+            // Défini le chemin vers le dossier
+            char folder[100];
+            sprintf(folder, "../backups/%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1,
+                    tm.tm_mday,
+                    tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+            // Vérifie que le dossier n'existe pas puis le crée
+            struct stat st = {0};
+            if (stat(folder, &st) != -1) return;
+            mkdir(folder, 0700);
+
+            // Sauvegarde toutes les structures de données
+            save_game(game, folder);
+        }
+
         // Bouton de nouvelle partie
         if (button.type == 1) {
             world->menu = false;
