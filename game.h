@@ -31,6 +31,13 @@ typedef struct game_s game_t;
 void init_game(game_t *game);
 
 /**
+ * Sauvegarde l'état de la partie
+ * @param game La partie
+ * @param folder Le dossier de sauvegarde
+ */
+void save_game(game_t *game, char folder[100]);
+
+/**
  * @brief Libérer la mémoire de la partie
  * @param game La partie
  */

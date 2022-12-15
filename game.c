@@ -23,6 +23,29 @@ void init_game(game_t *game) {
             tm.tm_hour, tm.tm_min, tm.tm_sec);
 }
 
+/**
+ * Sauvegarde l'état de la partie
+ * @param folder  Le dossier de sauvegarde
+ */
+void save_game(game_t *game, char folder[100]) {
+    // Défini le chemin vers le fichier
+    char gameFileName[100];
+    sprintf(gameFileName, "%s/game.txt", folder);
+
+    // Ouvre le fichier en mode écriture
+    FILE *gameFile = NULL;
+    gameFile = fopen(gameFileName, "w");
+
+    // Défini le contenu du fichier de sauvegarde
+    char gameFileContent[300];
+    sprintf(gameFileContent, "%s\n%i\n%s\n%s\n%s", game->level, game->score, game->pseudo, game->startDate,
+            game->endDate);
+
+    // Ajoute le contenu du fichier qui est fermé après
+    fputs(gameFileContent, gameFile);
+    fclose(gameFile);
+}
+
 void clean_game(game_t *game) {
     free(game->pseudo);
     free(game->startDate);
