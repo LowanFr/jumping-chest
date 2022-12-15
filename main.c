@@ -40,9 +40,10 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_cam(world, camera, SCREEN_W, SCREEN_H);
 }
 
-void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, world_t *world) {
+void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world) {
     // Libère la mémoire de la partie
     clean_data(world);
+    clean_game(game);
 
     // Libère l'espace des ressources
     clean_ressources(ressources);
@@ -66,11 +67,11 @@ int main() {
     mouse_status_t mouse;
     game_t game;
     int delay = 0;
-    
+
 
     // Initialisation du jeu
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
-    
+
     // Boucle du menu
     while (world.pause || world.menu) {
         // Actualisation du menu
@@ -104,7 +105,7 @@ int main() {
     }
 
     // Libère toute la mémoire utilisée pour le monde
-    clean(window, renderer, &ressources, &world);
+    clean(window, renderer, &ressources, &game, &world);
 
     return EXIT_SUCCESS;
 }

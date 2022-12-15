@@ -68,15 +68,15 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
                 } else
                     SDL_RenderCopy(renderer, ressources->blocks,
                                    &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
-         
+
             }
         }
     }
     char buff[20];
     sprintf(buff, "SCORE : %d", game->score);
-    
+
     apply_text(renderer, 10, 10, 150, 50, buff ,ressources->score);
-    
+
     for(int i = 0; i < world->hearts; ++i){
         SDL_Rect pos_lives;
         pos_lives.x = SCREEN_W - 100 - i*(WIDTH_PLAYER + 20) ;
@@ -143,6 +143,8 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
             if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
             else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &world->buttons[i].DestR);
             else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
+            world->buttons[3].enable = false;
+            world->buttons[1].enable = true;
         }
 
         if (world->pause) {
@@ -150,6 +152,8 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
             if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
             else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
             else if (i == 3) SDL_RenderCopy(renderer, ressources->save, NULL, &world->buttons[i].DestR);
+            world->buttons[3].enable = true;
+            world->buttons[1].enable = false;
         }
     }
 

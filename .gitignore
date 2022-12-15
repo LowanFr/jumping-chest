@@ -5,6 +5,9 @@
 build/*
 !build/.gitkeep
 
+# Backups file
+backups/*/*.txt
+
 # CLion / Jetbrains
 .idea/
 cmake-build-debug/

@@ -8,8 +8,8 @@
 
 void init_game(game_t *game) {
     // Initialisation des paramètres
-    game->endDate = NULL;
-    game->pseudo = NULL;
+    game->endDate = malloc(sizeof(char) * 100);
+    game->pseudo = malloc(sizeof(char) * 50);
     game->score = 0;
     game->level = "classic";
 
@@ -17,10 +17,14 @@ void init_game(game_t *game) {
     time_t date = time(NULL);
     struct tm tm = *localtime(&date);
 
-    char buffer[50];
-    sprintf(buffer, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-            tm.tm_hour, tm.tm_min, tm.tm_sec);
-
     // Défini la date actuelle de lancement
-    game->startDate = buffer;
+    game->startDate = malloc(sizeof(char) * 100);
+    sprintf(game->startDate, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+            tm.tm_hour, tm.tm_min, tm.tm_sec);
+}
+
+void clean_game(game_t *game) {
+    free(game->pseudo);
+    free(game->startDate);
+    free(game->endDate);
 }

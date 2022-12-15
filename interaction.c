@@ -157,6 +157,44 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
             }
         }
 
+        // Bouton pour sauvegarder
+        if (button.type == 3) {
+            // Récupération de la date actuelle
+            time_t date = time(NULL);
+            struct tm tm = *localtime(&date);
+
+            char folder[100];
+            sprintf(folder, "../backups/%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1,
+                    tm.tm_mday,
+                    tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+            struct stat st = {0};
+            if (stat(folder, &st) == -1) {
+                mkdir(folder, 0700);
+            }
+
+            char worldFileName[100];
+            sprintf(worldFileName, "%s/world.txt", folder);
+
+            char gameFileName[100];
+            sprintf(gameFileName, "%s/game.txt", folder);
+
+            FILE *worldFile = NULL;
+            FILE *gameFile = NULL;
+            worldFile = fopen(worldFileName, "w"); // Ouvre en mode écriture
+            gameFile = fopen(gameFileName, "w"); // Ouvre en mode écriture
+
+            char gameFileContent[300];
+            sprintf(gameFileContent, "%s\n%i\n%s\n%s\n%s", game->level, game->score, game->pseudo, game->startDate,
+                    game->endDate);
+
+            printf("%s\n", game->startDate);
+            fputs(gameFileContent, gameFile);
+
+            fclose(worldFile);
+            fclose(gameFile);
+        }
+
         // Bouton de nouvelle partie
         if (button.type == 1) {
             world->menu = false;
