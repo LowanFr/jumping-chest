@@ -6,7 +6,8 @@ build/*
 !build/.gitkeep
 
 # Backups file
-backups/*/*.txt
+backups/*
+!backups/.gitkeep
 
 # CLion / Jetbrains
 .idea/
