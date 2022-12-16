@@ -137,6 +137,7 @@ struct world_s {
     bool end; /*!<  Champ désignant la fin de la partie. */
     bool menu;
     bool pause;
+    int cycles_pause; /*!<  Champ désignant le nombre de cycle de jeu. */
     bool newLevel;
     int counter_score_vie;
 

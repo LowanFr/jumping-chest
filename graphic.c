@@ -88,6 +88,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
             }
         }
     }
+    // Affichage du score
     char buff[20];
     sprintf(buff, "SCORE : %d", game->score);
 
@@ -98,6 +99,8 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
         world->counter_score_vie = 0;
     }
 
+    // Affichage des vies
+
     for (int i = 0; i < world->hearts; ++i) {
         SDL_Rect pos_lives;
         pos_lives.x = SCREEN_W - 100 - i * (WIDTH_PLAYER + 20);
@@ -107,6 +110,9 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
         SDL_RenderCopy(renderer, ressources->player,
                        &world->player->SrcR, &pos_lives);
     }
+
+    
+    
 
     // Incrémente le nombre de cycles
     if (world->cycles == 180) world->cycles = 0;
@@ -144,6 +150,21 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
     // Affiche l'arrière-plan
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
 
+    // Affichage du menu
+    
+    if(world->menu){
+        int x = SCREEN_W / 2 - 800 / 2;
+        int y = SCREEN_H / 8;
+        apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->score);
+        apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->score);
+    }
+    if(world->pause && world->cycles_pause < 400){
+        int x = SCREEN_W / 2 - 800 / 2;
+        int y = SCREEN_H / 8;
+        apply_text(renderer, x, y, 800, 100, "En pause..", ressources->score);
+    }
+    if(world->cycles_pause % 500 == 0) world->cycles_pause = 0;
+    
     bool save = false;
     struct dirent *dir;
     DIR *d = opendir("../backups");
@@ -160,6 +181,7 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
     for (int i = 0; i < 4; i++) {
         if (world->menu) {
             // Affiche le bouton
+            world->buttons[i].DestR.y = 300 + i * 90;
             if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
             else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &world->buttons[i].DestR);
             else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
@@ -168,7 +190,10 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
         }
 
         if (world->pause) {
+            //Incrementation du cycle de pause
+            world->cycles_pause++;
             // Affiche le bouton
+            world->buttons[i].DestR.y = i != 3 ? 300 + i * 90 : 300 + 90;
             if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
             else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
             else if (i == 3) SDL_RenderCopy(renderer, ressources->save, NULL, &world->buttons[i].DestR);

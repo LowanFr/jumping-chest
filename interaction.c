@@ -27,6 +27,7 @@ void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event)
                         world->menu = true;
                     } else if (!world->pause) {
                         world->pause = true;
+                        world->cycles_pause = 0;
                     }
                     break;
                 case SDLK_LEFT:

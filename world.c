@@ -25,7 +25,7 @@ void init_world(game_t *game, world_t *world, bool new_game) {
         world->buttons = calloc(4, sizeof(button_t));
         for (int i = 0; i < 4; ++i) {
             world->buttons[i].DestR.x = (1080 - 375 / 2) / 2;
-            world->buttons[i].DestR.y = i != 3 ? 220 + i * 90 : 310;
+            world->buttons[i].DestR.y = 300 + i * 90;
             world->buttons[i].DestR.w = 375;
             world->buttons[i].DestR.h = 75;
             world->buttons[i].type = i;
