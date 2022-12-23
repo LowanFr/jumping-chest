@@ -75,7 +75,7 @@ void load_game(game_t *game) {
                     sprintf(game->endDate, "%s", line);
                     break;
                 default:
-                    sprintf(game->level, "%s", line);
+                    if (strcmp(game->level, line) != 0) sprintf(game->level, "%s", line);
                     break;
             }
             step++;
@@ -90,14 +90,4 @@ void clean_game(game_t *game) {
     free(game->level);
     free(game->startDate);
     free(game->endDate);
-}
-
-void slice(const char *str, char *buffer, size_t start, size_t end) {
-    if (end >= start) return;
-
-    size_t j = 0;
-    for (size_t i = start; i <= end; ++i) {
-        buffer[j++] = str[i];
-    }
-    buffer[j] = 0;
 }

@@ -30,7 +30,6 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *g
 
     ressources->blocks = load_image(blocks, renderer);
     ressources->background = load_image(background, renderer);
-
     ressources->player = load_image("../assets/player.bmp", renderer);
     ressources->exit = load_image("../assets/button-exit.bmp", renderer);
     ressources->save = load_image("../assets/button-save.bmp", renderer);

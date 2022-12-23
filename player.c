@@ -45,22 +45,25 @@ void player_movement(keyboard_status_t *touches, sprite_t *player) {
 
 void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_status_t *key) {
     // Vérification des collisions avec les blocs qui entoure le joueur
-    for (int i = entity->DestR.y/64 - 5 ; i <= entity->DestR.y/64 + 5; ++i) {
-        for (int j = entity->DestR.x/64 - 5 ; j < entity->DestR.x/64 + 5; ++j) {
-            if(i < world->map->nb_row && i >= 0 && j < world->map->nb_col && j >= 0){
+    for (int i = entity->DestR.y / 64 - 5; i <= entity->DestR.y / 64 + 5; ++i) {
+        for (int j = entity->DestR.x / 64 - 5; j < entity->DestR.x / 64 + 5; ++j) {
+            if (i < world->map->nb_row && i >= 0 && j < world->map->nb_col && j >= 0) {
                 sprite_t *sprite = &world->blocks[i][j];
 
                 handle_collision_chest(world, entity, sprite, key);
                 handle_collision_solidBlock(entity, sprite);
                 handle_collision_blobs(game, world, world->player, entity);
                 handle_collision_pieces(world, game, entity, sprite);
-    
+
             }
         }
     }
 
     // Arrête le jeu si le joueur est mort
-    if (world->hearts == 0) world->end = true;
+    if (world->hearts == 0) {
+        world->menu = true;
+        world->end = true;
+    }
 }
 
 void handle_collision_pieces(world_t *world, game_t *game, sprite_t *player, sprite_t *sprite) {
@@ -81,13 +84,13 @@ void handle_collision_pieces(world_t *world, game_t *game, sprite_t *player, spr
 
     // Collision
     game->score++;
-    world->counter_score_vie ++;
+    world->counter_score_vie++;
     sprite->textureIndex = 0;
 }
 
-void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob, char cote){
+void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob, char cote) {
     SDL_Rect *blobImg = &blob->DestR;
-    
+
     player->DestR.x = player->prec.x;
     player->DestR.y = player->prec.y;
     world->hearts--;
@@ -95,13 +98,13 @@ void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob
     player->ground = player->prec.y;
     player->isAttacked = true;
     player->timeSinceJumpStart = 0;
-    if(cote == 'g'){
+    if (cote == 'g') {
         player->isright = true;
         player->prec.x = blobImg->x - player->prec.w;
-    }else if(cote == 'd'){
+    } else if (cote == 'd') {
         player->isright = false;
         player->prec.x = blobImg->x + blobImg->w;
-    }else if(cote == 'b'){
+    } else if (cote == 'b') {
         if (player->DestR.x + player->DestR.w / 2 > blobImg->x + blobImg->w) {
             player->isright = false;
             player->prec.x = blobImg->x + blobImg->w;
@@ -112,6 +115,7 @@ void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob
         }
     }
 }
+
 void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, sprite_t *blob) {
     if (player->textureIndex != -1) return;
 
@@ -144,29 +148,29 @@ void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, spri
     else if (blobImg->x < playerImg->x + playerImg->w && blobImg->x > playerImg->x &&
              player->prec.x + player->prec.w <= blob->prec.x && player->isAttacked == false) {
         change_state(game, world, player, blob, 'g');
-        
+
     }
 
         // Collision à droite du bloc
     else if (blobImg->x + blobImg->w > playerImg->x && blobImg->x < playerImg->x &&
-        player->prec.x >= blob->prec.x + blobImg->w && player->isAttacked == false) {
+             player->prec.x >= blob->prec.x + blobImg->w && player->isAttacked == false) {
         change_state(game, world, player, blob, 'd');
     }
 
         // Collision en bas du bloc
     else if (blobImg->y + blobImg->h > playerImg->y && playerImg->y > blobImg->y &&
              player->DestR.y >= blob->prec.y + blob->prec.h) {
-        
+
         change_state(game, world, player, blob, 'b');
     }
 }
 
 void handle_collision_chest(world_t *world, sprite_t *player, sprite_t *sprite, keyboard_status_t *key) {
     if (player->textureIndex != -1) return;
-    
+
     // Vérifie que c'est un bloc solide
     int index = sprite->textureIndex;
-    
+
     if (index != 4) return;
 
     // Récupère les deux rectangles
@@ -178,17 +182,18 @@ void handle_collision_chest(world_t *world, sprite_t *player, sprite_t *sprite, 
     bool condCollision2 = block->x < playerImg->x + playerImg->w && block->x + block->w > playerImg->x;
 
     // Vérifie qu'il y a une collision
-    if (condCollision1 && condCollision2){
-        if(!sprite->print_e) sprite->print_e = true;
-        if(key->e) {
+    if (condCollision1 && condCollision2) {
+        if (!sprite->print_e) sprite->print_e = true;
+        if (key->e) {
             sprite->textureIndex = 5;
             world->newLevel = true;
         }
-    }else{
-        if(sprite->print_e) sprite->print_e = false;
+    } else {
+        if (sprite->print_e) sprite->print_e = false;
     }
 
 }
+
 void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite) {
     // Vérifie que c'est un bloc solide
     int index = sprite->textureIndex;

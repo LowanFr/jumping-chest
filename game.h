@@ -50,13 +50,4 @@ void clean_game(game_t *game);
  */
 void load_game(game_t *game);
 
-/**
- * Récupère une partie d'une chaîne de caractère
- * @param str La chaîne de base
- * @param buffer Le résultat
- * @param start L'indice de début
- * @param end L'indice de fin
- */
-void slice(const char *str, char *buffer, size_t start, size_t end);
-
 #endif
