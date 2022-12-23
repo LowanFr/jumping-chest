@@ -23,8 +23,8 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *g
     if (strcmp(game->level, "classic") != 0) clean_ressources(ressources);
 
     // Récupère les assets en fonction du niveau
-    char blocks[100] = "../assets/classic.bmp";
-    char background[100] = "../assets/classic_bg.bmp";
+    char blocks[100];
+    char background[100];
     sprintf(blocks, "../assets/%s.bmp", game->level);
     sprintf(background, "../assets/%s_bg.bmp", game->level);
 
@@ -94,7 +94,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     apply_text(renderer, 10, 10, 150, 50, buff, ressources->score);
 
-    if(world->counter_score_vie >= 100){
+    if (world->counter_score_vie >= 100) {
         world->hearts++;
         world->counter_score_vie = 0;
     }
@@ -111,8 +111,8 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
                        &world->player->SrcR, &pos_lives);
     }
 
-    
-    
+
+
 
     // Incrémente le nombre de cycles
     if (world->cycles == 180) world->cycles = 0;
@@ -151,20 +151,20 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
 
     // Affichage du menu
-    
-    if(world->menu){
+
+    if (world->menu) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 8;
         apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->score);
         apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->score);
     }
-    if(world->pause && world->cycles_pause < 400){
+    if (world->pause && world->cycles_pause < 400) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 8;
         apply_text(renderer, x, y, 800, 100, "En pause..", ressources->score);
     }
-    if(world->cycles_pause % 500 == 0) world->cycles_pause = 0;
-    
+    if (world->cycles_pause % 500 == 0) world->cycles_pause = 0;
+
     bool save = false;
     struct dirent *dir;
     DIR *d = opendir("../backups");

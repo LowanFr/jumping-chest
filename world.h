@@ -295,4 +295,34 @@ void save_player(world_t *world, char folder[100]);
  */
 void save_blocks(world_t *world, char folder[100]);
 
+/**
+ * @brief Charge les données d'un monde sauvegardé
+ * @param world Le monde
+ */
+void load_world(world_t *world);
+
+/**
+ * @brief Charge les données du joueur
+ * @param world Le monde
+ */
+void load_player(world_t *world);
+
+/**
+ * @brief Charge les données des blocks
+ * @param world Le monde
+ */
+void load_blocks(world_t *world);
+
+/**
+ * @brief Charge des détails du monde sauvegardé
+ * @param world Le monde
+ */
+void load_details(world_t *world);
+
+/**
+ * @brief Initialise les blocks du monde
+ * @param world Le monde
+ */
+void init_blocks(world_t *world);
+
 #endif

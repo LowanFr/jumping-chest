@@ -8,10 +8,10 @@
 
 void init_game(game_t *game) {
     // Initialisation des paramètres
-    game->endDate = malloc(sizeof(char) * 100);
-    game->pseudo = malloc(sizeof(char) * 50);
+    game->endDate = (char *) malloc(sizeof(char) * 100);
+    game->pseudo = (char *) malloc(sizeof(char) * 50);
+    game->level = (char *) malloc(sizeof(char) * 10);
     game->score = 0;
-    game->level = "classic";
 
     // Récupération de la date actuelle
     time_t date = time(NULL);
@@ -21,6 +21,9 @@ void init_game(game_t *game) {
     game->startDate = malloc(sizeof(char) * 100);
     sprintf(game->startDate, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
             tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+    // Défini le niveau
+    sprintf(game->level, "classic");
 }
 
 /**
@@ -46,8 +49,55 @@ void save_game(game_t *game, char folder[100]) {
     fclose(gameFile);
 }
 
+void load_game(game_t *game) {
+    FILE *fichier = NULL;
+    char line[50];
+    int size = 50;
+    int step = 0;
+    fichier = fopen("../backups/game.txt", "r"); // Ouvre en mode lecture
+
+    if (fichier != NULL) { // Fichier introuvable
+        // Parcours toutes les lignes
+        while (fgets(line, size, fichier) != NULL) {
+            line[strcspn(line, "\r\n")] = 0;
+
+            switch (step) {
+                case 1:
+                    game->score = atoi(line);
+                    break;
+                case 2:
+                    sprintf(game->pseudo, "%s", line);
+                    break;
+                case 3:
+                    sprintf(game->startDate, "%s", line);
+                    break;
+                case 4:
+                    sprintf(game->endDate, "%s", line);
+                    break;
+                default:
+                    sprintf(game->level, "%s", line);
+                    break;
+            }
+            step++;
+        }
+
+        fclose(fichier);
+    }
+}
+
 void clean_game(game_t *game) {
     free(game->pseudo);
+    free(game->level);
     free(game->startDate);
     free(game->endDate);
+}
+
+void slice(const char *str, char *buffer, size_t start, size_t end) {
+    if (end >= start) return;
+
+    size_t j = 0;
+    for (size_t i = start; i <= end; ++i) {
+        buffer[j++] = str[i];
+    }
+    buffer[j] = 0;
 }

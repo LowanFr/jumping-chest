@@ -103,4 +103,6 @@ void ecrire_fichier(const char *nameFile, int **tab, int nb_cols, int nb_rows) {
         }
         if (i < nb_rows - 1) fputs("\n", fichier);
     }
+
+    fclose(fichier);
 }

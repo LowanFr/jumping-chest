@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 /**
  * @brief Définition d'une partie d'un joueur
@@ -42,5 +43,20 @@ void save_game(game_t *game, char folder[100]);
  * @param game La partie
  */
 void clean_game(game_t *game);
+
+/**
+ * @brief Charge la sauvegarde
+ * @param game La partie
+ */
+void load_game(game_t *game);
+
+/**
+ * Récupère une partie d'une chaîne de caractère
+ * @param str La chaîne de base
+ * @param buffer Le résultat
+ * @param start L'indice de début
+ * @param end L'indice de fin
+ */
+void slice(const char *str, char *buffer, size_t start, size_t end);
 
 #endif

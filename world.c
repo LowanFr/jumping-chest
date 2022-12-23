@@ -58,11 +58,14 @@ void init_world(game_t *game, world_t *world, bool new_game) {
     world->pause = false;
     world->newLevel = false;
 
-
     // Initialisation de l'image du joueur
     init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, 350, 720 - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
                 HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER, false);
 
+    init_blocks(world);
+}
+
+void init_blocks(world_t *world) {
     // Initialisation de tous les blocs sur la map
     for (int i = 0; i < world->map->nb_row; i++) {
         for (int j = 0; j < world->map->nb_col; ++j) {
@@ -294,4 +297,101 @@ void save_blocks(world_t *world, char folder[100]) {
 
     // Retranscris la matrice dans le fichier
     ecrire_fichier(blocksFiles, world->map->tab, world->map->nb_col, world->map->nb_row);
+}
+
+void load_world(world_t *world) {
+    load_blocks(world);
+    load_player(world);
+    load_details(world);
+}
+
+void load_player(world_t *world) {
+    FILE *fichier = NULL;
+    char line[50];
+    int size = 50;
+    int step = 0;
+    fichier = fopen("../backups/world/player.txt", "r"); // Ouvre en mode lecture
+
+    if (fichier != NULL) { // Fichier introuvable
+        // Parcours toutes les lignes
+        while (fgets(line, size, fichier) != NULL) {
+            int value = atoi(line);
+
+            switch (step) {
+                case 0:
+                    world->player->DestR.x = value;
+                    break;
+                case 1:
+                    world->player->DestR.y = value;
+                    break;
+                case 2:
+                    world->player->prec.x = value;
+                    break;
+                case 3:
+                    world->player->prec.y = value;
+                    break;
+                case 4:
+                    world->player->timeSinceJumpStart = value;
+                    break;
+                case 5:
+                    world->player->isright = (bool) value;
+                    break;
+                case 6:
+                    world->player->saut = (bool) value;
+                    break;
+                case 7:
+                    world->player->ground = value;
+                    break;
+                default:
+                    world->player->print_e = (bool) value;
+                    break;
+            }
+            step++;
+        }
+
+        fclose(fichier);
+    }
+}
+
+void load_blocks(world_t *world) {
+    world->map->tab = lire_fichier("../backups/world/blocks.txt");
+    init_blocks(world);
+}
+
+void load_details(world_t *world) {
+    FILE *fichier = NULL;
+    char line[50];
+    int size = 50;
+    int step = 0;
+    fichier = fopen("../backups/world/details.txt", "r"); // Ouvre en mode lecture
+
+    if (fichier != NULL) { // Fichier introuvable
+        // Parcours toutes les lignes
+        while (fgets(line, size, fichier) != NULL) {
+            int value = atoi(line);
+
+            // Initialisation de l'image du joueur
+            switch (step) {
+                case 0:
+                    world->cycles = value;
+                    break;
+                case 1:
+                    world->hearts = value;
+                    break;
+                case 2:
+                    world->end = (bool) value;
+                    break;
+                case 3:
+                    world->menu = (bool) value;
+                    break;
+                default:
+                    world->pause = (bool) value;
+                    break;
+            }
+
+            step++;
+        }
+
+        fclose(fichier);
+    }
 }
