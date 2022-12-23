@@ -16,7 +16,7 @@ void clean_ressources(ressources_t *ressources) {
     clean_texture(ressources->resume);
     clean_texture(ressources->newGame);
     clean_texture(ressources->letter_e);
-    clean_font(ressources->score);
+    clean_font(ressources->font);
 }
 
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *game) {
@@ -36,7 +36,7 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *g
     ressources->resume = load_image("../assets/button-resume.bmp", renderer);
     ressources->newGame = load_image("../assets/button-new.bmp", renderer);
     ressources->letter_e = load_image("../assets/lettre.bmp", renderer);
-    ressources->score = load_font("../assets/font.ttf", 200);
+    ressources->font = load_font("../assets/font.ttf", 200);
 }
 
 void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,
@@ -91,15 +91,16 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
     char buff[20];
     sprintf(buff, "SCORE : %d", game->score);
 
-    apply_text(renderer, 10, 10, 150, 50, buff, ressources->score);
+    apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
 
     if (world->counter_score_vie >= 100) {
         world->hearts++;
         world->counter_score_vie = 0;
     }
 
-    // Affichage des vies
 
+
+    // Affichage des vies
     for (int i = 0; i < world->hearts; ++i) {
         SDL_Rect pos_lives;
         pos_lives.x = SCREEN_W - 100 - i * (WIDTH_PLAYER + 20);
@@ -109,9 +110,6 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
         SDL_RenderCopy(renderer, ressources->player,
                        &world->player->SrcR, &pos_lives);
     }
-
-
-
 
     // Incrémente le nombre de cycles
     if (world->cycles == 180) world->cycles = 0;
@@ -154,19 +152,46 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
     if (world->menu) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 8;
-        apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->score);
-        apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->score);
+        apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->font);
+        apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->font);
     }
-    if (world->pause && world->cycles_pause < 400) {
-        int x = SCREEN_W / 2 - 800 / 2;
-        int y = SCREEN_H / 8;
-        apply_text(renderer, x, y, 800, 100, "En pause..", ressources->score);
+    if (world->pause) {
+        if(world->cycles_pause < 60){
+            int x = SCREEN_W / 2 - 800 / 2;
+            int y = SCREEN_H / 8;
+            apply_text(renderer, x, y, 800, 100, "En pause..", ressources->font);
+        }
+        if (world->cycles_pause % 120 == 0){
+            world->cycles_pause = 0;
+        }
+        //Incrementation du cycle de pause
+        world->cycles_pause++;
     }
-    if (world->cycles_pause % 500 == 0) world->cycles_pause = 0;
+    if (world->go_menu){
+        int x = SCREEN_W / 2 - 800 / 2 ;
+        int y = SCREEN_H / 2 - 100 / 2 ;
+
+        if(world->hearts == 0){
+            apply_text(renderer, x, y, 800, 100, "Vous avez perdu", ressources->font);
+        }else{
+            apply_text(renderer, x, y, 800, 100, "Vous avez gagne", ressources->font);
+        }
+
+        //Incrementation du cycle de pause
+        world->cycles_pause++;
+
+        if (world->cycles_pause % 120 == 0){
+            world->go_menu = false;
+            world->menu = true;
+            world->cycles_pause = 0;
+        }
+    }
 
     bool save = false;
     struct dirent *dir;
+    
     DIR *d = opendir("../backups");
+
     if (d) {
         while ((dir = readdir(d)) != NULL) {
             if (strcmp(dir->d_name, ".gitkeep") == 0 || strcmp(dir->d_name, "..") == 0 ||
@@ -189,8 +214,6 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
         }
 
         if (world->pause) {
-            //Incrementation du cycle de pause
-            world->cycles_pause++;
             // Affiche le bouton
             world->buttons[i].DestR.y = i != 3 ? 300 + i * 90 : 300 + 90;
             if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);

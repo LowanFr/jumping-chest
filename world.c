@@ -55,6 +55,7 @@ void init_world(game_t *game, world_t *world, bool new_game) {
     world->counter_score_vie = game->score % 100;
     world->end = !new_game && !world->newLevel;
     world->menu = !new_game && !world->newLevel;
+    world->go_menu = false;
     world->pause = false;
     world->newLevel = false;
 
@@ -192,7 +193,8 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
             new_level(renderer, game, ressources);
             game->level = "classic";
             world->end = true;
-            world->menu = true;
+            world->go_menu = true;
+            world->cycles_pause = 0;
         }
     }
 }
