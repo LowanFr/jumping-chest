@@ -7,7 +7,7 @@
  * @authors SCHNEIDER Paul, DOUILLET, Esteban
  */
 
-void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event) {
+void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL_Event *event) {
     // Effectue des actions sur le type d'événements
     switch (event->type) {
         case SDL_QUIT: // Fermeture de la fenêtre
@@ -17,6 +17,8 @@ void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event)
             break;
 
         case SDL_KEYDOWN: // Touches appuyées
+            write_pseudo(game, event->key.keysym.sym);
+
             switch (event->key.keysym.sym) {
                 case SDLK_ESCAPE:
                     if(!world->go_menu){
@@ -116,7 +118,7 @@ void handle_event(SDL_Renderer *renderer, ressources_t *ressources,
                   mouse_status_t *mouse, keyboard_status_t *keyboard, game_t *game, world_t *world, SDL_Event *event) {
     // Exécute tous les événements en attente à chaque cycle
     while (SDL_PollEvent(event)) {
-        refresh_keys(world, keyboard, event);
+        refresh_keys(game, world, keyboard, event);
         refresh_mouse(mouse, event);
         handle_button(renderer, ressources, game, world, mouse);
     }
@@ -181,4 +183,34 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
             world->pause = false;
         }
     }
+}
+
+void write_pseudo(game_t *game, SDL_KeyCode key) {
+    if (!game->enteringPseudo) return;
+
+    // Supprime le dernier caractère
+    if (key == SDLK_BACKSPACE) {
+        game->pseudo[strlen(game->pseudo) - 1] = 0;
+        return;
+    }
+
+    // Fin du pseudonyme
+    if (key == SDLK_RETURN) {
+        game->enteringPseudo = false;
+        return;
+    }
+
+    // Récupère le nom de la clef
+    char keyName[50];
+    sprintf(keyName, "%s", SDL_GetKeyName(key));
+
+    // Vérifie la taille du pseudonyme
+    if (strlen(game->pseudo) >= 20) return;
+
+    // Ajoute le caractère
+    if (key == SDLK_SPACE) strcat(game->pseudo, " ");
+
+    // Vérifie la taille de la clef
+    if (strlen(keyName) > 1) return;
+    strcat(game->pseudo, keyName);
 }

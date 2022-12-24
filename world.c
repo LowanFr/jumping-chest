@@ -185,9 +185,10 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
         SDL_Delay(2000);
 
         // Modifie les textures en fonction du niveau
-        if (strcmp(game->level, "classic") == 0) game->level = "snow";
-        else if (strcmp(game->level, "snow") == 0) game->level = "lava";
-        else game->level = "END";
+        if (strcmp(game->level, "classic") == 0) sprintf(game->level, "snow");
+        else if (strcmp(game->level, "snow") == 0) sprintf(game->level, "lava");
+        else
+            sprintf(game->level, "END");
 
         // Vérifie si s'il y a un prochain niveau
         if (strcmp(game->level, "END") != 0) {
@@ -196,7 +197,7 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
             init_world(game, world, false);
         } else {
             new_level(renderer, game, ressources);
-            game->level = "classic";
+            sprintf(game->level, "classic");
             world->end = true;
             world->go_menu = true;
             world->cycles_pause = 0;
@@ -322,7 +323,7 @@ void load_player(world_t *world) {
     if (fichier != NULL) { // Fichier introuvable
         // Parcours toutes les lignes
         while (fgets(line, size, fichier) != NULL) {
-            int value = atoi(line);
+            int value = (int) strtol(line, NULL, 10);
 
             switch (step) {
                 case 0:

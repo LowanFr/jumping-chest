@@ -28,6 +28,14 @@ void clean_ressources(ressources_t *ressources);
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *game);
 
 /**
+ * @brief Demande à l'utilisateur d'entrer son pseudonyme
+ * @param renderer Le moteur de rendu
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
+void askPseudo(SDL_Renderer *renderer, game_t *game, ressources_t *ressources);
+
+/**
  * @brief Rafraichit l'écran en fonction de l'état des données du monde.
  * @param renderer Le moniteur de rendu
  * @param game La partie
@@ -57,7 +65,7 @@ void coin_animations(sprite_t *block);
  * @param renderer Le moteur de rendu
  * @param ressources Les ressources
  */
-void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressources);
+void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources);
 
 /**
  * @brief Gère l'animation d'un blob.

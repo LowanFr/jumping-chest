@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stdbool.h>
 
 /**
  * @brief Définition d'une partie d'un joueur
@@ -22,6 +23,7 @@ struct game_s {
     char *pseudo; /*!< Champ concernant le pseudonyme associé à la partie. */
     char *startDate; /*!< Champ concernant la date à laquelle la partie est lancée. */
     char *endDate; /*!< Champ concernant la date à laquelle la partie est finie. */
+    bool enteringPseudo; /*!< Champ concernant le fait que l'utilisateur peut rentrer son pseudonyme */
 };
 typedef struct game_s game_t;
 
