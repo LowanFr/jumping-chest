@@ -318,7 +318,7 @@ void load_player(world_t *world) {
     if (fichier != NULL) { // Fichier introuvable
         // Parcours toutes les lignes
         while (fgets(line, size, fichier) != NULL) {
-            int value = atoi(line);
+            int value = (int) strtol(line, NULL, 10);
 
             switch (step) {
                 case 0:
