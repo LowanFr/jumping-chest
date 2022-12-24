@@ -19,6 +19,15 @@
 #include "game.h"
 
 /**
+ * @brief La hauteur de l'écran.
+ */
+#define SCREEN_H 720
+
+/**
+ * @brief La largeur de l'écran.
+ */
+#define SCREEN_W 1280
+/**
  * @brief La largeur de l'image du joueur
  */
 #define WIDTH_PLAYER 56

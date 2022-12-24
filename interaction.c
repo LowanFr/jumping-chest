@@ -19,16 +19,19 @@ void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event)
         case SDL_KEYDOWN: // Touches appuyées
             switch (event->key.keysym.sym) {
                 case SDLK_ESCAPE:
-                    world->end = true;
-                    if (world->menu) {
-                        world->menu = false;
-                    } else if (world->pause) {
-                        world->pause = false;
-                        world->menu = true;
-                    } else {
-                        world->pause = true;
-                        world->cycles_pause = 0;
+                    if(!world->go_menu){
+                        world->end = true;
+                        if (world->menu) {
+                            world->menu = false;
+                        } else if (world->pause) {
+                            world->pause = false;
+                            world->menu = true;
+                        } else {
+                            world->pause = true;
+                            world->cycles_pause = 0;
+                        }
                     }
+                    
                     break;
                 case SDLK_LEFT:
                     keyboard->lastIsLeft = true;
@@ -50,12 +53,18 @@ void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event)
         case SDL_KEYUP: // Les touches libérées
             switch (event->key.keysym.sym) {
                 case SDLK_LEFT:
+                    if(keyboard->right){
+                        keyboard->lastIsLeft  = false;
+                    }
                     keyboard->left = false;
                     break;
                 case SDLK_SPACE:
                     keyboard->space = false;
                     break;
                 case SDLK_RIGHT:
+                    if(keyboard->left){
+                        keyboard->lastIsLeft  = true;
+                    }
                     keyboard->right = false;
                     break;
                 case SDLK_e:

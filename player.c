@@ -53,7 +53,7 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
             if (i < world->map->nb_row && i >= 0 && j < world->map->nb_col && j >= 0) {
                 sprite_t *sprite = &world->blocks[i][j];
 
-                //entity = player et blobs
+                //entity = player ou blobs
                 handle_collision_solidBlock(entity, sprite);
 
                 //entity est forcément un player
@@ -62,6 +62,14 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
 
             }
         }
+    }
+
+    if(world->player->DestR.x < 0 || world->player->DestR.x + world->player->DestR.w >= world->map->nb_col * SIZE_TEXTURES){
+        world->player->DestR.x = world->player->prec.x;
+    }
+    
+    if(world->player->DestR.y > world->map->nb_row * SIZE_TEXTURES){
+        world->hearts = 0;
     }
 
     // Arrête le jeu si le joueur est mort

@@ -11,15 +11,7 @@
 #include "sdl2-ttf-light.h"
 #include "player.h"
 
-/**
- * @brief La hauteur de l'écran.
- */
-#define SCREEN_H 720
 
-/**
- * @brief La largeur de l'écran.
- */
-#define SCREEN_W 1280
 
 /**
  * @brief Nettoie les ressources.

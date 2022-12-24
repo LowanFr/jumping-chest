@@ -60,7 +60,7 @@ void init_world(game_t *game, world_t *world, bool new_game) {
     world->newLevel = false;
 
     // Initialisation de l'image du joueur
-    init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, 350, 720 - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
+    init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, SCREEN_W / 2 + SIZE_TEXTURES * 4, SCREEN_H - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
                 HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER, false);
 
     init_blocks(world);
@@ -115,8 +115,13 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
 }
 
 void repositioning_camera(world_t *world) {
-    world->cam->x = world->player->prec.x - world->cam->w / 2;
-    world->cam->y = world->player->prec.y - world->cam->h / 2;
+    if(world->player->prec.x > SIZE_TEXTURES * 10 && world->player->prec.x < world->map->nb_col * SIZE_TEXTURES - SIZE_TEXTURES * 10){
+        world->cam->x = world->player->prec.x - world->cam->w / 2;
+    }
+    if(world->player->prec.y < world->map->nb_row * SIZE_TEXTURES - SIZE_TEXTURES * 6 && world->player->prec.y > SIZE_TEXTURES * 5){
+        world->cam->y = world->player->prec.y - world->cam->h / 2;
+    }
+    
 }
 
 void blob_movement(world_t *world, sprite_t *sprite) {
