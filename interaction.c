@@ -27,7 +27,7 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
                     } else if (world->pause) {
                         world->pause = false;
                         world->menu = true;
-                    } else if (!world->pause) {
+                    } else {
                         world->pause = true;
                         world->cycles_pause = 0;
                     }

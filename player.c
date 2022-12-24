@@ -44,15 +44,20 @@ void player_movement(keyboard_status_t *touches, sprite_t *player) {
 }
 
 void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_status_t *key) {
+    // Vérification des collisions avec les blobs et le joueur
+    handle_collision_blobs(game, world, world->player, entity);
+
     // Vérification des collisions avec les blocs qui entoure le joueur
     for (int i = entity->DestR.y / 64 - 5; i <= entity->DestR.y / 64 + 5; ++i) {
         for (int j = entity->DestR.x / 64 - 5; j < entity->DestR.x / 64 + 5; ++j) {
             if (i < world->map->nb_row && i >= 0 && j < world->map->nb_col && j >= 0) {
                 sprite_t *sprite = &world->blocks[i][j];
 
-                handle_collision_chest(world, entity, sprite, key);
+                //entity = player et blobs
                 handle_collision_solidBlock(entity, sprite);
-                handle_collision_blobs(game, world, world->player, entity);
+
+                //entity est forcément un player
+                handle_collision_chest(world, entity, sprite, key);
                 handle_collision_pieces(world, game, entity, sprite);
 
             }
@@ -61,7 +66,8 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
 
     // Arrête le jeu si le joueur est mort
     if (world->hearts == 0) {
-        world->menu = true;
+        world->cycles_pause = 0;
+        world->go_menu = true;
         world->end = true;
     }
 }
@@ -98,6 +104,7 @@ void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob
     player->ground = player->prec.y;
     player->isAttacked = true;
     player->timeSinceJumpStart = 0;
+    
     if (cote == 'g') {
         player->isright = true;
         player->prec.x = blobImg->x - player->prec.w;

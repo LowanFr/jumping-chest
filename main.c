@@ -63,12 +63,10 @@ void clean(SDL_Window *window, SDL_Renderer *renderer, ressources_t *ressources,
 
 /**
  * Applique des pauses pour être à 60 FPS
- * @param delay Le délai
  */
-void sleep(int *delay) {
+void sleep() {
     // Ralentissement pour un affichage fluide
-    if (SDL_GetTicks() < (*delay + 1000 / FPS)) SDL_Delay((*delay + 1000 / FPS) - SDL_GetTicks());
-    *delay = (int) SDL_GetTicks();
+    SDL_Delay(1000 / FPS);
 }
 
 /**
@@ -91,7 +89,7 @@ int main() {
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
 
     // Boucle du menu
-    while (world.pause || world.menu) {
+    while (world.pause || world.menu || world.go_menu) {
         // Actualisation du menu
         refresh_menu(&game, &world, renderer, &ressources);
         handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
@@ -112,9 +110,9 @@ int main() {
             repositioning_camera(&world);
             handle_collision(&game, &world, world.player, &keyboard);
 
-            sleep(&delay);
+            sleep();
         }
-        sleep(&delay);
+        sleep();
     }
 
     // Libère toute la mémoire utilisée pour le monde

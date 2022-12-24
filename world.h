@@ -137,7 +137,8 @@ struct world_s {
     bool end; /*!<  Champ désignant la fin de la partie. */
     bool menu;
     bool pause;
-    int cycles_pause; /*!<  Champ désignant le nombre de cycle de jeu. */
+    bool go_menu; /*!<  Champ désignant l'animation entre le jeu et le menu si joueur gagne ou si joueur perd */
+    int cycles_pause; /*!<  Champ désignant le nombre de cycle de jeu dans le pause. */
     bool newLevel;
     int counter_score_vie;
 
@@ -156,7 +157,7 @@ struct ressources_s {
     SDL_Texture *save; /*!< Ressource liée à l'image du bouton de sauvegarde. */
     SDL_Texture *exit; /*!< Ressource liée à l'image du bouton pour quitter. */
     SDL_Texture *letter_e; /*!< Ressource liée à l'image de la lettre E*/
-    TTF_Font *score; /*!< Ressource liée au texte de la vie */
+    TTF_Font *font; /*!< Ressource liée au texte de la vie */
 };
 typedef struct ressources_s ressources_t;
 
