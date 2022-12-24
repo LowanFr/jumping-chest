@@ -12,6 +12,7 @@ void init_game(game_t *game) {
     game->pseudo = (char *) malloc(sizeof(char) * 50);
     game->level = (char *) malloc(sizeof(char) * 10);
     game->score = 0;
+    game->enteringPseudo = false;
 
     // Récupération de la date actuelle
     time_t date = time(NULL);
@@ -63,7 +64,7 @@ void load_game(game_t *game) {
 
             switch (step) {
                 case 1:
-                    game->score = atoi(line);
+                    game->score = (int) strtol(line, NULL, 10);
                     break;
                 case 2:
                     sprintf(game->pseudo, "%s", line);

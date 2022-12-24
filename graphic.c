@@ -87,6 +87,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
             }
         }
     }
+
     // Affichage du score
     char buff[20];
     sprintf(buff, "SCORE : %d", game->score);
@@ -109,9 +110,6 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
         SDL_RenderCopy(renderer, ressources->player,
                        &world->player->SrcR, &pos_lives);
     }
-
-
-
 
     // Incrémente le nombre de cycles
     if (world->cycles == 180) world->cycles = 0;
@@ -142,26 +140,29 @@ void coin_animations(sprite_t *block) {
     }
 }
 
-void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressources) {
+void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources) {
     // Vide le moteur de rendu
     clear_renderer(renderer);
 
-    // Affiche l'arrière-plan
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
+    askPseudo(renderer, game, ressources);
 
-    // Affichage du menu
-
+    // Affichage du menu principal
     if (world->menu) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 8;
         apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->score);
         apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->score);
     }
+
+    // Affiche du menu de pause
     if (world->pause && world->cycles_pause < 400) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 8;
         apply_text(renderer, x, y, 800, 100, "En pause..", ressources->score);
     }
+
+    // Fais clignoter le menu de pause
     if (world->cycles_pause % 500 == 0) world->cycles_pause = 0;
 
     bool save = false;
@@ -203,6 +204,34 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
 
     // Met à jour l'écran
     update_screen(renderer);
+}
+
+void askPseudo(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
+    if (strcmp(game->endDate, "") == 0) return;
+
+    // Fin de l'écriture du pseudonyme = Sauvegarde de score
+    if (!game->enteringPseudo) {
+        FILE *fichier = NULL;
+        fichier = fopen("../backups/leaderboard.txt", "a");
+
+        char text[50];
+        sprintf(text, "%s %i\n", game->pseudo, game->score);
+        fputs(text, fichier);
+
+        fclose(fichier);
+
+        sprintf(game->endDate, "");
+        return;
+    }
+
+    char text[50];
+    sprintf(text, "Pseudonyme : %s", game->pseudo);
+
+    int length = (int) strlen(text) * 30;
+
+    int x = SCREEN_W / 2 - length / 2;
+    int y = SCREEN_H / 1.25;
+    apply_text(renderer, x, y, length, 75, text, ressources->score);
 }
 
 void blobs_animations(sprite_t *block) {

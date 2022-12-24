@@ -18,7 +18,7 @@
  * @param keyboard Le statut du clavier
  * @param event L'événement
  */
-void refresh_keys(world_t *world, keyboard_status_t *keyboard, SDL_Event *event);
+void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL_Event *event);
 
 /**
  * @brief Initialisation du status du clavier par défaut.
@@ -62,5 +62,7 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event);
  */
 void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
                    mouse_status_t *mouseStatus);
+
+void write_pseudo(game_t *game, SDL_KeyCode key);
 
 #endif

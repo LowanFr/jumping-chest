@@ -93,7 +93,7 @@ int main() {
     // Boucle du menu
     while (world.pause || world.menu) {
         // Actualisation du menu
-        refresh_menu(&world, renderer, &ressources);
+        refresh_menu(&game, &world, renderer, &ressources);
         handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
 
         // Boucle principal

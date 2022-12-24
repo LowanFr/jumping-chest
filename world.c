@@ -174,26 +174,37 @@ void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
 
 void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources, world_t *world) {
     // Mise à jour du niveau si besoin avec les nouvelles textures
-    if (world->newLevel) {
-        // Pause pendant 2sec
-        SDL_Delay(2000);
+    if (!world->newLevel) return;
 
-        // Modifie les textures en fonction du niveau
-        if (strcmp(game->level, "classic") == 0) game->level = "snow";
-        else if (strcmp(game->level, "snow") == 0) game->level = "lava";
-        else game->level = "END";
+    // Pause pendant 2sec
+    SDL_Delay(2000);
 
-        // Vérifie si s'il y a un prochain niveau
-        if (strcmp(game->level, "END") != 0) {
-            clean_data(world);
-            new_level(renderer, game, ressources);
-            init_world(game, world, false);
-        } else {
-            new_level(renderer, game, ressources);
-            game->level = "classic";
-            world->end = true;
-            world->menu = true;
-        }
+    // Modifie les textures en fonction du niveau
+    if (strcmp(game->level, "classic") == 0) sprintf(game->level, "snow");
+    else if (strcmp(game->level, "snow") == 0) sprintf(game->level, "lava");
+    else {
+        // Récupération de la date actuelle
+        time_t date = time(NULL);
+        struct tm tm = *localtime(&date);
+
+        // Défini la date actuelle de lancement
+        sprintf(game->endDate, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+                tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+        sprintf(game->level, "END");
+        game->enteringPseudo = true;
+    }
+
+    // Vérifie si s'il y a un prochain niveau
+    if (strcmp(game->level, "END") != 0) {
+        clean_data(world);
+        new_level(renderer, game, ressources);
+        init_world(game, world, false);
+    } else {
+        new_level(renderer, game, ressources);
+        sprintf(game->level, "classic");
+        world->end = true;
+        world->menu = true;
     }
 }
 
@@ -315,7 +326,7 @@ void load_player(world_t *world) {
     if (fichier != NULL) { // Fichier introuvable
         // Parcours toutes les lignes
         while (fgets(line, size, fichier) != NULL) {
-            int value = atoi(line);
+            int value = (int) strtol(line, NULL, 10);
 
             switch (step) {
                 case 0:
@@ -368,7 +379,7 @@ void load_details(world_t *world) {
     if (fichier != NULL) { // Fichier introuvable
         // Parcours toutes les lignes
         while (fgets(line, size, fichier) != NULL) {
-            int value = atoi(line);
+            int value = (int) strtol(line, NULL, 10);
 
             // Initialisation de l'image du joueur
             switch (step) {
