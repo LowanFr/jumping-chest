@@ -63,6 +63,6 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event);
 void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
                    mouse_status_t *mouseStatus);
 
-void write_pseudo(game_t *game, SDL_KeyCode key);
+void write_pseudo(game_t *game, SDL_Keycode key);
 
 #endif

@@ -185,7 +185,7 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
     }
 }
 
-void write_pseudo(game_t *game, SDL_KeyCode key) {
+void write_pseudo(game_t *game, SDL_Keycode key) {
     if (!game->enteringPseudo) return;
 
     // Supprime le dernier caractère
