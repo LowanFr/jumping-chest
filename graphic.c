@@ -140,15 +140,15 @@ void coin_animations(sprite_t *block) {
     }
 }
 
-void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressources) {
+void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources) {
     // Vide le moteur de rendu
     clear_renderer(renderer);
 
     // Affiche l'arrière-plan
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
+    askPseudo(renderer, game, ressources);
 
     // Affichage du menu
-
     if (world->menu) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 8;
@@ -156,31 +156,31 @@ void refresh_menu(world_t *world, SDL_Renderer *renderer, ressources_t *ressourc
         apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->font);
     }
     if (world->pause) {
-        if(world->cycles_pause < 60){
+        if (world->cycles_pause < 60) {
             int x = SCREEN_W / 2 - 800 / 2;
             int y = SCREEN_H / 8;
             apply_text(renderer, x, y, 800, 100, "En pause..", ressources->font);
         }
-        if (world->cycles_pause % 120 == 0){
+        if (world->cycles_pause % 120 == 0) {
             world->cycles_pause = 0;
         }
         //Incrementation du cycle de pause
         world->cycles_pause++;
     }
-    if (world->go_menu){
-        int x = SCREEN_W / 2 - 800 / 2 ;
-        int y = SCREEN_H / 2 - 100 / 2 ;
+    if (world->go_menu) {
+        int x = SCREEN_W / 2 - 800 / 2;
+        int y = SCREEN_H / 2 - 100 / 2;
 
-        if(world->hearts == 0){
+        if (world->hearts == 0) {
             apply_text(renderer, x, y, 800, 100, "Vous avez perdu", ressources->font);
-        }else{
+        } else {
             apply_text(renderer, x, y, 800, 100, "Vous avez gagne", ressources->font);
         }
 
         //Incrementation du cycle de pause
         world->cycles_pause++;
 
-        if (world->cycles_pause % 120 == 0){
+        if (world->cycles_pause % 120 == 0) {
             world->go_menu = false;
             world->menu = true;
             world->cycles_pause = 0;
@@ -234,4 +234,32 @@ void blobs_animations(sprite_t *block) {
         block->textureIndex++;
         if (block->textureIndex == 12) block->textureIndex = 10; // Recommence le cycle
     }
+}
+
+void askPseudo(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
+    if (strcmp(game->endDate, "") == 0) return;
+
+    // Fin de l'écriture du pseudonyme = Sauvegarde de score
+    if (!game->enteringPseudo) {
+        FILE *fichier = NULL;
+        fichier = fopen("../backups/leaderboard.txt", "a");
+
+        char text[50];
+        sprintf(text, "%s %i\n", game->pseudo, game->score);
+        fputs(text, fichier);
+
+        fclose(fichier);
+
+        sprintf(game->endDate, "");
+        return;
+    }
+
+    char text[50];
+    sprintf(text, "Pseudonyme : %s", game->pseudo);
+
+    int length = (int) strlen(text) * 30;
+
+    int x = SCREEN_W / 2 - length / 2;
+    int y = SCREEN_H / 1.25;
+    apply_text(renderer, x, y, length, 75, text, ressources->font);
 }
