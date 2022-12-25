@@ -154,7 +154,8 @@ void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, spri
         game->score += 10;
         world->counter_score_vie += 10;
         player->saut = true;
-        player->ground = player->DestR.y;
+        player->DestR.y = blobImg->y - player->DestR.h;
+        player->ground = player->prec.y;
         player->timeSinceJumpStart = 0;
         blob->textureIndex = 0;
     }
