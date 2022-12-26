@@ -14,6 +14,8 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
             world->end = true;
             world->pause = false;
             world->menu = false;
+            world->go_menu = false;
+            game->enteringPseudo = false;
             break;
 
         case SDL_KEYDOWN: // Touches appuyées
