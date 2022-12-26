@@ -5,6 +5,7 @@
  * @date 7 Décembre 2022
  */
 #include "game.h"
+#include <ctype.h>
 
 void init_game(game_t *game) {
     // Initialisation des paramètres
@@ -14,7 +15,6 @@ void init_game(game_t *game) {
     game->score = 0;
     game->enteringPseudo = false;
     game->nbPseudoScore = 0;
-    game->leaderboard = calloc(sizeof(char*), 10);
     load_leaderboard(game);
     
     // Récupération de la date actuelle
@@ -54,34 +54,63 @@ void save_game(game_t *game, char folder[100]) {
 }
 
 void load_leaderboard(game_t *game) {
+    game->leaderboard = calloc(sizeof(char*), 10);
+   
     FILE *fichier = NULL;
     char line[50];
     int size = 50;
     int step = 0;
-    char* result;
+    char** result = calloc(sizeof(char*), 10);
+    int *scores = calloc(sizeof(int), 10);
+
+    int i = 0;
     int len_result;
+    int score_index = 0;
+    int score;
+
     fichier = fopen("../backups/leaderboard.txt", "r"); // Ouvre en mode lecture
-
     if (fichier != NULL) { // Fichier introuvable
-        result = fgets(line, size, fichier);
         // Parcours toutes les lignes
-        while (result != NULL && step != 3) {
-            len_result = strlen(result);
-            result[len_result - 1 ] = '\0';
+        while (fgets(line, size, fichier) != NULL) {
             
-            game->leaderboard[step] = calloc(sizeof(char), 50);
-            
-            sprintf(game->leaderboard[step], "%s", line);
-            
-            
-            game->nbPseudoScore++;
-           
-            step++;
+            result[i] = calloc(sizeof(char), 50);
+            sprintf(result[i], "%s", line);
+            len_result = strlen(result[i]);
+            result[i][len_result - 1 ] = '\0';
+            printf("%d\n", len_result);
+            ++i;
+        }
+        fclose(fichier);
+        len_result = i;
 
-            result = fgets(line, size, fichier);
+        int index_max = 0 ;
+        int score_max = 0;
+        
+        char** score_e = calloc(sizeof(char), 10);
+        char* score_c;
+
+        for(int i = 0; i < len_result ; ++i){
+            score_e[i] = calloc(sizeof(char), 50);
+            strcpy(score_e[i], result[i]);
+            score_c = strtok(result[i], " ");
+            score_c = strtok(NULL, score_c);
+            scores[i] = (int) strtol(score_c, NULL, 10);
+            
         }
 
-        fclose(fichier);
+        score_max = scores[0];
+        for(int j = 0; j < len_result ; ++j){
+            for(int i = 0; i < len_result; ++i){
+                if(scores[i] > score_max){
+                    score_max = scores[i];
+                    index_max = i;
+                }
+            }
+        game->leaderboard[j] = score_e[index_max];
+        game->nbPseudoScore++;
+        scores[index_max] = 0;
+        score_max = 0;
+        }
     }
 }
 
@@ -126,4 +155,8 @@ void clean_game(game_t *game) {
     free(game->level);
     free(game->startDate);
     free(game->endDate);
+    for(int i = 0; i < game->nbPseudoScore ; ++i){
+        free(game->leaderboard[i]);
+    }
+    free(game->leaderboard);
 }
