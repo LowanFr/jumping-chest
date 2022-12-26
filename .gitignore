@@ -3,7 +3,7 @@
 
 # CMake
 build/*
-!build/.gitkeep
+!build/main
 
 # Backups file
 backups/*
