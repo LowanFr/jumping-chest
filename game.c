@@ -13,9 +13,10 @@ void init_game(game_t *game) {
     game->level = (char *) malloc(sizeof(char) * 10);
     game->score = 0;
     game->enteringPseudo = false;
+    game->nbPseudoScore = 0;
+    game->leaderboard = calloc(sizeof(char*), 10);
+    load_leaderboard(game);
     
-    
-
     // Récupération de la date actuelle
     time_t date = time(NULL);
     struct tm tm = *localtime(&date);
@@ -50,6 +51,38 @@ void save_game(game_t *game, char folder[100]) {
     // Ajoute le contenu du fichier qui est fermé après
     fputs(gameFileContent, gameFile);
     fclose(gameFile);
+}
+
+void load_leaderboard(game_t *game) {
+    FILE *fichier = NULL;
+    char line[50];
+    int size = 50;
+    int step = 0;
+    char* result;
+    int len_result;
+    fichier = fopen("../backups/leaderboard.txt", "r"); // Ouvre en mode lecture
+
+    if (fichier != NULL) { // Fichier introuvable
+        result = fgets(line, size, fichier);
+        // Parcours toutes les lignes
+        while (result != NULL && step != 3) {
+            len_result = strlen(result);
+            result[len_result - 1 ] = '\0';
+            
+            game->leaderboard[step] = calloc(sizeof(char), 50);
+            
+            sprintf(game->leaderboard[step], "%s", line);
+            
+            
+            game->nbPseudoScore++;
+           
+            step++;
+
+            result = fgets(line, size, fichier);
+        }
+
+        fclose(fichier);
+    }
 }
 
 void load_game(game_t *game) {

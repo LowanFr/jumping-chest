@@ -24,7 +24,8 @@ struct game_s {
     char *startDate; /*!< Champ concernant la date à laquelle la partie est lancée. */
     char *endDate; /*!< Champ concernant la date à laquelle la partie est finie. */
     bool enteringPseudo; /*!< Champ concernant le fait que l'utilisateur peut rentrer son pseudonyme */
-    
+    char **leaderboard;
+    int nbPseudoScore;
 };
 typedef struct game_s game_t;
 
@@ -52,5 +53,7 @@ void clean_game(game_t *game);
  * @param game La partie
  */
 void load_game(game_t *game);
+
+void load_leaderboard(game_t *game);
 
 #endif

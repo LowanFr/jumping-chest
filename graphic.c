@@ -203,6 +203,18 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
             else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
             world->buttons[3].enable = false;
             world->buttons[1].enable = true;
+
+            if(game->nbPseudoScore != 0){
+                apply_text(renderer, SCREEN_W - SCREEN_W / 4, SCREEN_H / 3, 150, 50, "leaderboard", ressources->font);
+
+                for(int i = 0; i < game->nbPseudoScore; ++i){
+                    // Affichage du score
+                    char buff[50];
+                    sprintf(buff, "%d) %s", i+1, game->leaderboard[i]);
+                    // Affichage du score
+                    apply_text(renderer, SCREEN_W - SCREEN_W / 4 - 50, SCREEN_H / 3 + (i+1) * 75, 150, 50, buff, ressources->font);
+                }
+            }
         }
 
         if (world->pause) {
