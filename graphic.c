@@ -98,8 +98,6 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
         world->counter_score_vie = 0;
     }
 
-
-
     // Affichage des vies
     for (int i = 0; i < world->hearts; ++i) {
         SDL_Rect pos_lives;
@@ -241,9 +239,10 @@ void askPseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_
         fputs(text, fichier);
 
         world->go_menu = false;
-        world->menu = true;
+        world->reinstall = true;
         world->cycles_pause = 0;
         fclose(fichier);
+        
         return;
     }
 

@@ -180,7 +180,9 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
         }
 
         // Bouton pour quitter
-        if (button.type == 2 && world->menu) world->menu = false;
+        if (button.type == 2 && world->menu){
+            world->menu = false;
+        }
         if (button.type == 2 && world->pause) {
             world->menu = true;
             world->pause = false;

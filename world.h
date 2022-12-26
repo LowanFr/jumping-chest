@@ -150,6 +150,7 @@ struct world_s {
     int cycles_pause; /*!<  Champ désignant le nombre de cycle de jeu dans le pause. */
     bool newLevel;
     int counter_score_vie;
+    bool reinstall;
 
 };
 typedef struct world_s world_t;

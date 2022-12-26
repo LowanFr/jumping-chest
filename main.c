@@ -36,6 +36,7 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     init_ressources(*renderer, ressources, game);
     world->newLevel = false;
     world->hearts = 3;
+    world->reinstall = false;
     init_world(game, world, false);
     init_cam(world, camera, SCREEN_W, SCREEN_H);
 }
@@ -83,8 +84,9 @@ int main() {
     mouse_status_t mouse;
     game_t game;
     int delay = 0;
+    world.reinstall = true;
 
-
+    while(world.reinstall){
     // Initialisation du jeu
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
 
@@ -118,6 +120,7 @@ int main() {
     // Libère toute la mémoire utilisée pour le monde
     clean(window, renderer, &ressources, &game, &world);
 
+    }
     return EXIT_SUCCESS;
 }
 

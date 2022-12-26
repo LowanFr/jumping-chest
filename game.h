@@ -24,6 +24,7 @@ struct game_s {
     char *startDate; /*!< Champ concernant la date à laquelle la partie est lancée. */
     char *endDate; /*!< Champ concernant la date à laquelle la partie est finie. */
     bool enteringPseudo; /*!< Champ concernant le fait que l'utilisateur peut rentrer son pseudonyme */
+    char **leaderboard;
 };
 typedef struct game_s game_t;
 
