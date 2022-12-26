@@ -63,6 +63,11 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event);
 void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
                    mouse_status_t *mouseStatus);
 
+/**
+ * @brief Écris le pseudonyme de l'utilisateur
+ * @param game Le jeu
+ * @param key La touche
+ */
 void write_pseudo(game_t *game, SDL_Keycode key);
 
 #endif

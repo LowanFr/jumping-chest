@@ -21,7 +21,7 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
 
             switch (event->key.keysym.sym) {
                 case SDLK_ESCAPE:
-                    if(!world->go_menu){
+                    if (!world->go_menu) {
                         world->end = true;
                         if (world->menu) {
                             world->menu = false;
@@ -33,7 +33,7 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
                             world->cycles_pause = 0;
                         }
                     }
-                    
+
                     break;
                 case SDLK_LEFT:
                     keyboard->lastIsLeft = true;
@@ -55,8 +55,8 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
         case SDL_KEYUP: // Les touches libérées
             switch (event->key.keysym.sym) {
                 case SDLK_LEFT:
-                    if(keyboard->right){
-                        keyboard->lastIsLeft  = false;
+                    if (keyboard->right) {
+                        keyboard->lastIsLeft = false;
                     }
                     keyboard->left = false;
                     break;
@@ -64,8 +64,8 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
                     keyboard->space = false;
                     break;
                 case SDLK_RIGHT:
-                    if(keyboard->left){
-                        keyboard->lastIsLeft  = true;
+                    if (keyboard->left) {
+                        keyboard->lastIsLeft = true;
                     }
                     keyboard->right = false;
                     break;
@@ -172,6 +172,7 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
         if (button.type == 1 && world->menu == true && world->end == true) {
             world->menu = false;
             world->end = false;
+            init_game(game);
             init_world(game, world, true);
             init_ressources(renderer, ressources, game);
         }
@@ -194,7 +195,7 @@ void write_pseudo(game_t *game, SDL_Keycode key) {
         return;
     }
 
-    // Fin du pseudonyme
+    //  Fin du pseudonyme
     if (key == SDLK_RETURN) {
         game->enteringPseudo = false;
         return;

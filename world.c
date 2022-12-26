@@ -60,7 +60,8 @@ void init_world(game_t *game, world_t *world, bool new_game) {
     world->newLevel = false;
 
     // Initialisation de l'image du joueur
-    init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, SCREEN_W / 2 + SIZE_TEXTURES * 4, SCREEN_H - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
+    init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, SCREEN_W / 2 + SIZE_TEXTURES * 4,
+                SCREEN_H - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
                 HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER, false);
 
     init_blocks(world);
@@ -115,13 +116,15 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
 }
 
 void repositioning_camera(world_t *world) {
-    if(world->player->prec.x > SIZE_TEXTURES * 10 && world->player->prec.x < world->map->nb_col * SIZE_TEXTURES - SIZE_TEXTURES * 10){
+    if (world->player->prec.x > SIZE_TEXTURES * 10 &&
+        world->player->prec.x < world->map->nb_col * SIZE_TEXTURES - SIZE_TEXTURES * 10) {
         world->cam->x = world->player->prec.x - world->cam->w / 2;
     }
-    if(world->player->prec.y < world->map->nb_row * SIZE_TEXTURES - SIZE_TEXTURES * 6 && world->player->prec.y > SIZE_TEXTURES * 5){
+    if (world->player->prec.y < world->map->nb_row * SIZE_TEXTURES - SIZE_TEXTURES * 6 &&
+        world->player->prec.y > SIZE_TEXTURES * 5) {
         world->cam->y = world->player->prec.y - world->cam->h / 2;
     }
-    
+
 }
 
 void blob_movement(world_t *world, sprite_t *sprite) {
@@ -187,8 +190,17 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
         // Modifie les textures en fonction du niveau
         if (strcmp(game->level, "classic") == 0) sprintf(game->level, "snow");
         else if (strcmp(game->level, "snow") == 0) sprintf(game->level, "lava");
-        else
+        else {
+            // Récupération de la date actuelle
+            time_t date = time(NULL);
+            struct tm tm = *localtime(&date);
+
+            // Défini la date actuelle de fin
+            sprintf(game->endDate, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+                    tm.tm_hour, tm.tm_min, tm.tm_sec);
+
             sprintf(game->level, "END");
+        }
 
         // Vérifie si s'il y a un prochain niveau
         if (strcmp(game->level, "END") != 0) {
@@ -200,6 +212,7 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
             sprintf(game->level, "classic");
             world->end = true;
             world->go_menu = true;
+            game->enteringPseudo = true;
             world->cycles_pause = 0;
         }
     }
@@ -376,7 +389,7 @@ void load_details(world_t *world) {
     if (fichier != NULL) { // Fichier introuvable
         // Parcours toutes les lignes
         while (fgets(line, size, fichier) != NULL) {
-            int value = atoi(line);
+            int value = (int) strtol(line, NULL, 10);
 
             // Initialisation de l'image du joueur
             switch (step) {

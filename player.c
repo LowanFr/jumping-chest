@@ -64,16 +64,18 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
         }
     }
 
-    if(world->player->DestR.x < 0 || world->player->DestR.x + world->player->DestR.w >= world->map->nb_col * SIZE_TEXTURES){
+    if (world->player->DestR.x < 0 ||
+        world->player->DestR.x + world->player->DestR.w >= world->map->nb_col * SIZE_TEXTURES) {
         world->player->DestR.x = world->player->prec.x;
     }
-    
-    if(world->player->DestR.y > world->map->nb_row * SIZE_TEXTURES){
+
+    if (world->player->DestR.y > world->map->nb_row * SIZE_TEXTURES) {
         world->hearts = 0;
     }
 
     // Arrête le jeu si le joueur est mort
     if (world->hearts == 0) {
+        game->enteringPseudo = true;
         world->cycles_pause = 0;
         world->go_menu = true;
         world->end = true;
@@ -112,7 +114,7 @@ void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob
     player->ground = player->prec.y;
     player->isAttacked = true;
     player->timeSinceJumpStart = 0;
-    
+
     if (cote == 'g') {
         player->isright = true;
         player->prec.x = blobImg->x - player->prec.w;

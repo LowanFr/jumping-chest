@@ -146,7 +146,6 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
 
     // Affiche l'arrière-plan
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
-    askPseudo(renderer, game, ressources);
 
     // Affichage du menu
     if (world->menu) {
@@ -155,6 +154,7 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
         apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->font);
         apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->font);
     }
+
     if (world->pause) {
         if (world->cycles_pause < 60) {
             int x = SCREEN_W / 2 - 800 / 2;
@@ -167,6 +167,7 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
         //Incrementation du cycle de pause
         world->cycles_pause++;
     }
+
     if (world->go_menu) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 2 - 100 / 2;
@@ -177,14 +178,7 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
             apply_text(renderer, x, y, 800, 100, "Vous avez gagne", ressources->font);
         }
 
-        //Incrementation du cycle de pause
-        world->cycles_pause++;
-
-        if (world->cycles_pause % 120 == 0) {
-            world->go_menu = false;
-            world->menu = true;
-            world->cycles_pause = 0;
-        }
+        askPseudo(renderer, game, world, ressources);
     }
 
     bool save = false;
@@ -236,9 +230,7 @@ void blobs_animations(sprite_t *block) {
     }
 }
 
-void askPseudo(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
-    if (strcmp(game->endDate, "") == 0) return;
-
+void askPseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
     // Fin de l'écriture du pseudonyme = Sauvegarde de score
     if (!game->enteringPseudo) {
         FILE *fichier = NULL;
@@ -248,9 +240,10 @@ void askPseudo(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
         sprintf(text, "%s %i\n", game->pseudo, game->score);
         fputs(text, fichier);
 
+        world->go_menu = false;
+        world->menu = true;
+        world->cycles_pause = 0;
         fclose(fichier);
-
-        sprintf(game->endDate, "");
         return;
     }
 
