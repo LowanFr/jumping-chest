@@ -64,15 +64,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
                 // Gérer les flips des blobs ainsi que leur déplacement/collisions
                 if (world->blocks[i][j].textureIndex == 10 || world->blocks[i][j].textureIndex == 11) {
-                    blob_movement(world, &world->blocks[i][j]);
-                    handle_collision(game, world, &world->blocks[i][j], keyboard);
-
-                    // Affiche le joueur selon la caméra
-                    SDL_RendererFlip flip =
-                            world->blocks[i][j].DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-
-                    SDL_RenderCopyEx(renderer, ressources->blocks,
-                                     &world->textures[world->blocks[i][j].textureIndex].SrcR, &block, 0., NULL, flip);
+                    display_blobs(renderer, game, world, ressources, keyboard, &world->blocks[i][j], &block);
                 } else {
                     if (world->blocks[i][j].textureIndex == 4 && world->blocks[i][j].print_e == true) {
                         world->letter_e->DestR.x = block.x + 4;
@@ -94,6 +86,17 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     // Met à jour l'écran
     update_screen(renderer);
+}
+
+void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard, sprite_t *sprite, SDL_Rect *rect) {
+    blob_movement(world, sprite);
+    handle_collision(game, world, sprite, keyboard);
+
+    // Affiche le joueur selon la caméra
+    SDL_RendererFlip flip = sprite->DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+
+    SDL_RenderCopyEx(renderer, ressources->blocks,
+                     &world->textures[sprite->textureIndex].SrcR, rect, 0., NULL, flip);
 }
 
 void display_score(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
