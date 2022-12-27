@@ -8,9 +8,9 @@
 
 void init_game(game_t *game) {
     // Initialisation des paramètres
-    game->endDate = (char *) calloc(sizeof(char), 100);
-    game->pseudo = (char *) calloc(sizeof(char), 50);
-    game->level = (char *) malloc(sizeof(char) * 10);
+    game->endDate = (char *) calloc(100, sizeof(char));
+    game->pseudo = (char *) calloc(20, sizeof(char));
+    game->level = (char *) calloc(10, sizeof(char));
     game->score = 0;
     game->nextLife = 100;
     game->enteringPseudo = false;
@@ -22,7 +22,7 @@ void init_game(game_t *game) {
     struct tm tm = *localtime(&date);
 
     // Défini la date actuelle de lancement
-    game->startDate = malloc(sizeof(char) * 100);
+    game->startDate = calloc(100, sizeof(char));
     sprintf(game->startDate, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
             tm.tm_hour, tm.tm_min, tm.tm_sec);
 
@@ -54,15 +54,19 @@ void save_game(game_t *game, char folder[100]) {
 }
 
 void load_leaderboard(game_t *game) {
-    // Alloue la mémoire des tableaux
-    game->leaderboard = calloc(sizeof(char *), 10);
-    char **lines = calloc(sizeof(char *), 10);
-    int *scores = calloc(sizeof(int), 10);
+    // Alloue la mémoire du TOP 5
+    game->leaderboard = calloc(5, sizeof(char *));
+    char *path = "../backups/leaderboard.txt";
     FILE *file = NULL;
 
     // Vérifie que le fichier existe
-    file = fopen("../backups/leaderboard.txt", "r");
+    file = fopen(path, "r");
     if (file == NULL) return;
+
+    // Alloue la mémoire dans les tableaux en fonction du nombre de joueur
+    int nbPlayers = getNbPlayers(path);
+    char **lines = calloc(nbPlayers, sizeof(char *));
+    int *scores = calloc(nbPlayers, sizeof(int));
 
     int size = 50;
     int index = 0;
@@ -111,6 +115,7 @@ void load_leaderboard(game_t *game) {
     }
 
     // Libère la mémoire
+    free(line);
     for (int j = 0; j < index; ++j) free(lines[j]);
     free(lines);
     free(scores);
@@ -161,4 +166,23 @@ void clean_game(game_t *game) {
     free(game->endDate);
     for (int i = 0; i < 10; ++i) free(game->leaderboard[i]);
     free(game->leaderboard);
+}
+
+
+int getNbPlayers(char *path) {
+    FILE *file = NULL;
+    int res = 0;
+
+    // Vérifie que le fichier existe
+    file = fopen(path, "r");
+    if (file == NULL) return res;
+
+    // Parcours le fichier ligne par ligne
+    char *line = calloc(50, sizeof (char));
+    while (fgets(line, 50, file) != NULL) res++;
+
+    // Ferme le fichier
+    fclose(file);
+
+    return res;
 }

@@ -61,4 +61,11 @@ void load_game(game_t *game);
  */
 void load_leaderboard(game_t *game);
 
+/**
+ * @brief Récupère le nombre de joueur dans le classement
+ * @param path Le chemin vers le fichier
+ * @return Le nombre de joueur
+ */
+int getNbPlayers(char *path);
+
 #endif
