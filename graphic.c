@@ -246,16 +246,17 @@ void blobs_animations(sprite_t *block) {
 void askPseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
     // Fin de l'écriture du pseudonyme = Sauvegarde de score
     if (!game->enteringPseudo) {
+        world->waitingMenu = false;
+        world->reinstall = true;
+        world->cyclesPause = 0;
+
         FILE *fichier = NULL;
         fichier = fopen("../backups/leaderboard.txt", "a");
+        if (fichier == NULL || strlen(game->pseudo) == 0) return;
 
         char text[50];
         sprintf(text, "%s %i\n", game->pseudo, game->score);
         fputs(text, fichier);
-
-        world->waitingMenu = false;
-        world->reinstall = true;
-        world->cyclesPause = 0;
         fclose(fichier);
 
         return;
