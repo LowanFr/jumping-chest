@@ -164,7 +164,7 @@ void clean_game(game_t *game) {
     free(game->level);
     free(game->startDate);
     free(game->endDate);
-    for (int i = 0; i < 10; ++i) free(game->leaderboard[i]);
+    for (int i = 0; i < 5; ++i) free(game->leaderboard[i]);
     free(game->leaderboard);
 }
 
