@@ -188,13 +188,11 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
         if (strcmp(game->level, "classic") == 0) sprintf(game->level, "snow");
         else if (strcmp(game->level, "snow") == 0) sprintf(game->level, "lava");
         else {
-            // Récupération de la date actuelle
-            time_t date = time(NULL);
-            struct tm tm = *localtime(&date);
+            struct tm now = getDate();
 
             // Défini la date actuelle de fin
-            sprintf(game->endDate, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-                    tm.tm_hour, tm.tm_min, tm.tm_sec);
+            sprintf(game->endDate, "%d-%02d-%02d %02d:%02d:%02d", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+                    now.tm_hour, now.tm_min, now.tm_sec);
 
             sprintf(game->level, "END");
         }
