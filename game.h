@@ -20,12 +20,13 @@
 struct game_s {
     char *level; /*!< Champ concernant le niveau. */
     int score; /*!< Champ concernant le score actuel. */
+    int nextLife; /*!< Score nécessaire avant la prochaine vie. */
     char *pseudo; /*!< Champ concernant le pseudonyme associé à la partie. */
     char *startDate; /*!< Champ concernant la date à laquelle la partie est lancée. */
     char *endDate; /*!< Champ concernant la date à laquelle la partie est finie. */
-    bool enteringPseudo; /*!< Champ concernant le fait que l'utilisateur peut rentrer son pseudonyme */
-    char **leaderboard;
-    int nbPseudoScore;
+    bool enteringPseudo; /*!< Champ concernant le fait que l'utilisateur peut rentrer son pseudonyme. */
+    char **leaderboard; /*!< Champ concernant le classement par score décroissant. */
+    int leaderboardLength; /*!< Champ concernant la taille du classement. */
 };
 typedef struct game_s game_t;
 
@@ -54,6 +55,10 @@ void clean_game(game_t *game);
  */
 void load_game(game_t *game);
 
+/**
+ * @brief Charge le classement
+ * @param game La partie
+ */
 void load_leaderboard(game_t *game);
 
 #endif

@@ -5,7 +5,7 @@
 ## What is the principle of the game?
 
 > This game is built around several worlds with different levels. Each level is different, nevertheless at the end of
-> each level, you have the possibility to choose an improvement on your personnag.
+> each level, you have the possibility to choose an improvement on your character.
 > By putting your nickname at the beginning of the game, you will be able to see your score compared to the other people
 > who played on your device.
 

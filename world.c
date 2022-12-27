@@ -46,16 +46,13 @@ void init_world(game_t *game, world_t *world, bool new_game) {
         // Initialisation de tous les blocs sur la map
         world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
         for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
-
-        world->counter_score_vie = 0;
     }
 
     world->cycles = 0;
     world->hearts = new_game ? 3 : world->hearts;
-    world->counter_score_vie = game->score % 100;
     world->end = !new_game && !world->newLevel;
     world->menu = !new_game && !world->newLevel;
-    world->go_menu = false;
+    world->waitingMenu = false;
     world->pause = false;
     world->newLevel = false;
 
@@ -110,7 +107,7 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
     // Définition des autres paramètres de l'image
     sprite->v = SPEED_X_WALK;
     sprite->textureIndex = textureIndex;
-    sprite->isright = true;
+    sprite->goRight = true;
     sprite->isAttacked = false;
     sprite->print_e = print_e;
 }
@@ -133,8 +130,8 @@ void blob_movement(world_t *world, sprite_t *sprite) {
     if (world->cycles % 180 == 0) {
         sprite->saut = true;
         sprite->ground = sprite->DestR.y;
-        if (world->player->DestR.x >= sprite->DestR.x) sprite->isright = true;
-        else sprite->isright = false;
+        if (world->player->DestR.x >= sprite->DestR.x) sprite->goRight = true;
+        else sprite->goRight = false;
     }
 
     // Vérifie si le blob ne saute pas (gravité)
@@ -149,7 +146,7 @@ void blob_movement(world_t *world, sprite_t *sprite) {
                                       0.5 * GRAVITY * sprite->timeSinceJumpStart * sprite->timeSinceJumpStart);
         sprite->timeSinceJumpStart++;
         if (world->player->isAttacked == false) {
-            if (sprite->isright == true) sprite->DestR.x += sprite->v;
+            if (sprite->goRight == true) sprite->DestR.x += sprite->v;
             else sprite->DestR.x -= sprite->v;
         }
 
@@ -211,9 +208,9 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
             new_level(renderer, game, ressources);
             sprintf(game->level, "classic");
             world->end = true;
-            world->go_menu = true;
+            world->waitingMenu = true;
             game->enteringPseudo = true;
-            world->cycles_pause = 0;
+            world->cyclesPause = 0;
         }
     }
 }
@@ -282,7 +279,7 @@ void save_player(world_t *world, char folder[100]) {
     // Inscris les détails
     char player[100];
     sprintf(player, "%i\n%i\n%i\n%i\n%i\n%i\n%i\n%i\n%i", world->player->DestR.x, world->player->DestR.y,
-            world->player->prec.x, world->player->prec.y, world->player->timeSinceJumpStart, world->player->isright,
+            world->player->prec.x, world->player->prec.y, world->player->timeSinceJumpStart, world->player->goRight,
             world->player->saut, world->player->ground, world->player->print_e);
 
     // Ajoute le contenu du fichier qui est fermé après
@@ -355,7 +352,7 @@ void load_player(world_t *world) {
                     world->player->timeSinceJumpStart = value;
                     break;
                 case 5:
-                    world->player->isright = (bool) value;
+                    world->player->goRight = (bool) value;
                     break;
                 case 6:
                     world->player->saut = (bool) value;

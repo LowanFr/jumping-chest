@@ -83,7 +83,6 @@ int main() {
     keyboard_status_t keyboard;
     mouse_status_t mouse;
     game_t game;
-    int delay = 0;
     world.reinstall = true;
 
     while(world.reinstall){
@@ -91,7 +90,7 @@ int main() {
     init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
 
     // Boucle du menu
-    while (world.pause || world.menu || world.go_menu) {
+    while (world.pause || world.menu || world.waitingMenu) {
         // Actualisation du menu
         refresh_menu(&game, &world, renderer, &ressources);
         handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);

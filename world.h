@@ -113,9 +113,9 @@ struct sprite_s {
     bool saut; /*!< Champ vérifiant si le joueur est en saut. */
     int timeSinceJumpStart; /*!< La durée depuis laquelle le joueur est en saut. */
     int ground; /*!< Le sol sur lequel il doit atterrir. */
-    bool isright;
-    bool isAttacked;
-    bool print_e;
+    bool goRight; /*!< Oui si l'image va à droite, sinon non. */
+    bool isAttacked; /*!< Oui si l'image se fait attaquer. */
+    bool print_e; /*!< Oui si la lettre droit être affichée. */
 
 };
 typedef struct sprite_s sprite_t;
@@ -140,16 +140,15 @@ struct world_s {
     sprite_t *letter_e; /*!< Champ liée à l'image de la lettre E*/
     cam_t *cam; /*!<  Champ désignant la camera. */
     map_t *map; /*!<  Champ désignant la map du jeu. */
-    int cycles; /*!<  Champ désignant le nombre de cycle de jeu. */
     int hearts; /*!<  Champ désignant la map du jeu. */
     button_t *buttons; /*!<  Champ désignant les boutons */
     bool end; /*!<  Champ désignant la fin de la partie. */
-    bool menu;
-    bool pause;
-    bool go_menu; /*!<  Champ désignant l'animation entre le jeu et le menu si joueur gagne ou si joueur perd */
-    int cycles_pause; /*!<  Champ désignant le nombre de cycle de jeu dans le pause. */
-    bool newLevel;
-    int counter_score_vie;
+    bool menu; /*!<  Champ désignant le menu principal. */
+    bool pause; /*!<  Champ désignant le menu de pause. */
+    bool waitingMenu; /*!<  Champ désignant l'animation entre le jeu et le menu si joueur gagne ou si joueur perd. */
+    int cycles; /*!<  Champ désignant le nombre de cycle de jeu. */
+    int cyclesPause; /*!<  Champ désignant le nombre de cycle de jeu dans le menu de pause. */
+    bool newLevel; /*!<  Champ désignant si on change de niveau. */
     bool reinstall;
 
 };

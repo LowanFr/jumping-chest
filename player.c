@@ -17,7 +17,7 @@ void player_movement(keyboard_status_t *touches, sprite_t *player) {
         // Vérifie le déplacement à droite
         if (touches->right) player->DestR.x += player->v;
     } else {
-        if (player->isright) player->DestR.x -= player->v;
+        if (player->goRight) player->DestR.x -= player->v;
         else player->DestR.x += player->v;
     }
 
@@ -76,8 +76,8 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
     // Arrête le jeu si le joueur est mort
     if (world->hearts == 0) {
         game->enteringPseudo = true;
-        world->cycles_pause = 0;
-        world->go_menu = true;
+        world->cyclesPause = 0;
+        world->waitingMenu = true;
         world->end = true;
     }
 }
@@ -100,11 +100,11 @@ void handle_collision_pieces(world_t *world, game_t *game, sprite_t *player, spr
 
     // Collision
     game->score++;
-    world->counter_score_vie++;
+    game->nextLife--;
     sprite->textureIndex = 0;
 }
 
-void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob, char cote) {
+void change_state(world_t *world, sprite_t *player, sprite_t *blob, char cote) {
     SDL_Rect *blobImg = &blob->DestR;
 
     player->DestR.x = player->prec.x;
@@ -116,18 +116,17 @@ void change_state(game_t *game, world_t *world, sprite_t *player, sprite_t *blob
     player->timeSinceJumpStart = 0;
 
     if (cote == 'g') {
-        player->isright = true;
+        player->goRight = true;
         player->prec.x = blobImg->x - player->prec.w;
     } else if (cote == 'd') {
-        player->isright = false;
+        player->goRight = false;
         player->prec.x = blobImg->x + blobImg->w;
     } else if (cote == 'b') {
         if (player->DestR.x + player->DestR.w / 2 > blobImg->x + blobImg->w) {
-            player->isright = false;
+            player->goRight = false;
             player->prec.x = blobImg->x + blobImg->w;
-
         } else {
-            player->isright = true;
+            player->goRight = true;
             player->prec.x = blobImg->x - player->prec.w;
         }
     }
@@ -154,7 +153,7 @@ void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, spri
     if (blobImg->y < playerImg->y + playerImg->h && playerImg->y < blobImg->y &&
         player->prec.y + player->prec.h <= blobImg->y) {
         game->score += 10;
-        world->counter_score_vie += 10;
+        game->nextLife -= 10;
         player->saut = true;
         player->DestR.y = blobImg->y - player->DestR.h;
         player->ground = player->prec.y;
@@ -165,21 +164,20 @@ void handle_collision_blobs(game_t *game, world_t *world, sprite_t *player, spri
         // Collision à gauche du bloc
     else if (blobImg->x < playerImg->x + playerImg->w && blobImg->x > playerImg->x &&
              player->prec.x + player->prec.w <= blob->prec.x && player->isAttacked == false) {
-        change_state(game, world, player, blob, 'g');
+        change_state(world, player, blob, 'g');
 
     }
 
         // Collision à droite du bloc
     else if (blobImg->x + blobImg->w > playerImg->x && blobImg->x < playerImg->x &&
              player->prec.x >= blob->prec.x + blobImg->w && player->isAttacked == false) {
-        change_state(game, world, player, blob, 'd');
+        change_state(world, player, blob, 'd');
     }
 
         // Collision en bas du bloc
     else if (blobImg->y + blobImg->h > playerImg->y && playerImg->y > blobImg->y &&
              player->DestR.y >= blob->prec.y + blob->prec.h) {
-
-        change_state(game, world, player, blob, 'b');
+        change_state(world, player, blob, 'b');
     }
 }
 

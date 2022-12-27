@@ -22,7 +22,7 @@ void clean_ressources(ressources_t *ressources) {
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *game) {
     if (strcmp(game->level, "classic") != 0) clean_ressources(ressources);
 
-    // Récupère les assets en fonction du niveau
+    // Récupère, en fonction des niveaux, les assets
     char blocks[100];
     char background[100];
     sprintf(blocks, "../assets/%s.bmp", game->level);
@@ -93,9 +93,10 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
 
-    if (world->counter_score_vie >= 100) {
+    // Vérifie si le joueur à une vie en plus
+    if (game->nextLife <= 0) {
         world->hearts++;
-        world->counter_score_vie = 0;
+        game->nextLife += 100;
     }
 
     // Affichage des vies
@@ -154,19 +155,19 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
     }
 
     if (world->pause) {
-        if (world->cycles_pause < 60) {
+        if (world->cyclesPause < 60) {
             int x = SCREEN_W / 2 - 800 / 2;
             int y = SCREEN_H / 8;
             apply_text(renderer, x, y, 800, 100, "En pause..", ressources->font);
         }
-        if (world->cycles_pause % 120 == 0) {
-            world->cycles_pause = 0;
+        if (world->cyclesPause % 120 == 0) {
+            world->cyclesPause = 0;
         }
         //Incrementation du cycle de pause
-        world->cycles_pause++;
+        world->cyclesPause++;
     }
 
-    if (world->go_menu) {
+    if (world->waitingMenu) {
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 2 - 100 / 2;
 
@@ -186,8 +187,9 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
 
     if (d) {
         while ((dir = readdir(d)) != NULL) {
+            // Ne prends pas en compte tous les fichiers par défaut
             if (strcmp(dir->d_name, ".gitkeep") == 0 || strcmp(dir->d_name, "..") == 0 ||
-                strcmp(dir->d_name, ".") == 0)
+                strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "leaderboard.txt") == 0)
                 continue;
             save = true;
         }
@@ -204,15 +206,15 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
             world->buttons[3].enable = false;
             world->buttons[1].enable = true;
 
-            if(game->nbPseudoScore != 0){
-                apply_text(renderer, SCREEN_W - SCREEN_W / 4, SCREEN_H / 3, 150, 50, "leaderboard", ressources->font);
+            if(game->leaderboardLength != 0){
+                apply_text(renderer, SCREEN_W - SCREEN_W / 4, SCREEN_H / 3, 250, 50, "leaderboard", ressources->font);
 
-                for(int i = 0; i < game->nbPseudoScore; ++i){
+                for(int j = 0; j < game->leaderboardLength; ++j){
                     // Affichage du score
                     char buff[50];
-                    sprintf(buff, "%d) %s", i+1, game->leaderboard[i]);
+                    sprintf(buff, "%d) %s", j+1, game->leaderboard[j]);
                     // Affichage du score
-                    apply_text(renderer, SCREEN_W - SCREEN_W / 4 - 50, SCREEN_H / 3 + (i+1) * 75, 150, 50, buff, ressources->font);
+                    apply_text(renderer, SCREEN_W - SCREEN_W / 4 - 50, SCREEN_H / 3 + (j+1) * 75, 250, 50, buff, ressources->font);
                 }
             }
         }
@@ -250,11 +252,11 @@ void askPseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_
         sprintf(text, "%s %i\n", game->pseudo, game->score);
         fputs(text, fichier);
 
-        world->go_menu = false;
+        world->waitingMenu = false;
         world->reinstall = true;
-        world->cycles_pause = 0;
+        world->cyclesPause = 0;
         fclose(fichier);
-        
+
         return;
     }
 

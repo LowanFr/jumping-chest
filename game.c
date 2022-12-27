@@ -12,10 +12,11 @@ void init_game(game_t *game) {
     game->pseudo = (char *) calloc(sizeof(char), 50);
     game->level = (char *) malloc(sizeof(char) * 10);
     game->score = 0;
+    game->nextLife = 100;
     game->enteringPseudo = false;
-    game->nbPseudoScore = 0;
+    game->leaderboardLength = 0;
     load_leaderboard(game);
-    
+
     // Récupération de la date actuelle
     time_t date = time(NULL);
     struct tm tm = *localtime(&date);
@@ -54,7 +55,7 @@ void save_game(game_t *game, char folder[100]) {
 
 void load_leaderboard(game_t *game) {
     game->leaderboard = calloc(sizeof(char*), 10);
-   
+
     FILE *fichier = NULL;
     char line[50];
     int size = 50;
@@ -68,11 +69,11 @@ void load_leaderboard(game_t *game) {
     if (fichier != NULL) { // Fichier introuvable
         // Parcours toutes les lignes
         while (fgets(line, size, fichier) != NULL) {
-            
+
             result[i] = calloc(sizeof(char), 50);
             snprintf(result[i], 50, "%s", line);
-            len_result = strlen(result[i]);
-            result[i][len_result - 1 ] = '\0'; //enleve à chaque fois le caractère \n 
+            len_result = (int) strlen(result[i]);
+            result[i][len_result - 1 ] = '\0'; // enlève à chaque fois le caractère "\n"
             ++i;
         }
 
@@ -81,7 +82,7 @@ void load_leaderboard(game_t *game) {
 
         int index_max = 0 ;
 
-        
+
         char** score_e = calloc(sizeof(char*), 10); // Copie de result pour effectuer le tri
         char* score_c;
 
@@ -96,7 +97,7 @@ void load_leaderboard(game_t *game) {
 
         int score_max = scores[0];
 
-        for(int j = 0; j < len_result ; ++j){
+        for(int j = 0; j < len_result && j < 5; ++j){
             for(int index = 0; index < len_result; ++index){
                 if(scores[index] > score_max){
                     score_max = scores[index];
@@ -105,11 +106,9 @@ void load_leaderboard(game_t *game) {
             }
 
             game->leaderboard[j] = calloc(sizeof(char), 50);
-
-
             snprintf(game->leaderboard[j], 50, "%s", score_e[index_max]);
 
-            game->nbPseudoScore++;
+            game->leaderboardLength++;
             scores[index_max] = 0;
             score_max = 0;
         }

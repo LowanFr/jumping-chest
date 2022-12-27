@@ -14,7 +14,7 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
             world->end = true;
             world->pause = false;
             world->menu = false;
-            world->go_menu = false;
+            world->waitingMenu = false;
             game->enteringPseudo = false;
             break;
 
@@ -23,7 +23,7 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
 
             switch (event->key.keysym.sym) {
                 case SDLK_ESCAPE:
-                    if (!world->go_menu) {
+                    if (!world->waitingMenu) {
                         world->end = true;
                         if (world->menu) {
                             world->menu = false;
@@ -32,7 +32,7 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
                             world->menu = true;
                         } else {
                             world->pause = true;
-                            world->cycles_pause = 0;
+                            world->cyclesPause = 0;
                         }
                     }
 
