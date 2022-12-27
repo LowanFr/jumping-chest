@@ -8,9 +8,10 @@
 
 void init_game(game_t *game) {
     // Initialisation des paramètres
-    game->endDate = (char *) calloc(100, sizeof(char));
-    game->pseudo = (char *) calloc(20, sizeof(char));
-    game->level = (char *) calloc(10, sizeof(char));
+    game->startDate = calloc(100, sizeof(char));
+    game->endDate = calloc(100, sizeof(char));
+    game->pseudo = calloc(20, sizeof(char));
+    game->level = calloc(10, sizeof(char));
     game->score = 0;
     game->nextLife = 100;
     game->enteringPseudo = false;
@@ -18,15 +19,11 @@ void init_game(game_t *game) {
     load_leaderboard(game);
 
     // Récupération de la date actuelle
-    time_t date = time(NULL);
-    struct tm tm = *localtime(&date);
+    struct tm now = getDate();
 
-    // Défini la date actuelle de lancement
-    game->startDate = calloc(100, sizeof(char));
-    sprintf(game->startDate, "%d-%02d-%02d %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-            tm.tm_hour, tm.tm_min, tm.tm_sec);
-
-    // Défini le niveau
+    // Défini la date actuelle de lancement et le niveau
+    sprintf(game->startDate, "%d-%02d-%02d %02d:%02d:%02d", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+            now.tm_hour, now.tm_min, now.tm_sec);
     sprintf(game->level, "classic");
 }
 
@@ -59,7 +56,7 @@ void load_leaderboard(game_t *game) {
     file = fopen(path, "r");
     if (file == NULL) return;
 
-    // Alloue la mémoire dans les tableaux en fonction du nombre de joueurs
+    // Alloue la mémoire dans les tableaux en fonction du nombre de joueurs et crée le classement
     int nbPlayers = getNbPlayers(path);
     char **players = getPlayers(path, nbPlayers);
     int *scores = getScores(players, nbPlayers);
@@ -74,7 +71,7 @@ void load_leaderboard(game_t *game) {
 void load_game(game_t *game) {
     FILE *fichier = NULL;
     int size = LINE_SIZE;
-    char line[size];
+    char *line = calloc(size, sizeof(char));
     int step = 0;
 
     // Vérifie que le fichier existe
@@ -84,29 +81,32 @@ void load_game(game_t *game) {
     // Parcours toutes les lignes
     while (fgets(line, size, fichier) != NULL) {
         line[strcspn(line, "\r\n")] = 0;
-
-        // Sauvegarde la donnée correspondante
-        switch (step) {
-            case 1:
-                game->score = (int) strtol(line, NULL, 10);
-                break;
-            case 2:
-                sprintf(game->pseudo, "%s", line);
-                break;
-            case 3:
-                sprintf(game->startDate, "%s", line);
-                break;
-            case 4:
-                sprintf(game->endDate, "%s", line);
-                break;
-            default:
-                if (strcmp(game->level, line) != 0) sprintf(game->level, "%s", line);
-                break;
-        }
+        setGameData(game, line, step);
         step++;
     }
 
+    free(line);
     fclose(fichier);
+}
+
+void setGameData(game_t *game, char *line, int step) {
+    switch (step) {
+        case 1:
+            game->score = (int) strtol(line, NULL, 10);
+            break;
+        case 2:
+            sprintf(game->pseudo, "%s", line);
+            break;
+        case 3:
+            sprintf(game->startDate, "%s", line);
+            break;
+        case 4:
+            sprintf(game->endDate, "%s", line);
+            break;
+        default:
+            if (strcmp(game->level, line) != 0) sprintf(game->level, "%s", line);
+            break;
+    }
 }
 
 void clean_game(game_t *game) {
@@ -203,4 +203,9 @@ void setLeaderboard(game_t *game, char **players, int *scores, int nbPlayers) {
         scores[indexMax] = 0;
         scoreMax = 0;
     }
+}
+
+struct tm getDate() {
+    time_t date = time(NULL);
+    return *localtime(&date);
 }

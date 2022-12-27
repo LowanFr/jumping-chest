@@ -96,4 +96,18 @@ int *getScores(char **players, int nbPlayers);
  */
 void setLeaderboard(game_t *game, char **players, int *scores, int nbPlayers);
 
+/**
+ * @brief Récupère la date actuelle
+ * @return La date
+ */
+struct tm getDate();
+
+/**
+ * @brief Défini un attribut de la partie en fonction de la donnée et de l'étape de chargement
+ * @param game La partie
+ * @param line La donnée sauvegardée
+ * @param step L'étape
+ */
+void setGameData(game_t *game, char *line, int step);
+
 #endif
