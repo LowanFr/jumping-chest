@@ -212,9 +212,6 @@ void write_pseudo(game_t *game, SDL_Keycode key) {
     // Vérifie la taille du pseudonyme
     if (strlen(game->pseudo) >= 20) return;
 
-    // Ajoute le caractère
-    if (key == SDLK_SPACE) strcat(game->pseudo, " ");
-
     // Vérifie la taille de la clef
     if (strlen(keyName) > 1) return;
     strcat(game->pseudo, keyName);
