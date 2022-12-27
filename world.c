@@ -61,6 +61,7 @@ void init_world(game_t *game, world_t *world, bool new_game) {
                 SCREEN_H - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
                 HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER, false);
 
+    init_cam(world, SCREEN_W, SCREEN_H);
     init_blocks(world);
 }
 
@@ -78,12 +79,22 @@ void init_blocks(world_t *world) {
     }
 }
 
-void init_cam(world_t *world, cam_t *cam, int w, int h) {
-    cam->x = world->player->DestR.x - w / 2;
-    cam->y = world->player->DestR.y - h / 2;
-    cam->h = h;
-    cam->w = w;
-    world->cam = cam;
+void init_cam(world_t *world, int w, int h) {
+    world->cam = calloc(1, sizeof (cam_t));
+    world->cam->x = world->player->DestR.x - w / 2;
+    world->cam->y = world->player->DestR.y - h / 2;
+    world->cam->h = h;
+    world->cam->w = w;
+
+    // Vérifie la bordure gauche
+    if (world->cam->x < 0) {
+        world->cam->x = 0;
+    }
+
+    // vérifie la bordure droite
+    if (world->cam->x + world->cam->w >= world->map->nb_col * SIZE_TEXTURES) {
+        world->cam->x = world->map->nb_col * SIZE_TEXTURES - world->cam->w;
+    }
 }
 
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex,
@@ -162,6 +173,7 @@ void clean_data(world_t *world) {
     free(world->map);
     free(world->textures);
     free(world->player);
+    free(world->cam);
 }
 
 void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
@@ -319,6 +331,7 @@ void load_world(world_t *world) {
     load_blocks(world);
     load_player(world);
     load_details(world);
+    init_cam(world, SCREEN_W, SCREEN_H);
 }
 
 void load_player(world_t *world) {
@@ -410,4 +423,12 @@ void load_details(world_t *world) {
 
         fclose(fichier);
     }
+}
+
+void update_hearts(game_t *game, world_t *world) {
+    // Vérifie si l'utilisateur doit avoir un meilleur score
+    if (game->nextLife > 0) return;
+
+    world->hearts++;
+    game->nextLife += 100;
 }

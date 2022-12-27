@@ -72,4 +72,64 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
  */
 void blobs_animations(sprite_t *block);
 
+/**
+ * @brief Affiche tous les blocs du monde
+ * @param game La partie
+ * @param world Le monde
+ * @param renderer Le moteur de rendu
+ * @param ressources Les ressources
+ * @param keyboard Le clavier
+ */
+void display_blocks(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources,
+                    keyboard_status_t *keyboard);
+
+/**
+ * @brief Affiche un bloc sur le monde
+ * @param game La partie
+ * @param world Le monde
+ * @param renderer Le moteur de rendu
+ * @param ressources Les ressources
+ * @param keyboard Le clavier
+ * @param sprite L'image
+ */
+void display_block(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources,
+                   keyboard_status_t *keyboard, sprite_t *sprite);
+
+/**
+ * @brief Affiche un blob sur le monde
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param world Le monde
+ * @param ressources Les ressources
+ * @param keyboard Le clavier
+ * @param sprite L'image
+ * @param rect Le rectangle adapté à la caméra
+ */
+void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard, sprite_t *sprite, SDL_Rect *rect);
+
+/**
+ * @brief Affiche le score de la partie
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param ressources Les ressources
+ */
+void display_score(SDL_Renderer *renderer, game_t *game, ressources_t *ressources);
+
+/**
+ * @brief Affiche les vies
+ * @param renderer Le moteur de rendu
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
+void display_lives(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+
+/**
+ * @brief Affiche le joueur
+ * @param renderer Le moteur de rendu
+ * @param world Le monde
+ * @param ressources Les ressources
+ * @param keyboard Le clavier
+ */
+void display_player(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard);
+
 #endif

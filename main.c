@@ -23,11 +23,10 @@
  * @param ressources Les ressources
  * @param world Le monde
  * @param keys Les touches du clavier
- * @param camera La caméra
  * @param game La partie
  */
 void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world,
-          keyboard_status_t *keyboard, mouse_status_t *mouse, cam_t *camera, game_t *game) {
+          keyboard_status_t *keyboard, mouse_status_t *mouse, game_t *game) {
     init_sdl(window, renderer, SCREEN_W, SCREEN_H);
     init_ttf();
     init_game(game);
@@ -38,7 +37,6 @@ void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources
     world->hearts = 3;
     world->reinstall = false;
     init_world(game, world, false);
-    init_cam(world, camera, SCREEN_W, SCREEN_H);
 }
 
 /**
@@ -79,7 +77,6 @@ int main() {
     SDL_Event event;
     ressources_t ressources;
     world_t world;
-    cam_t camera;
     keyboard_status_t keyboard;
     mouse_status_t mouse;
     game_t game;
@@ -87,7 +84,7 @@ int main() {
 
     while (world.reinstall) {
         // Initialisation du jeu
-        init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
+        init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &game);
 
         // Boucle du menu
         while (world.pause || world.menu || world.waitingMenu) {
@@ -105,11 +102,16 @@ int main() {
 
                 // Exécution de tous les événements
                 handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
+                update_hearts(&game, &world);
 
                 // Déplacement du joueur
                 player_movement(&keyboard, world.player);
                 repositioning_camera(&world);
                 handle_collision(&game, &world, world.player, &keyboard);
+
+                // Incrémente le nombre de cycles
+                if (world.cycles == 180) world.cycles = 0;
+                else world.cycles++;
 
                 sleep();
             }

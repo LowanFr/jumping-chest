@@ -93,12 +93,6 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
 
-    // Vérifie si le joueur à une vie en plus
-    if (game->nextLife <= 0) {
-        world->hearts++;
-        game->nextLife += 100;
-    }
-
     // Affichage des vies
     for (int i = 0; i < world->hearts; ++i) {
         SDL_Rect pos_lives;
@@ -109,10 +103,6 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
         SDL_RenderCopy(renderer, ressources->player,
                        &world->player->SrcR, &pos_lives);
     }
-
-    // Incrémente le nombre de cycles
-    if (world->cycles == 180) world->cycles = 0;
-    else world->cycles++;
 
     // Affiche le joueur selon la caméra
     SDL_RendererFlip flip = keyboard->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;

@@ -209,11 +209,10 @@ void init_world(game_t *game, world_t *world, bool new_game);
 /**
  * @brief Initialisation de la caméra.
  * @param world Le monde
- * @param camera La caméra à initialiser
- * @param h La hauteur de la caméra
- * @param w La largeur de la caméra
+ * @param w La hauteur de la caméra
+ * @param h La largeur de la caméra
  */
-void init_cam(world_t *world, cam_t *camera, int h, int w);
+void init_cam(world_t *world, int w, int f);
 
 /**
  * @brief Initialisation d'une image.
@@ -334,5 +333,12 @@ void load_details(world_t *world);
  * @param world Le monde
  */
 void init_blocks(world_t *world);
+
+/**
+ * @brief Vérifie si le membre doit avoir des vies en plus
+ * @param game La partie
+ * @param world Le monde
+ */
+void update_hearts(game_t *game, world_t *world);
 
 #endif
