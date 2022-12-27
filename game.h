@@ -14,7 +14,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define LINE_SIZE 100
+#define LINE_SIZE 100 // La taille maximale d'une ligne du leaderboard
 
 /**
  * @brief Définition d'une partie d'un joueur
@@ -78,7 +78,6 @@ int getNbPlayers(char *path);
  */
 char **getPlayers(char *path, int nbPlayers);
 
-
 /**
  * @brief Récupère tous les scores
  * @param path Le chemin vers le fichier
@@ -88,6 +87,13 @@ char **getPlayers(char *path, int nbPlayers);
  */
 int *getScores(char **players, int nbPlayers);
 
+/**
+ * @brief Défini le classement à partir des scores
+ * @param game La partie
+ * @param players Les joueurs
+ * @param scores  Les scores
+ * @param nbPlayers Le nombre de joueurs
+ */
 void setLeaderboard(game_t *game, char **players, int *scores, int nbPlayers);
 
 #endif

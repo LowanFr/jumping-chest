@@ -30,10 +30,6 @@ void init_game(game_t *game) {
     sprintf(game->level, "classic");
 }
 
-/**
- * Sauvegarde l'état de la partie
- * @param folder  Le dossier de sauvegarde
- */
 void save_game(game_t *game, char folder[100]) {
     // Défini le chemin vers le fichier
     char gameFileName[100];
