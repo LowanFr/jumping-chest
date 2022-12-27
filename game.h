@@ -14,6 +14,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define LINE_SIZE 100
+
 /**
  * @brief Définition d'une partie d'un joueur
  */
@@ -67,5 +69,25 @@ void load_leaderboard(game_t *game);
  * @return Le nombre de joueur
  */
 int getNbPlayers(char *path);
+
+/**
+ * @brief Récupère chaque ligne avec pseudo + score
+ * @param path Le chemin vers le fichier
+ * @param lineSize La maximum pour un joueur
+ * @return Les lignes avec les pseudonymes + scores
+ */
+char **getPlayers(char *path, int nbPlayers);
+
+
+/**
+ * @brief Récupère tous les scores
+ * @param path Le chemin vers le fichier
+ * @param players Les lignes avec tous les joueurs (Pseudo + score)
+ * @param lineSize La taille maximale d'une ligne
+ * @return Les scores de chaque joueur
+ */
+int *getScores(char **players, int nbPlayers);
+
+void setLeaderboard(game_t *game, char **players, int *scores, int nbPlayers);
 
 #endif

@@ -65,66 +65,20 @@ void load_leaderboard(game_t *game) {
 
     // Alloue la mémoire dans les tableaux en fonction du nombre de joueurs
     int nbPlayers = getNbPlayers(path);
-    char **lines = calloc(nbPlayers, sizeof(char *));
-    int *scores = calloc(nbPlayers, sizeof(int));
-
-    int size = 50;
-    int index = 0;
-    char *line = calloc(size, sizeof(char));
-
-    // Parcours le fichier ligne par ligne
-    while (fgets(line, size, file) != NULL) {
-        lines[index] = calloc(size, sizeof(char));
-        snprintf(lines[index], size, "%s", line);
-        int len_result = (int) strlen(lines[index]);
-        lines[index][len_result - 1] = '\0'; // enlève à chaque fois le caractère "\n"
-        ++index;
-    }
-    fclose(file);
-
-    char *string;
-    for (int i = 0; i < index; ++i) {
-        // Récupère le score à partir de la ligne
-        sprintf(line, "%s", lines[i]);
-        string = strtok(line, " ");
-        string = strtok(NULL, string);
-        scores[i] = (int) strtol(string, NULL, 10);
-    }
-
-    int scoreMax = scores[0];
-    int indexMax = 0;
-
-    // Parcours n fois (n ≤ 5) pour définir le TOP 5
-    for (int i = 0; i < index && i < 5; ++i) {
-        // Récupère le meilleur joueur
-        for (int j = 0; j < index; ++j) {
-            if (scores[j] > scoreMax) {
-                scoreMax = scores[j];
-                indexMax = j;
-            }
-        }
-
-        // Sauvegarde le joueur
-        game->leaderboard[i] = calloc(size, sizeof(char));
-        snprintf(game->leaderboard[i], size, "%s", lines[indexMax]);
-        game->leaderboardLength++;
-
-        // Modifie le score pour qu'il ne puisse pas réapparaître
-        scores[indexMax] = 0;
-        scoreMax = 0;
-    }
+    char **players = getPlayers(path, nbPlayers);
+    int *scores = getScores(players, nbPlayers);
+    setLeaderboard(game, players, scores, nbPlayers);
 
     // Libère la mémoire
-    free(line);
-    for (int j = 0; j < index; ++j) free(lines[j]);
-    free(lines);
+    for (int j = 0; j < nbPlayers; ++j) free(players[j]);
+    free(players);
     free(scores);
 }
 
 void load_game(game_t *game) {
     FILE *fichier = NULL;
-    char line[50];
-    int size = 50;
+    int size = LINE_SIZE;
+    char line[size];
     int step = 0;
 
     // Vérifie que le fichier existe
@@ -178,11 +132,79 @@ int getNbPlayers(char *path) {
     if (file == NULL) return res;
 
     // Parcours le fichier ligne par ligne
-    char line[50];
-    while (fgets(line, 50, file) != NULL) res++;
+    int lineSize = LINE_SIZE;
+    char line[lineSize];
+    while (fgets(line, lineSize, file) != NULL) res++;
 
     // Ferme le fichier
     fclose(file);
 
     return res;
+}
+
+char **getPlayers(char *path, int nbPlayers) {
+    FILE *file = NULL;
+
+    // Vérifie que le fichier existe
+    file = fopen(path, "r");
+    if (file == NULL) return NULL;
+
+    // Alloue la mémoire pour chaque joueur
+    int lineSize = LINE_SIZE;
+    char **lines = calloc(nbPlayers, sizeof(char *));
+    char line[lineSize];
+    int index = 0;
+
+    // Parcours le fichier ligne par ligne
+    while (fgets(line, lineSize, file) != NULL) {
+        lines[index] = calloc(lineSize, sizeof(char));
+        snprintf(lines[index], lineSize, "%s", line);
+        lines[index++][strcspn(line, "\r\n")] = 0;
+    }
+
+    // Ferme le fichier
+    fclose(file);
+    return lines;
+}
+
+int *getScores(char **players, int nbPlayers) {
+    char line[LINE_SIZE];
+    int *scores = calloc(nbPlayers, sizeof(int));
+
+    char *string;
+    for (int i = 0; i < nbPlayers; ++i) {
+        // Récupère le score à partir de la ligne
+        sprintf(line, "%s", players[i]);
+        string = strtok(line, " ");
+        string = strtok(NULL, string);
+        scores[i] = (int) strtol(string, NULL, 10);
+    }
+
+    return scores;
+}
+
+void setLeaderboard(game_t *game, char **players, int *scores, int nbPlayers) {
+    int lineSize = LINE_SIZE;
+    int scoreMax = scores[0];
+    int indexMax = 0;
+
+    // Parcours n fois (n ≤ 5) pour définir le TOP 5
+    for (int i = 0; i < nbPlayers && i < 5; ++i) {
+        // Récupère le meilleur joueur
+        for (int j = 0; j < nbPlayers; ++j) {
+            if (scores[j] > scoreMax) {
+                scoreMax = scores[j];
+                indexMax = j;
+            }
+        }
+
+        // Sauvegarde le joueur
+        game->leaderboard[i] = calloc(lineSize, sizeof(char));
+        snprintf(game->leaderboard[i], lineSize, "%s", players[indexMax]);
+        game->leaderboardLength++;
+
+        // Modifie le score pour qu'il ne puisse pas réapparaître
+        scores[indexMax] = 0;
+        scoreMax = 0;
+    }
 }
