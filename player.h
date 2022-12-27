@@ -62,7 +62,7 @@ void handle_collision_solidBlock(sprite_t *player, sprite_t *sprite);
  * @param player Le joueur
  * @param sprite Le bloc
  */
-void handle_collision_pieces(world_t *world, game_t *game, sprite_t *player, sprite_t *sprite);
+void handle_collision_pieces(game_t *game, sprite_t *player, sprite_t *sprite);
 
 /**
  * @brief Modifie l'état du monde en fonction d'une collision

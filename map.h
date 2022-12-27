@@ -24,14 +24,6 @@ int **allouer_tab_2D(int n, int m);
 void desallouer_tab_2D(int **tab, int n);
 
 /**
- * @brief Affiche le contenu d’un tableau de caractères de taille n × m.
- * @param tab Le tableau de caractères
- * @param n La largeur du tableau
- * @param m La hauteur du tableau
- */
-void afficher_tab_2D(int **tab, int n, int m);
-
-/**
  * @brief Compte le nombre max de ligne / colonne.
  * @param nameFile Le nom du fichier
  * @param nbRows Le nombre de ligne

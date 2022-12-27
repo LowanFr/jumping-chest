@@ -63,7 +63,7 @@ void load_leaderboard(game_t *game) {
     file = fopen(path, "r");
     if (file == NULL) return;
 
-    // Alloue la mémoire dans les tableaux en fonction du nombre de joueur
+    // Alloue la mémoire dans les tableaux en fonction du nombre de joueurs
     int nbPlayers = getNbPlayers(path);
     char **lines = calloc(nbPlayers, sizeof(char *));
     int *scores = calloc(nbPlayers, sizeof(int));

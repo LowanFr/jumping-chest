@@ -58,7 +58,7 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
 
                 //entity est forcément un player
                 handle_collision_chest(world, entity, sprite, key);
-                handle_collision_pieces(world, game, entity, sprite);
+                handle_collision_pieces(game, entity, sprite);
 
             }
         }
@@ -82,7 +82,7 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
     }
 }
 
-void handle_collision_pieces(world_t *world, game_t *game, sprite_t *player, sprite_t *sprite) {
+void handle_collision_pieces(game_t *game, sprite_t *player, sprite_t *sprite) {
     // Vérifie que l'entité est le joueur et que le bloc est une pièce
     int textureIndex = sprite->textureIndex;
     if (textureIndex < 6 || textureIndex > 9 || player->textureIndex != -1) return;
