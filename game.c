@@ -178,7 +178,7 @@ int getNbPlayers(char *path) {
     if (file == NULL) return res;
 
     // Parcours le fichier ligne par ligne
-    char *line = calloc(50, sizeof (char));
+    char line[50];
     while (fgets(line, 50, file) != NULL) res++;
 
     // Ferme le fichier
