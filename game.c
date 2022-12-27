@@ -54,72 +54,66 @@ void save_game(game_t *game, char folder[100]) {
 }
 
 void load_leaderboard(game_t *game) {
-    game->leaderboard = calloc(sizeof(char*), 10);
+    // Alloue la mémoire des tableaux
+    game->leaderboard = calloc(sizeof(char *), 10);
+    char **lines = calloc(sizeof(char *), 10);
+    int *scores = calloc(sizeof(int), 10);
+    FILE *file = NULL;
 
-    FILE *fichier = NULL;
-    char line[50];
+    // Vérifie que le fichier existe
+    file = fopen("../backups/leaderboard.txt", "r");
+    if (file == NULL) return;
+
     int size = 50;
-    char** result = calloc(sizeof(char*), 10); //copie du txt dans un tableau
-    int *scores = calloc(sizeof(int), 10); //copie des scores pour le tri
+    int index = 0;
+    char *line = calloc(size, sizeof(char));
 
-    int i = 0;
-    int len_result;
-
-    fichier = fopen("../backups/leaderboard.txt", "r"); // Ouvre en mode lecture
-    if (fichier != NULL) { // Fichier introuvable
-        // Parcours toutes les lignes
-        while (fgets(line, size, fichier) != NULL) {
-
-            result[i] = calloc(sizeof(char), 50);
-            snprintf(result[i], 50, "%s", line);
-            len_result = (int) strlen(result[i]);
-            result[i][len_result - 1 ] = '\0'; // enlève à chaque fois le caractère "\n"
-            ++i;
-        }
-
-        fclose(fichier);
-        len_result = i;
-
-        int index_max = 0 ;
-
-
-        char** score_e = calloc(sizeof(char*), 10); // Copie de result pour effectuer le tri
-        char* score_c;
-
-        for(int index = 0; index < len_result ; ++index){
-            score_e[index] = calloc(sizeof(char), 50);
-            snprintf(score_e[index], 50, "%s", result[index]);
-
-            score_c = strtok(result[index], " ");
-            score_c = strtok(NULL, score_c);
-            scores[index] = (int) strtol(score_c, NULL, 10);
-        }
-
-        int score_max = scores[0];
-
-        for(int j = 0; j < len_result && j < 5; ++j){
-            for(int index = 0; index < len_result; ++index){
-                if(scores[index] > score_max){
-                    score_max = scores[index];
-                    index_max = index;
-                }
-            }
-
-            game->leaderboard[j] = calloc(sizeof(char), 50);
-            snprintf(game->leaderboard[j], 50, "%s", score_e[index_max]);
-
-            game->leaderboardLength++;
-            scores[index_max] = 0;
-            score_max = 0;
-        }
-        for(int index = 0; index < len_result; ++index){
-            free(score_e[index]);
-            free(result[index]);
-        }
-        free(score_e);
-        free(result);
-        free(scores);
+    // Parcours le fichier ligne par ligne
+    while (fgets(line, size, file) != NULL) {
+        lines[index] = calloc(size, sizeof(char));
+        snprintf(lines[index], size, "%s", line);
+        int len_result = (int) strlen(lines[index]);
+        lines[index][len_result - 1] = '\0'; // enlève à chaque fois le caractère "\n"
+        ++index;
     }
+    fclose(file);
+
+    char *string;
+    for (int i = 0; i < index; ++i) {
+        // Récupère le score à partir de la ligne
+        sprintf(line, "%s", lines[i]);
+        string = strtok(line, " ");
+        string = strtok(NULL, string);
+        scores[i] = (int) strtol(string, NULL, 10);
+    }
+
+    int scoreMax = scores[0];
+    int indexMax = 0;
+
+    // Parcours n fois (n ≤ 5) pour définir le TOP 5
+    for (int i = 0; i < index && i < 5; ++i) {
+        // Récupère le meilleur joueur
+        for (int j = 0; j < index; ++j) {
+            if (scores[j] > scoreMax) {
+                scoreMax = scores[j];
+                indexMax = j;
+            }
+        }
+
+        // Sauvegarde le joueur
+        game->leaderboard[i] = calloc(size, sizeof(char));
+        snprintf(game->leaderboard[i], size, "%s", lines[indexMax]);
+        game->leaderboardLength++;
+
+        // Modifie le score pour qu'il ne puisse pas réapparaître
+        scores[indexMax] = 0;
+        scoreMax = 0;
+    }
+
+    // Libère la mémoire
+    for (int j = 0; j < index; ++j) free(lines[j]);
+    free(lines);
+    free(scores);
 }
 
 void load_game(game_t *game) {
@@ -127,35 +121,37 @@ void load_game(game_t *game) {
     char line[50];
     int size = 50;
     int step = 0;
-    fichier = fopen("../backups/game.txt", "r"); // Ouvre en mode lecture
 
-    if (fichier != NULL) { // Fichier introuvable
-        // Parcours toutes les lignes
-        while (fgets(line, size, fichier) != NULL) {
-            line[strcspn(line, "\r\n")] = 0;
+    // Vérifie que le fichier existe
+    fichier = fopen("../backups/game.txt", "r");
+    if (fichier == NULL) return;
 
-            switch (step) {
-                case 1:
-                    game->score = (int) strtol(line, NULL, 10);
-                    break;
-                case 2:
-                    sprintf(game->pseudo, "%s", line);
-                    break;
-                case 3:
-                    sprintf(game->startDate, "%s", line);
-                    break;
-                case 4:
-                    sprintf(game->endDate, "%s", line);
-                    break;
-                default:
-                    if (strcmp(game->level, line) != 0) sprintf(game->level, "%s", line);
-                    break;
-            }
-            step++;
+    // Parcours toutes les lignes
+    while (fgets(line, size, fichier) != NULL) {
+        line[strcspn(line, "\r\n")] = 0;
+
+        // Sauvegarde la donnée correspondante
+        switch (step) {
+            case 1:
+                game->score = (int) strtol(line, NULL, 10);
+                break;
+            case 2:
+                sprintf(game->pseudo, "%s", line);
+                break;
+            case 3:
+                sprintf(game->startDate, "%s", line);
+                break;
+            case 4:
+                sprintf(game->endDate, "%s", line);
+                break;
+            default:
+                if (strcmp(game->level, line) != 0) sprintf(game->level, "%s", line);
+                break;
         }
-
-        fclose(fichier);
+        step++;
     }
+
+    fclose(fichier);
 }
 
 void clean_game(game_t *game) {
@@ -163,8 +159,6 @@ void clean_game(game_t *game) {
     free(game->level);
     free(game->startDate);
     free(game->endDate);
-    for (int i = 0; i < 10; ++i)
-        free(game->leaderboard[i]);
-
+    for (int i = 0; i < 10; ++i) free(game->leaderboard[i]);
     free(game->leaderboard);
 }
