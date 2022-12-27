@@ -87,11 +87,8 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
             }
         }
     }
-    // Affichage du score
-    char buff[20];
-    sprintf(buff, "SCORE : %d", game->score);
 
-    apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
+    display_score(renderer, game, ressources);
 
     // Affichage des vies
     for (int i = 0; i < world->hearts; ++i) {
@@ -113,6 +110,13 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     // Met à jour l'écran
     update_screen(renderer);
+}
+
+void display_score(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
+    char buff[20];
+    sprintf(buff, "SCORE : %d", game->score);
+
+    apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
 }
 
 void handle_animations(world_t *world, sprite_t *block) {
