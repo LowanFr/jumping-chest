@@ -89,18 +89,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
     }
 
     display_score(renderer, game, ressources);
-
-    // Affichage des vies
-    for (int i = 0; i < world->hearts; ++i) {
-        SDL_Rect pos_lives;
-        pos_lives.x = SCREEN_W - 100 - i * (WIDTH_PLAYER + 20);
-        pos_lives.y = 10;
-        pos_lives.w = WIDTH_PLAYER * 0.7;
-        pos_lives.h = HEIGHT_PLAYER * 0.7;
-        SDL_RenderCopy(renderer, ressources->player,
-                       &world->player->SrcR, &pos_lives);
-    }
-
+    display_lives(renderer, world, ressources);
     display_player(renderer, world, ressources, keyboard);
 
     // Met à jour l'écran
@@ -112,6 +101,18 @@ void display_score(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
     sprintf(buff, "SCORE : %d", game->score);
 
     apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
+}
+
+void display_lives(SDL_Renderer *renderer, world_t *world, ressources_t *ressources) {
+    for (int i = 0; i < world->hearts; ++i) {
+        SDL_Rect pos_lives;
+        pos_lives.x = SCREEN_W - 100 - i * (WIDTH_PLAYER + 20);
+        pos_lives.y = 10;
+        pos_lives.w = WIDTH_PLAYER * 0.7;
+        pos_lives.h = HEIGHT_PLAYER * 0.7;
+        SDL_RenderCopy(renderer, ressources->player,
+                       &world->player->SrcR, &pos_lives);
+    }
 }
 
 void display_player(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard) {
