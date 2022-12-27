@@ -85,39 +85,39 @@ int main() {
     game_t game;
     world.reinstall = true;
 
-    while(world.reinstall){
-    // Initialisation du jeu
-    init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
+    while (world.reinstall) {
+        // Initialisation du jeu
+        init(&window, &renderer, &ressources, &world, &keyboard, &mouse, &camera, &game);
 
-    // Boucle du menu
-    while (world.pause || world.menu || world.waitingMenu) {
-        // Actualisation du menu
-        refresh_menu(&game, &world, renderer, &ressources);
-        handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
-
-        // Boucle principal
-        while (!world.end) {
-            // Mise à jour de l'affichage
-            refresh_graphics(renderer, &game, &world, &ressources, &keyboard);
-
-            // Mise à jour du niveau si besoin avec les nouvelles textures
-            refresh_level(renderer, &game, &ressources, &world);
-
-            // Exécution de tous les événements
+        // Boucle du menu
+        while (world.pause || world.menu || world.waitingMenu) {
+            // Actualisation du menu
+            refresh_menu(&game, &world, renderer, &ressources);
             handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
 
-            // Déplacement du joueur
-            player_movement(&keyboard, world.player);
-            repositioning_camera(&world);
-            handle_collision(&game, &world, world.player, &keyboard);
+            // Boucle principal
+            while (!world.end) {
+                // Mise à jour de l'affichage
+                refresh_graphics(renderer, &game, &world, &ressources, &keyboard);
 
+                // Mise à jour du niveau si besoin avec les nouvelles textures
+                refresh_level(renderer, &game, &ressources, &world);
+
+                // Exécution de tous les événements
+                handle_event(renderer, &ressources, &mouse, &keyboard, &game, &world, &event);
+
+                // Déplacement du joueur
+                player_movement(&keyboard, world.player);
+                repositioning_camera(&world);
+                handle_collision(&game, &world, world.player, &keyboard);
+
+                sleep();
+            }
             sleep();
         }
-        sleep();
-    }
 
-    // Libère toute la mémoire utilisée pour le monde
-    clean(window, renderer, &ressources, &game, &world);
+        // Libère toute la mémoire utilisée pour le monde
+        clean(window, renderer, &ressources, &game, &world);
 
     }
     return EXIT_SUCCESS;

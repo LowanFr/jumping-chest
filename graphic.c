@@ -206,15 +206,16 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
             world->buttons[3].enable = false;
             world->buttons[1].enable = true;
 
-            if(game->leaderboardLength != 0){
+            if (game->leaderboardLength != 0) {
                 apply_text(renderer, SCREEN_W - SCREEN_W / 4, SCREEN_H / 3, 250, 50, "leaderboard", ressources->font);
 
-                for(int j = 0; j < game->leaderboardLength; ++j){
+                for (int j = 0; j < game->leaderboardLength; ++j) {
                     // Affichage du score
                     char buff[50];
-                    sprintf(buff, "%d) %s", j+1, game->leaderboard[j]);
+                    sprintf(buff, "%d) %s", j + 1, game->leaderboard[j]);
                     // Affichage du score
-                    apply_text(renderer, SCREEN_W - SCREEN_W / 4 - 50, SCREEN_H / 3 + (j+1) * 75, 250, 50, buff, ressources->font);
+                    apply_text(renderer, SCREEN_W - SCREEN_W / 4 - 50, SCREEN_H / 3 + (j + 1) * 75, 250, 50, buff,
+                               ressources->font);
                 }
             }
         }

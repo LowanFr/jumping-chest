@@ -21,7 +21,6 @@
 #define JUMP_SPEED 30
 
 
-
 /**
  * @brief Gestion du déplacement du joueur.
  * @param touches Les touches
