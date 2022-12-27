@@ -101,12 +101,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
                        &world->player->SrcR, &pos_lives);
     }
 
-    // Affiche le joueur selon la caméra
-    SDL_RendererFlip flip = keyboard->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-    SDL_Rect block = world->player->DestR;
-    block.x -= world->cam->x;
-    block.y -= world->cam->y;
-    SDL_RenderCopyEx(renderer, ressources->player, &world->player->SrcR, &block, 0., NULL, flip);
+    display_player(renderer, world, ressources, keyboard);
 
     // Met à jour l'écran
     update_screen(renderer);
@@ -117,6 +112,15 @@ void display_score(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
     sprintf(buff, "SCORE : %d", game->score);
 
     apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
+}
+
+void display_player(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard) {
+    // Affiche le joueur selon la caméra
+    SDL_RendererFlip flip = keyboard->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+    SDL_Rect block = world->player->DestR;
+    block.x -= world->cam->x;
+    block.y -= world->cam->y;
+    SDL_RenderCopyEx(renderer, ressources->player, &world->player->SrcR, &block, 0., NULL, flip);
 }
 
 void handle_animations(world_t *world, sprite_t *block) {
