@@ -80,7 +80,7 @@ void init_blocks(world_t *world) {
 }
 
 void init_cam(world_t *world, int w, int h) {
-    world->cam = calloc(1, sizeof (cam_t));
+    world->cam = calloc(1, sizeof(cam_t));
     world->cam->x = world->player->DestR.x - w / 2;
     world->cam->y = world->player->DestR.y - h / 2;
     world->cam->h = h;
