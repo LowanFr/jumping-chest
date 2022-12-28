@@ -32,7 +32,14 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *g
  * @param world Le monde
  * @param ressources Les ressources
  */
-void askPseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
+void ask_pseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
+
+/**
+ * @brief Sauvegarde le pseudonyme dans le fichier
+ * @param game La partie
+ * @param world Le monde
+ */
+void save_pseudo(game_t *game, world_t *world);
 
 /**
  * @brief Rafraichit l'écran en fonction de l'état des données du monde.
@@ -132,9 +139,48 @@ void display_lives(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
  */
 void display_player(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard);
 
-void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
-void display_main_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+/**
+ * @brief Affiche les différents menus
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
+void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save);
+
+/**
+ * @brief Affiche le menu principal
+ * @param renderer Le moteur de recherche
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
+void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save);
+
+void display_leaderboard(SDL_Renderer *renderer, game_t *game, ressources_t *ressources);
+
+/**
+ * @brief Affiche le menu de pause
+ * @param renderer Le moteur de rendu
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
 void display_pause_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+
+/**
+ * @brief Affiche le menu final (défaite/victoire)
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
 void display_waiting_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
+
+/**
+ * Vérifie si le jeu contient une sauvegarde
+ * @return Oui s'il existe une sauvegarde, sinon non
+ */
+bool has_backup();
+
+
 
 #endif

@@ -163,63 +163,33 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
 
     // Affichage du menu
-    display_menu(renderer, game, world, ressources);
-
-    bool save = false;
-    struct dirent *dir;
-
-    DIR *d = opendir("../backups");
-
-    if (d) {
-        while ((dir = readdir(d)) != NULL) {
-            // Ne prends pas en compte tous les fichiers par défaut
-            if (strcmp(dir->d_name, ".gitkeep") == 0 || strcmp(dir->d_name, "..") == 0 ||
-                strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "leaderboard.txt") == 0)
-                continue;
-            save = true;
-        }
-        closedir(d);
-    }
-
-    for (int i = 0; i < 4; i++) {
-        if (world->menu) {
-            // Affiche le bouton
-            world->buttons[i].DestR.y = 300 + i * 90;
-            if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
-            else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &world->buttons[i].DestR);
-            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
-            world->buttons[3].enable = false;
-            world->buttons[1].enable = true;
-
-            if (game->leaderboardLength != 0) {
-                apply_text(renderer, SCREEN_W - SCREEN_W / 4, SCREEN_H / 3, 250, 50, "leaderboard", ressources->font);
-
-                for (int j = 0; j < game->leaderboardLength; ++j) {
-                    // Affichage du score
-                    char buff[50];
-                    sprintf(buff, "%d) %s", j + 1, game->leaderboard[j]);
-                    // Affichage du score
-                    apply_text(renderer, SCREEN_W - SCREEN_W / 4 - 50, SCREEN_H / 3 + (j + 1) * 75, 250, 50, buff,
-                               ressources->font);
-                }
-            }
-        }
-
-        if (world->pause) {
-            // Affiche le bouton
-            world->buttons[i].DestR.y = i != 3 ? 300 + i * 90 : 300 + 90;
-            if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
-            else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
-            else if (i == 3) SDL_RenderCopy(renderer, ressources->save, NULL, &world->buttons[i].DestR);
-            world->buttons[3].enable = true;
-            world->buttons[1].enable = false;
-        }
-    }
+    bool save = has_backup();
+    display_menu(renderer, game, world, ressources, save);
 
     // Met à jour l'écran
     update_screen(renderer);
 }
 
+bool has_backup() {
+    bool res = false;
+
+    // Ouvre le dossier de sauvegarde
+    struct dirent *dir;
+    DIR *d = opendir("../backups");
+    if (!d || d == NULL) return res;
+
+    // Vérifie s'il y a un fichier de sauvegarde dans le dossier
+    while ((dir = readdir(d)) != NULL && res == false) {
+        // Ne prends pas en compte tous les fichiers par défaut
+        if (strcmp(dir->d_name, ".gitkeep") == 0 || strcmp(dir->d_name, "..") == 0 ||
+            strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "leaderboard.txt") == 0)
+            continue;
+        res = true;
+    }
+
+    closedir(d);
+    return res;
+}
 void blobs_animations(sprite_t *block) {
     // Itère l'image de la pièce
     if (block->textureIndex >= 10 && block->textureIndex <= 11) {
@@ -228,43 +198,50 @@ void blobs_animations(sprite_t *block) {
     }
 }
 
-void askPseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
-    // Fin de l'écriture du pseudonyme = Sauvegarde de score
+void ask_pseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
+    // Sauvegarde le pseudonyme avec le score associé
     if (!game->enteringPseudo) {
-        world->waitingMenu = false;
-        world->reinstall = true;
-        world->cyclesPause = 0;
-
-        FILE *fichier = NULL;
-        fichier = fopen("../backups/leaderboard.txt", "a");
-        if (fichier == NULL || strlen(game->pseudo) == 0) return;
-
-        char text[50];
-        sprintf(text, "%s %i\n", game->pseudo, game->score);
-        fputs(text, fichier);
-        fclose(fichier);
-
+        save_pseudo(game, world);
         return;
     }
 
+    // Défini le texte à afficher
     char text[50];
     sprintf(text, "Pseudonyme : %s", game->pseudo);
 
+    // Affiche le texte
     int length = (int) strlen(text) * 30;
-
     int x = SCREEN_W / 2 - length / 2;
     int y = SCREEN_H / 1.25;
     apply_text(renderer, x, y, length, 75, text, ressources->font);
 }
 
-void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
+void save_pseudo(game_t *game, world_t *world) {
+    // Redirige sur le menu principal
+    world->waitingMenu = false;
+    world->reinstall = true;
+    world->cyclesPause = 0;
+
+    // Ouvre le fichier et vérifie que pseudonyme n'est pas vide
+    FILE *fichier = NULL;
+    fichier = fopen("../backups/leaderboard.txt", "a");
+    if (fichier == NULL || strlen(game->pseudo) == 0) return;
+
+    // Ajoute le pseudonyme à la suite dans le fichier
+    char text[50];
+    sprintf(text, "%s %i\n", game->pseudo, game->score);
+    fputs(text, fichier);
+    fclose(fichier);
+}
+
+void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save) {
     // Gère l'affichage des différents menus
-    display_main_menu(renderer, world, ressources);
+    display_main_menu(renderer, game, world, ressources, save);
     display_pause_menu(renderer, world, ressources);
     display_waiting_menu(renderer, game, world, ressources);
 }
 
-void display_main_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources) {
+void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save) {
     // Vérifie que nous sommes sur le menu principal
     if (!world->menu) return;
 
@@ -273,6 +250,36 @@ void display_main_menu(SDL_Renderer *renderer, world_t *world, ressources_t *res
     int y = SCREEN_H / 8;
     apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->font);
     apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->font);
+
+    // Affiche tous les boutons
+    for (int i = 0; i < 4; i++) {
+        // Affiche le bouton
+        world->buttons[i].DestR.y = 300 + i * 90;
+        if (i == 0 && save) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
+        else if (i == 1) SDL_RenderCopy(renderer, ressources->newGame, NULL, &world->buttons[i].DestR);
+        else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
+        world->buttons[3].enable = false;
+        world->buttons[1].enable = true;
+    }
+
+    display_leaderboard(renderer, game, ressources);
+}
+
+void display_leaderboard(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
+    // Vérifie que le classement n'est pas vide
+    if (game->leaderboardLength == 0) return;
+
+    // Affiche le titre
+    apply_text(renderer, SCREEN_W - SCREEN_W / 4, SCREEN_H / 3, 250, 50, "leaderboard", ressources->font);
+
+    // Affiche toutes les personnes
+    for (int j = 0; j < game->leaderboardLength; ++j) {
+        int x = SCREEN_W - SCREEN_W / 4 - 50;
+        int y = SCREEN_H / 3 + (j + 1) * 75;
+        char text[50];
+        sprintf(text, "%d) %s", j + 1, game->leaderboard[j]);
+        apply_text(renderer, x, y, 250, 50, text, ressources->font);
+    }
 }
 
 void display_pause_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources) {
@@ -284,6 +291,16 @@ void display_pause_menu(SDL_Renderer *renderer, world_t *world, ressources_t *re
         int x = SCREEN_W / 2 - 800 / 2;
         int y = SCREEN_H / 8;
         apply_text(renderer, x, y, 800, 100, "En pause..", ressources->font);
+    }
+
+    // Affiche tous les boutons
+    for (int i = 0; i < 4; i++) {
+        world->buttons[i].DestR.y = i != 3 ? 300 + i * 90 : 300 + 90;
+        if (i == 0) SDL_RenderCopy(renderer, ressources->resume, NULL, &world->buttons[i].DestR);
+        else if (i == 2) SDL_RenderCopy(renderer, ressources->exit, NULL, &world->buttons[i].DestR);
+        else if (i == 3) SDL_RenderCopy(renderer, ressources->save, NULL, &world->buttons[i].DestR);
+        world->buttons[3].enable = true;
+        world->buttons[1].enable = false;
     }
 
     // Actualisation du cycle
@@ -303,5 +320,5 @@ void display_waiting_menu(SDL_Renderer *renderer, game_t *game, world_t *world, 
     if (world->hearts == 0) apply_text(renderer, x, y, 800, 100, "Vous avez perdu", ressources->font);
     else apply_text(renderer, x, y, 800, 100, "Vous avez gagne", ressources->font);
 
-    askPseudo(renderer, game, world, ressources);
+    ask_pseudo(renderer, game, world, ressources);
 }
