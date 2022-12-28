@@ -7,46 +7,44 @@
 #include "world.h"
 
 void init_world(game_t *game, world_t *world, bool new_game) {
-    if (!new_game) {
-        // Initialisation des images de tous les blocs
-        world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
-        for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
-            init_sprite(&world->textures[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
-                        Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11),
-                        SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i, false);
-        }
-
-        world->player = calloc(1, sizeof(sprite_t));
-        world->letter_e = calloc(1, sizeof(sprite_t));
-
-        init_sprite(world->letter_e, 0, 0, 512, 512, 0, 0, 56, 56, 0, false);
-
-        // Définition des boutons pour le menu
-        world->buttons = calloc(4, sizeof(button_t));
-        for (int i = 0; i < 4; ++i) {
-            world->buttons[i].DestR.x = (1080 - 375 / 2) / 2;
-            world->buttons[i].DestR.y = 300 + i * 90;
-            world->buttons[i].DestR.w = 375;
-            world->buttons[i].DestR.h = 75;
-            world->buttons[i].type = i;
-            world->buttons[i].enable = i < 3;
-        }
-
-        // Défini le nom de la carte
-        char mapPath[100];
-        sprintf(mapPath, "../assets/map-%s.txt", game->level);
-
-        // Récupération de la carte
-        world->map = malloc(sizeof(map_t));
-        world->map->tab = lire_fichier(mapPath);
-
-        // Récupération de la taille de la map
-        taille_fichier(mapPath, &world->map->nb_row, &world->map->nb_col);
-
-        // Initialisation de tous les blocs sur la map
-        world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
-        for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
+    // Initialisation des images de tous les blocs
+    world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
+    for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
+        init_sprite(&world->textures[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
+                    Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11),
+                    SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i, false);
     }
+
+    world->player = calloc(1, sizeof(sprite_t));
+    world->letter_e = calloc(1, sizeof(sprite_t));
+
+    init_sprite(world->letter_e, 0, 0, 512, 512, 0, 0, 56, 56, 0, false);
+
+    // Définition des boutons pour le menu
+    world->buttons = calloc(4, sizeof(button_t));
+    for (int i = 0; i < 4; ++i) {
+        world->buttons[i].DestR.x = (1080 - 375 / 2) / 2;
+        world->buttons[i].DestR.y = 300 + i * 90;
+        world->buttons[i].DestR.w = 375;
+        world->buttons[i].DestR.h = 75;
+        world->buttons[i].type = i;
+        world->buttons[i].enable = i < 3;
+    }
+
+    // Défini le nom de la carte
+    char mapPath[100];
+    sprintf(mapPath, "../assets/map-%s.txt", game->level);
+
+    // Récupération de la carte
+    world->map = malloc(sizeof(map_t));
+    world->map->tab = lire_fichier(mapPath);
+
+    // Récupération de la taille de la map
+    taille_fichier(mapPath, &world->map->nb_row, &world->map->nb_col);
+
+    // Initialisation de tous les blocs sur la map
+    world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
+    for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
 
     world->cycles = 0;
     world->hearts = new_game ? 3 : world->hearts;

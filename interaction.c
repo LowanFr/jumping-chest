@@ -167,6 +167,7 @@ void new_game_button(SDL_Renderer *renderer, game_t *game, world_t *world, resso
     clean_game(game);
     init_game(game);
 
+    clean_data(world);
     init_world(game, world, true);
     init_ressources(renderer, ressources, game);
 }
