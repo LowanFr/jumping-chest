@@ -65,7 +65,6 @@ void init_world(game_t *game, world_t *world, bool new_game) {
 
 void init_blocks(world_t *world) {
 
-
     // Initialisation de tous les blocs sur la map
     for (int i = 0; i < world->map->nb_row; i++) {
         for (int j = 0; j < world->map->nb_col; ++j) {
@@ -95,6 +94,7 @@ void init_cam(world_t *world, int w, int h) {
     if (world->cam->x + world->cam->w >= world->map->nb_col * SIZE_TEXTURES) {
         world->cam->x = world->map->nb_col * SIZE_TEXTURES - world->cam->w;
     }
+
 }
 
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex,
@@ -334,6 +334,9 @@ void load_world(world_t *world) {
     load_player(world);
     load_details(world);
     init_cam(world, SCREEN_W, SCREEN_H);
+    if(world->cam->y < SIZE_TEXTURES * 5){
+        world->cam->y = SIZE_TEXTURES * 5 - world->cam->h / 2;
+    }
 }
 
 void load_player(world_t *world) {
