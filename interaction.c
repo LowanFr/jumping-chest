@@ -140,8 +140,9 @@ void resume_button(SDL_Renderer *renderer, game_t *game, world_t *world, ressour
     } else { // Charge la sauvegarde
         world->menu = false;
         load_game(game);
-        load_world(world);
         init_ressources(renderer, ressources, game);
+        load_world(world);
+
         world->end = false;
     }
 }

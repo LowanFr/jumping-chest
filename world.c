@@ -66,6 +66,8 @@ void init_world(game_t *game, world_t *world, bool new_game) {
 }
 
 void init_blocks(world_t *world) {
+
+
     // Initialisation de tous les blocs sur la map
     for (int i = 0; i < world->map->nb_row; i++) {
         for (int j = 0; j < world->map->nb_col; ++j) {
@@ -168,8 +170,8 @@ void clean_data(world_t *world) {
     // Libère toute la mémoire utilisée pour le monde
     desallouer_tab_2D(world->map->tab, world->map->nb_row);
     for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]); // Libère toutes les lignes
-    free(world->buttons);
     free(world->blocks);
+    free(world->buttons);
     free(world->map);
     free(world->textures);
     free(world->player);
@@ -215,7 +217,7 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
             new_level(renderer, game, ressources);
             init_world(game, world, false);
         } else {
-            new_level(renderer, game, ressources);
+
             sprintf(game->level, "classic");
             world->end = true;
             world->waitingMenu = true;
@@ -384,6 +386,14 @@ void load_player(world_t *world) {
 
 void load_blocks(world_t *world) {
     world->map->tab = lire_fichier("../backups/world/blocks.txt");
+    taille_fichier("../backups/world/blocks.txt", &world->map->nb_row, &world->map->nb_col);
+    for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]); // Libère toutes les lignes
+    free(world->blocks);
+
+    // Initialisation de tous les blocs sur la map
+    world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
+    for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
+
     init_blocks(world);
 }
 
