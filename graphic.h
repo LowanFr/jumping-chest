@@ -132,4 +132,9 @@ void display_lives(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
  */
 void display_player(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard);
 
+void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
+void display_main_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+void display_pause_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources);
+void display_waiting_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
+
 #endif

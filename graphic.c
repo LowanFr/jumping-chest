@@ -8,6 +8,7 @@
 #include <dirent.h>
 
 void clean_ressources(ressources_t *ressources) {
+    // Libère la mémoire associée à toutes les images
     clean_texture(ressources->background);
     clean_texture(ressources->player);
     clean_texture(ressources->blocks);
@@ -20,14 +21,16 @@ void clean_ressources(ressources_t *ressources) {
 }
 
 void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *game) {
+    // Libère la mémoire des anciennes ressources
     if (strcmp(game->level, "classic") != 0) clean_ressources(ressources);
 
-    // Récupère, en fonction des niveaux, les assets
+    // Récupère les blocs et l'arrière-plan en fonction du niveau
     char blocks[100];
     char background[100];
     sprintf(blocks, "../assets/%s.bmp", game->level);
     sprintf(background, "../assets/%s_bg.bmp", game->level);
 
+    // Charge toutes les images
     ressources->blocks = load_image(blocks, renderer);
     ressources->background = load_image(background, renderer);
     ressources->player = load_image("../assets/player.bmp", renderer);
@@ -106,7 +109,6 @@ void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressour
 
     // Affiche le blob selon la caméra
     SDL_RendererFlip flip = sprite->DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-
     SDL_RenderCopyEx(renderer, ressources->blocks,&world->textures[sprite->textureIndex].SrcR,
                      rect, 0., NULL, flip);
 }
@@ -161,38 +163,7 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
 
     // Affichage du menu
-    if (world->menu) {
-        int x = SCREEN_W / 2 - 800 / 2;
-        int y = SCREEN_H / 8;
-        apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->font);
-        apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->font);
-    }
-
-    if (world->pause) {
-        if (world->cyclesPause < 60) {
-            int x = SCREEN_W / 2 - 800 / 2;
-            int y = SCREEN_H / 8;
-            apply_text(renderer, x, y, 800, 100, "En pause..", ressources->font);
-        }
-        if (world->cyclesPause % 120 == 0) {
-            world->cyclesPause = 0;
-        }
-        //Incrementation du cycle de pause
-        world->cyclesPause++;
-    }
-
-    if (world->waitingMenu) {
-        int x = SCREEN_W / 2 - 800 / 2;
-        int y = SCREEN_H / 2 - 100 / 2;
-
-        if (world->hearts == 0) {
-            apply_text(renderer, x, y, 800, 100, "Vous avez perdu", ressources->font);
-        } else {
-            apply_text(renderer, x, y, 800, 100, "Vous avez gagne", ressources->font);
-        }
-
-        askPseudo(renderer, game, world, ressources);
-    }
+    display_menu(renderer, game, world, ressources);
 
     bool save = false;
     struct dirent *dir;
@@ -284,4 +255,53 @@ void askPseudo(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_
     int x = SCREEN_W / 2 - length / 2;
     int y = SCREEN_H / 1.25;
     apply_text(renderer, x, y, length, 75, text, ressources->font);
+}
+
+void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
+    // Gère l'affichage des différents menus
+    display_main_menu(renderer, world, ressources);
+    display_pause_menu(renderer, world, ressources);
+    display_waiting_menu(renderer, game, world, ressources);
+}
+
+void display_main_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources) {
+    // Vérifie que nous sommes sur le menu principal
+    if (!world->menu) return;
+
+    // Affichage les textes aux coordonnées souhaitées
+    int x = SCREEN_W / 2 - 800 / 2;
+    int y = SCREEN_H / 8;
+    apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->font);
+    apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->font);
+}
+
+void display_pause_menu(SDL_Renderer *renderer, world_t *world, ressources_t *ressources) {
+    // Vérifie que nous sommes sur le menu de pause
+    if (!world->pause) return;
+
+    // Affiche le texte pendant 60 cycles
+    if (world->cyclesPause < 60) {
+        int x = SCREEN_W / 2 - 800 / 2;
+        int y = SCREEN_H / 8;
+        apply_text(renderer, x, y, 800, 100, "En pause..", ressources->font);
+    }
+
+    // Actualisation du cycle
+    if (world->cyclesPause % 120 == 0) world->cyclesPause = 0;
+    world->cyclesPause++;
+}
+
+void display_waiting_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
+    // Vérifie que nous sommes sur le menu final (victoire/défaite)
+    if (!world->waitingMenu) return;
+
+    // Défini la position du texte
+    int x = SCREEN_W / 2 - 800 / 2;
+    int y = SCREEN_H / 2 - 100 / 2;
+
+    // Affiche le texte selon l'état du jeu
+    if (world->hearts == 0) apply_text(renderer, x, y, 800, 100, "Vous avez perdu", ressources->font);
+    else apply_text(renderer, x, y, 800, 100, "Vous avez gagne", ressources->font);
+
+    askPseudo(renderer, game, world, ressources);
 }
