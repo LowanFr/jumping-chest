@@ -163,7 +163,10 @@ void save_button(game_t *game, world_t *world) {
 void new_game_button(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
     world->menu = false;
     world->end = false;
+
+    clean_game(game);
     init_game(game);
+
     init_world(game, world, true);
     init_ressources(renderer, ressources, game);
 }
