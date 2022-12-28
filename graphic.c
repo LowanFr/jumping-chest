@@ -46,23 +46,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     // Affiche l'arrière-plan
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
-
-    // Affiche tous les blocs présents sur la caméra (et un peu plus haut pour les sauts des blobs)
-    for (int i = 0; i < world->map->nb_row; ++i) {
-        for (int j = 0; j < world->map->nb_col; ++j) {
-            SDL_Rect block = world->blocks[i][j].DestR;
-            bool onCamera = block.y <= world->cam->y + world->cam->h &&
-                            block.y + block.h >= world->cam->y - SIZE_TEXTURES * 4 &&
-                            block.x <= world->cam->x + world->cam->w &&
-                            block.x + block.w >= world->cam->x;
-
-            // Affiche le bloc s'il y a une collision entre celui-ci et la caméra
-            if (onCamera) {
-                display_block(game, world, renderer, ressources, keyboard, &world->blocks[i][j]);
-            }
-        }
-    }
-
+    display_blocks(game, world, renderer, ressources, keyboard);
     display_score(renderer, game, ressources);
     display_lives(renderer, world, ressources);
     display_player(renderer, world, ressources, keyboard);
@@ -71,24 +55,46 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
     update_screen(renderer);
 }
 
+void display_blocks(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources,
+                    keyboard_status_t *keyboard) {
+    // Parcours tous les blocs du monde
+    for (int i = 0; i < world->map->nb_row; ++i) {
+        for (int j = 0; j < world->map->nb_col; ++j) {
+            // Vérifie que le bloc apparaît sur la caméra
+            SDL_Rect block = world->blocks[i][j].DestR;
+            bool onCamera = block.y <= world->cam->y + world->cam->h &&
+                            block.y + block.h >= world->cam->y - SIZE_TEXTURES * 4 &&
+                            block.x <= world->cam->x + world->cam->w &&
+                            block.x + block.w >= world->cam->x;
+            if (!onCamera) continue;
+
+            display_block(game, world, renderer, ressources, keyboard, &world->blocks[i][j]);
+        }
+    }
+}
+
 void display_block(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources,
                    keyboard_status_t *keyboard, sprite_t *sprite) {
+    // Récupère la position du bloc par rapport à la caméra
     SDL_Rect block = sprite->DestR;
-    handle_animations(world, sprite);
     block.x -= world->cam->x;
     block.y -= world->cam->y;
 
-    // Gérer les flips des blobs ainsi que leur déplacement/collisions
+    handle_animations(world, sprite);
+
+    // Gère l'affichage des blobs (flip de l'image si nécessaire)
     if (sprite->textureIndex == 10 || sprite->textureIndex == 11) {
         display_blobs(renderer, game, world, ressources, keyboard, sprite, &block);
     } else {
+        // Gère l'affichage de la lettre E au-dessus du coffre (fermé)
         if (sprite->textureIndex == 4 && sprite->print_e == true) {
             world->letter_e->DestR.x = block.x + 4;
             world->letter_e->DestR.y = block.y - 50;
-
             SDL_RenderCopy(renderer, ressources->letter_e,
                            &world->letter_e->SrcR, &world->letter_e->DestR);
         }
+
+        // Affiche le bloc
         SDL_RenderCopy(renderer, ressources->blocks,
                        &world->textures[sprite->textureIndex].SrcR, &block);
     }
@@ -98,17 +104,16 @@ void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressour
     blob_movement(world, sprite);
     handle_collision(game, world, sprite, keyboard);
 
-    // Affiche le joueur selon la caméra
+    // Affiche le blob selon la caméra
     SDL_RendererFlip flip = sprite->DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
 
-    SDL_RenderCopyEx(renderer, ressources->blocks,
-                     &world->textures[sprite->textureIndex].SrcR, rect, 0., NULL, flip);
+    SDL_RenderCopyEx(renderer, ressources->blocks,&world->textures[sprite->textureIndex].SrcR,
+                     rect, 0., NULL, flip);
 }
 
 void display_score(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
     char buff[20];
     sprintf(buff, "SCORE : %d", game->score);
-
     apply_text(renderer, 10, 10, 150, 50, buff, ressources->font);
 }
 
@@ -119,14 +124,15 @@ void display_lives(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
         pos_lives.y = 10;
         pos_lives.w = WIDTH_PLAYER * 0.7;
         pos_lives.h = HEIGHT_PLAYER * 0.7;
-        SDL_RenderCopy(renderer, ressources->player,
-                       &world->player->SrcR, &pos_lives);
+        SDL_RenderCopy(renderer, ressources->player,&world->player->SrcR, &pos_lives);
     }
 }
 
 void display_player(SDL_Renderer *renderer, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard) {
     // Affiche le joueur selon la caméra
     SDL_RendererFlip flip = keyboard->lastIsLeft == 1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+
+    // Récupère le bloc par rapport à la caméra
     SDL_Rect block = world->player->DestR;
     block.x -= world->cam->x;
     block.y -= world->cam->y;
