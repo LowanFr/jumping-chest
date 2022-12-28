@@ -58,24 +58,7 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
             // Affiche le bloc s'il y a une collision entre celui-ci et la caméra
             if (onCamera) {
-                handle_animations(world, &world->blocks[i][j]);
-                block.x -= world->cam->x;
-                block.y -= world->cam->y;
-
-                // Gérer les flips des blobs ainsi que leur déplacement/collisions
-                if (world->blocks[i][j].textureIndex == 10 || world->blocks[i][j].textureIndex == 11) {
-                    display_blobs(renderer, game, world, ressources, keyboard, &world->blocks[i][j], &block);
-                } else {
-                    if (world->blocks[i][j].textureIndex == 4 && world->blocks[i][j].print_e == true) {
-                        world->letter_e->DestR.x = block.x + 4;
-                        world->letter_e->DestR.y = block.y - 50;
-
-                        SDL_RenderCopy(renderer, ressources->letter_e,
-                                       &world->letter_e->SrcR, &world->letter_e->DestR);
-                    }
-                    SDL_RenderCopy(renderer, ressources->blocks,
-                                   &world->textures[world->blocks[i][j].textureIndex].SrcR, &block);
-                }
+                display_block(game, world, renderer, ressources, keyboard, &world->blocks[i][j]);
             }
         }
     }
@@ -86,6 +69,29 @@ void refresh_graphics(SDL_Renderer *renderer, game_t *game, world_t *world, ress
 
     // Met à jour l'écran
     update_screen(renderer);
+}
+
+void display_block(game_t *game, world_t *world, SDL_Renderer *renderer, ressources_t *ressources,
+                   keyboard_status_t *keyboard, sprite_t *sprite) {
+    SDL_Rect block = sprite->DestR;
+    handle_animations(world, sprite);
+    block.x -= world->cam->x;
+    block.y -= world->cam->y;
+
+    // Gérer les flips des blobs ainsi que leur déplacement/collisions
+    if (sprite->textureIndex == 10 || sprite->textureIndex == 11) {
+        display_blobs(renderer, game, world, ressources, keyboard, sprite, &block);
+    } else {
+        if (sprite->textureIndex == 4 && sprite->print_e == true) {
+            world->letter_e->DestR.x = block.x + 4;
+            world->letter_e->DestR.y = block.y - 50;
+
+            SDL_RenderCopy(renderer, ressources->letter_e,
+                           &world->letter_e->SrcR, &world->letter_e->DestR);
+        }
+        SDL_RenderCopy(renderer, ressources->blocks,
+                       &world->textures[sprite->textureIndex].SrcR, &block);
+    }
 }
 
 void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard, sprite_t *sprite, SDL_Rect *rect) {
