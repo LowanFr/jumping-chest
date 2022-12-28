@@ -94,23 +94,24 @@ void display_block(game_t *game, world_t *world, SDL_Renderer *renderer, ressour
         if (sprite->textureIndex == 4 && sprite->print_e == true) {
             world->letter_e->DestR.x = block.x + 4;
             world->letter_e->DestR.y = block.y - 50;
-            SDL_RenderCopy(renderer, ressources->letter_e,&world->letter_e->SrcR,
+            SDL_RenderCopy(renderer, ressources->letter_e, &world->letter_e->SrcR,
                            &world->letter_e->DestR);
         }
 
         // Affiche le bloc
-        SDL_RenderCopy(renderer, ressources->blocks,&world->textures[sprite->textureIndex].SrcR,
+        SDL_RenderCopy(renderer, ressources->blocks, &world->textures[sprite->textureIndex].SrcR,
                        &block);
     }
 }
 
-void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard, sprite_t *sprite, SDL_Rect *rect) {
+void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,
+                   keyboard_status_t *keyboard, sprite_t *sprite, SDL_Rect *rect) {
     blob_movement(world, sprite);
     handle_collision(game, world, sprite, keyboard);
 
     // Affiche le blob selon la caméra
     SDL_RendererFlip flip = sprite->DestR.x < world->player->DestR.x ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
-    SDL_RenderCopyEx(renderer, ressources->blocks,&world->textures[sprite->textureIndex].SrcR,
+    SDL_RenderCopyEx(renderer, ressources->blocks, &world->textures[sprite->textureIndex].SrcR,
                      rect, 0., NULL, flip);
 }
 
@@ -127,7 +128,7 @@ void display_lives(SDL_Renderer *renderer, world_t *world, ressources_t *ressour
         pos_lives.y = 10;
         pos_lives.w = WIDTH_PLAYER * 0.7;
         pos_lives.h = HEIGHT_PLAYER * 0.7;
-        SDL_RenderCopy(renderer, ressources->player,&world->player->SrcR, &pos_lives);
+        SDL_RenderCopy(renderer, ressources->player, &world->player->SrcR, &pos_lives);
     }
 }
 

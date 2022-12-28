@@ -112,7 +112,8 @@ void display_block(game_t *game, world_t *world, SDL_Renderer *renderer, ressour
  * @param sprite L'image
  * @param rect Le rectangle adapté à la caméra
  */
-void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, keyboard_status_t *keyboard, sprite_t *sprite, SDL_Rect *rect);
+void display_blobs(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources,
+                   keyboard_status_t *keyboard, sprite_t *sprite, SDL_Rect *rect);
 
 /**
  * @brief Affiche le score de la partie
@@ -156,6 +157,12 @@ void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressourc
  */
 void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save);
 
+/**
+ * @brief Affiche le classement
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param ressources Les ressources
+ */
 void display_leaderboard(SDL_Renderer *renderer, game_t *game, ressources_t *ressources);
 
 /**
@@ -180,7 +187,6 @@ void display_waiting_menu(SDL_Renderer *renderer, game_t *game, world_t *world, 
  * @return Oui s'il existe une sauvegarde, sinon non
  */
 bool has_backup();
-
 
 
 #endif
