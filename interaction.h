@@ -70,4 +70,35 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
  */
 void write_pseudo(game_t *game, SDL_Keycode key);
 
+/**
+ * @brief Actionne le bouton pour reprendre le jeu
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
+void resume_button(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
+
+/**
+ * @brief Actionne le bouton pour lancer une nouvelle partie
+ * @param renderer Le moteur de rendu
+ * @param game La partie
+ * @param world Le monde
+ * @param ressources Les ressources
+ */
+void new_game_button(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
+
+/**
+ * @brief Actionne le bouton pour quitter le jeu
+ * @param world Le monde
+ */
+void exit_button(world_t *world);
+
+/**
+ * @brief Actionne le bouton pour sauvegarder la partie
+ * @param game La partie
+ * @param world Le monde
+ */
+void save_button(game_t *game, world_t *world);
+
 #endif

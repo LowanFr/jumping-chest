@@ -8,6 +8,8 @@
  */
 
 void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL_Event *event) {
+    SDL_Keycode key;
+
     // Effectue des actions sur le type d'événements
     switch (event->type) {
         case SDL_QUIT: // Fermeture de la fenêtre
@@ -19,15 +21,15 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
             break;
 
         case SDL_KEYDOWN: // Touches appuyées
-            write_pseudo(game, event->key.keysym.sym);
+            key = event->key.keysym.sym;
+            write_pseudo(game, key);
 
-            switch (event->key.keysym.sym) {
+            switch (key) {
                 case SDLK_ESCAPE:
                     if (!world->waitingMenu) {
                         world->end = true;
-                        if (world->menu) {
-                            world->menu = false;
-                        } else if (world->pause) {
+                        if (world->menu) world->menu = false;
+                        else if (world->pause) {
                             world->pause = false;
                             world->menu = true;
                         } else {
@@ -35,7 +37,6 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
                             world->cyclesPause = 0;
                         }
                     }
-
                     break;
                 case SDLK_LEFT:
                     keyboard->lastIsLeft = true;
@@ -48,7 +49,7 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
                     keyboard->lastIsLeft = false;
                     keyboard->right = true;
                     break;
-                case SDLK_e:
+                default:
                     keyboard->e = true;
                     break;
             }
@@ -57,18 +58,14 @@ void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL
         case SDL_KEYUP: // Les touches libérées
             switch (event->key.keysym.sym) {
                 case SDLK_LEFT:
-                    if (keyboard->right) {
-                        keyboard->lastIsLeft = false;
-                    }
+                    if (keyboard->right) keyboard->lastIsLeft = false;
                     keyboard->left = false;
                     break;
                 case SDLK_SPACE:
                     keyboard->space = false;
                     break;
                 case SDLK_RIGHT:
-                    if (keyboard->left) {
-                        keyboard->lastIsLeft = true;
-                    }
+                    if (keyboard->left) keyboard->lastIsLeft = true;
                     keyboard->right = false;
                     break;
                 case SDLK_e:
@@ -98,22 +95,8 @@ void refresh_mouse(mouse_status_t *mouse, SDL_Event *event) {
     SDL_GetMouseState(&mouse->x, &mouse->y);
 
     // Effectue des actions sur le type d'événements
-    switch (event->type) {
-        case SDL_MOUSEBUTTONDOWN: // Bouton appuyé
-            switch (event->button.button) {
-                case SDL_BUTTON_LEFT:
-                    mouse->left = true;
-                    break;
-            }
-            break;
-
-        case SDL_MOUSEBUTTONUP: // Bouton libéré
-            switch (event->button.button) {
-                case SDL_BUTTON_LEFT:
-                    mouse->left = false;
-                    break;
-            }
-    }
+    if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == SDL_BUTTON_LEFT) mouse->left = true;
+    else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) mouse->left = false;
 }
 
 void handle_event(SDL_Renderer *renderer, ressources_t *ressources,
@@ -128,7 +111,6 @@ void handle_event(SDL_Renderer *renderer, ressources_t *ressources,
 
 void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *game, world_t *world,
                    mouse_status_t *mouseStatus) {
-
     // Vérifie qu'il y a un clic gauche
     if (!mouseStatus->left) return;
 
@@ -143,50 +125,54 @@ void handle_button(SDL_Renderer *renderer, ressources_t *ressources, game_t *gam
         bool cond2 = mouseStatus->y <= button.DestR.y + button.DestR.h && mouseStatus->y >= button.DestR.y;
         if (!cond1 || !cond2) continue;
 
-        // Bouton reprendre une partie
-        if (button.type == 0) {
-            if (world->pause == true) {
-                world->pause = false;
-                world->end = false;
-            } else {
-                world->menu = false;
-                load_game(game);
-                load_world(world);
-                init_ressources(renderer, ressources, game);
-                world->end = false;
-            }
-        }
+        // Affiche le bouton correspondant
+        if (button.type == 0) resume_button(renderer, game, world, ressources);
+        if (button.type == 1) new_game_button(renderer, game, world, ressources);
+        if (button.type == 2) exit_button(world);
+        if (button.type == 3) save_button(game, world);
+    }
+}
 
-        // Bouton pour sauvegarder
-        if (button.type == 3) {
-            // Défini le chemin vers le dossier
-            char folder[100] = "../backups";
+void resume_button(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
+    if (world->pause == true) { // Reprend la partie en cours
+        world->pause = false;
+        world->end = false;
+    } else { // Charge la sauvegarde
+        world->menu = false;
+        load_game(game);
+        load_world(world);
+        init_ressources(renderer, ressources, game);
+        world->end = false;
+    }
+}
 
-            // Sauvegarde toutes les structures de données
-            save_game(game, folder);
-            save_world(world, folder);
+void save_button(game_t *game, world_t *world) {
+    // Défini le chemin vers le dossier
+    char folder[100] = "../backups";
 
-            world->menu = true;
-            world->pause = false;
-        }
+    // Sauvegarde toutes les structures de données
+    save_game(game, folder);
+    save_world(world, folder);
 
-        // Bouton de nouvelle partie
-        if (button.type == 1 && world->menu == true && world->end == true) {
-            world->menu = false;
-            world->end = false;
-            init_game(game);
-            init_world(game, world, true);
-            init_ressources(renderer, ressources, game);
-        }
+    // Redirige sur le menu principal
+    world->menu = true;
+    world->pause = false;
+}
 
-        // Bouton pour quitter
-        if (button.type == 2 && world->menu) {
-            world->menu = false;
-        }
-        if (button.type == 2 && world->pause) {
-            world->menu = true;
-            world->pause = false;
-        }
+void new_game_button(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
+    world->menu = false;
+    world->end = false;
+    init_game(game);
+    init_world(game, world, true);
+    init_ressources(renderer, ressources, game);
+}
+
+void exit_button(world_t *world) {
+    if (world->menu) { // Ferme le jeu
+        world->menu = false;
+    } else { // Redirige vers le menu principal
+        world->menu = true;
+        world->pause = false;
     }
 }
 
@@ -194,14 +180,9 @@ void write_pseudo(game_t *game, SDL_Keycode key) {
     if (!game->enteringPseudo) return;
 
     // Supprime le dernier caractère
-    if (key == SDLK_BACKSPACE) {
-        game->pseudo[strlen(game->pseudo) - 1] = 0;
-        return;
-    }
-
-    //  Fin du pseudonyme
-    if (key == SDLK_RETURN) {
-        game->enteringPseudo = false;
+    if (key == SDLK_BACKSPACE || key == SDLK_RETURN || key == SDLK_ESCAPE) {
+        if (key == SDLK_RETURN || key == SDLK_ESCAPE) game->enteringPseudo = false;
+        else game->pseudo[strlen(game->pseudo) - 1] = 0;
         return;
     }
 
@@ -209,10 +190,7 @@ void write_pseudo(game_t *game, SDL_Keycode key) {
     char keyName[50];
     sprintf(keyName, "%s", SDL_GetKeyName(key));
 
-    // Vérifie la taille du pseudonyme
-    if (strlen(game->pseudo) >= 20) return;
-
-    // Vérifie la taille de la clef
-    if (strlen(keyName) > 1) return;
+    // Vérifie la taille du pseudonyme et de la clef
+    if (strlen(game->pseudo) >= 20 || strlen(keyName) > 1) return;
     strcat(game->pseudo, keyName);
 }
