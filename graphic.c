@@ -71,6 +71,7 @@ void display_blocks(game_t *game, world_t *world, SDL_Renderer *renderer, ressou
                             block.x + block.w >= world->cam->x;
             if (!onCamera) continue;
 
+            // Affiche le bloc
             display_block(game, world, renderer, ressources, keyboard, &world->blocks[i][j]);
         }
     }
@@ -93,13 +94,13 @@ void display_block(game_t *game, world_t *world, SDL_Renderer *renderer, ressour
         if (sprite->textureIndex == 4 && sprite->print_e == true) {
             world->letter_e->DestR.x = block.x + 4;
             world->letter_e->DestR.y = block.y - 50;
-            SDL_RenderCopy(renderer, ressources->letter_e,
-                           &world->letter_e->SrcR, &world->letter_e->DestR);
+            SDL_RenderCopy(renderer, ressources->letter_e,&world->letter_e->SrcR,
+                           &world->letter_e->DestR);
         }
 
         // Affiche le bloc
-        SDL_RenderCopy(renderer, ressources->blocks,
-                       &world->textures[sprite->textureIndex].SrcR, &block);
+        SDL_RenderCopy(renderer, ressources->blocks,&world->textures[sprite->textureIndex].SrcR,
+                       &block);
     }
 }
 
@@ -190,6 +191,7 @@ bool has_backup() {
     closedir(d);
     return res;
 }
+
 void blobs_animations(sprite_t *block) {
     // Itère l'image de la pièce
     if (block->textureIndex >= 10 && block->textureIndex <= 11) {
