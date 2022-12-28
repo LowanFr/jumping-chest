@@ -173,6 +173,7 @@ void clean_data(world_t *world) {
     free(world->map);
     free(world->textures);
     free(world->player);
+    free(world->letter_e);
     free(world->cam);
 }
 
