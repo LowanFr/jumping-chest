@@ -79,6 +79,7 @@ void handle_collision(game_t *game, world_t *world, sprite_t *entity, keyboard_s
     if (world->hearts == 0) {
         game->enteringPseudo = true;
         world->cyclesPause = 0;
+        world->menu = false;
         world->waitingMenu = true;
         world->end = true;
     }

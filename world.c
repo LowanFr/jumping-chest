@@ -219,6 +219,7 @@ void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressource
 
             sprintf(game->level, "classic");
             world->end = true;
+            world->waitingMenu = false;
             world->waitingMenu = true;
             game->enteringPseudo = true;
             world->cyclesPause = 0;
