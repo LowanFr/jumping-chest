@@ -334,7 +334,7 @@ void load_world(world_t *world) {
     load_player(world);
     load_details(world);
     init_cam(world, SCREEN_W, SCREEN_H);
-    if(world->cam->y < SIZE_TEXTURES * 5){
+    if (world->cam->y < SIZE_TEXTURES * 5) {
         world->cam->y = SIZE_TEXTURES * 5 - world->cam->h / 2;
     }
 }
