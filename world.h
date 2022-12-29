@@ -228,7 +228,7 @@ struct mouse_status_s {
 typedef struct mouse_status_s mouse_status_t;
 
 /**
- * @brief Repositionnement de la caméra en se basant sur les coordonnées de l'utilisateur.
+ * @brief Repositionnement de la caméra pour ne pas afficher ce qui n'est pas sur la carte
  * @param world Le monde
  */
 void repositioning_camera(world_t *world);
@@ -377,4 +377,34 @@ void init_blocks(world_t *world);
  */
 void update_hearts(game_t *game, world_t *world);
 
+/**
+ * @brief Initialise les boutons
+ * @param world Le monde
+ */
+void init_buttons(world_t *world);
+
+/**
+ * @brief Initialise les textures
+ * @param world Le monde
+ */
+void init_textures(world_t *world);
+
+/**
+ * @brief Initialise la carte
+ * @param game La partie
+ * @param world Le monde
+ */
+void init_map(game_t *game, world_t *world);
+
+/**
+ * @brief Initialise le joueur
+ * @param world Le monde
+ */
+void init_player(world_t *world);
+
+/**
+ * @brief Initialise la lettre E
+ * @param world Le monde
+ */
+void init_letter_e(world_t *world);
 #endif

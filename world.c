@@ -7,44 +7,13 @@
 #include "world.h"
 
 void init_world(game_t *game, world_t *world, bool new_game) {
-    // Initialisation des images de tous les blocs
-    world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
-    for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
-        init_sprite(&world->textures[i], X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11),
-                    Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11),
-                    SIZE_TEXTURES, SIZE_TEXTURES, 0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i, false);
-    }
-
-    world->player = calloc(1, sizeof(sprite_t));
-    world->letter_e = calloc(1, sizeof(sprite_t));
-
-    init_sprite(world->letter_e, 0, 0, 512, 512, 0, 0, 56, 56, 0, false);
-
-    // Définition des boutons pour le menu
-    world->buttons = calloc(4, sizeof(button_t));
-    for (int i = 0; i < 4; ++i) {
-        world->buttons[i].DestR.x = (1080 - 375 / 2) / 2;
-        world->buttons[i].DestR.y = 300 + i * 90;
-        world->buttons[i].DestR.w = 375;
-        world->buttons[i].DestR.h = 75;
-        world->buttons[i].type = i;
-        world->buttons[i].enable = i < 3;
-    }
-
-    // Défini le nom de la carte
-    char mapPath[100];
-    sprintf(mapPath, "../assets/map-%s.txt", game->level);
-
-    // Récupération de la carte
-    world->map = malloc(sizeof(map_t));
-    world->map->tab = lire_fichier(mapPath);
-
-    // Récupération de la taille de la map
-    taille_fichier(mapPath, &world->map->nb_row, &world->map->nb_col);
-
-    // Initialisation de tous les blocs sur la map
-    world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
-    for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
+    init_textures(world);
+    init_player(world);
+    init_letter_e(world);
+    init_map(game, world);
+    init_buttons(world);
+    init_cam(world, SCREEN_W, SCREEN_H);
+    init_blocks(world);
 
     world->cycles = 0;
     world->hearts = new_game ? 3 : world->hearts;
@@ -53,17 +22,65 @@ void init_world(game_t *game, world_t *world, bool new_game) {
     world->waitingMenu = false;
     world->pause = false;
     world->newLevel = false;
+}
 
-    // Initialisation de l'image du joueur
+void init_player(world_t *world) {
+    // Initialisation du joueur
+    world->player = calloc(1, sizeof(sprite_t));
     init_sprite(world->player, 4, 0, WIDTH_PLAYER, HEIGHT_PLAYER, SCREEN_W / 2 + SIZE_TEXTURES * 4,
-                SCREEN_H - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,
-                HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER, false);
+                SCREEN_H - 3 * HEIGHT_PLAYER, WIDTH_PLAYER,HEIGHT_PLAYER, TEXTURE_INDEX_PLAYER,
+                false);
+}
 
-    init_cam(world, SCREEN_W, SCREEN_H);
-    init_blocks(world);
+void init_letter_e(world_t *world) {
+    // Initialisation la lettre E (au-dessus du coffre)
+    world->letter_e = calloc(1, sizeof(sprite_t));
+    init_sprite(world->letter_e, 0, 0, 512, 512, 0, 0, 56, 56, 0, false);
+}
+
+void init_textures(world_t *world) {
+    // Initialisation des images de tous les blocs
+    world->textures = calloc(NUMBER_OF_TEXTURES, sizeof(sprite_t));
+
+    for (int i = 1; i < NUMBER_OF_TEXTURES; ++i) {
+        int x = X_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) % 11);
+        int y = Y_FIRST_TEXTURE + (SIZE_TEXTURES + SHIFT_TEXTURE) * ((i - 1) / 11);
+        init_sprite(&world->textures[i], x,y,SIZE_TEXTURES, SIZE_TEXTURES,
+                    0, 0, SIZE_TEXTURES, SIZE_TEXTURES, i, false);
+    }
+}
+
+void init_map(game_t *game, world_t *world) {
+    // Défini le nom de la carte
+    char mapPath[100];
+    sprintf(mapPath, "../assets/map-%s.txt", game->level);
+
+    // Initialisation de la carte
+    world->map = malloc(sizeof(map_t));
+    world->map->tab = lire_fichier(mapPath);
+
+    // Récupération de la taille de la carte
+    taille_fichier(mapPath, &world->map->nb_row, &world->map->nb_col);
+}
+
+void init_buttons(world_t *world) {
+    // Initialisation des boutons pour le menu
+    world->buttons = calloc(4, sizeof(button_t));
+
+    for (int i = 0; i < 4; ++i) {
+        world->buttons[i].DestR.x = (1080 - 375 / 2) / 2;
+        world->buttons[i].DestR.y = 300 + i * 90;
+        world->buttons[i].DestR.w = 375;
+        world->buttons[i].DestR.h = 75;
+        world->buttons[i].type = i;
+        world->buttons[i].enable = i < 3;
+    }
 }
 
 void init_blocks(world_t *world) {
+    // Initialisation de tous les blocs sur la carte
+    world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
+    for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
 
     // Initialisation de tous les blocs sur la map
     for (int i = 0; i < world->map->nb_row; i++) {
@@ -79,6 +96,7 @@ void init_blocks(world_t *world) {
 }
 
 void init_cam(world_t *world, int w, int h) {
+    // Initialise la caméra
     world->cam = calloc(1, sizeof(cam_t));
     world->cam->x = world->player->DestR.x - w / 2;
     world->cam->y = world->player->DestR.y - h / 2;
@@ -86,9 +104,7 @@ void init_cam(world_t *world, int w, int h) {
     world->cam->w = w;
 
     // Vérifie la bordure gauche
-    if (world->cam->x < 0) {
-        world->cam->x = 0;
-    }
+    if (world->cam->x < 0) world->cam->x = 0;
 
     // vérifie la bordure droite
     if (world->cam->x + world->cam->w >= world->map->nb_col * SIZE_TEXTURES) {
@@ -124,23 +140,29 @@ void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y
 }
 
 void repositioning_camera(world_t *world) {
-    if (world->player->prec.x > SIZE_TEXTURES * 10 &&
-        world->player->prec.x < world->map->nb_col * SIZE_TEXTURES - SIZE_TEXTURES * 10) {
-        world->cam->x = world->player->prec.x - world->cam->w / 2;
-    }
-    if (world->player->prec.y < world->map->nb_row * SIZE_TEXTURES - SIZE_TEXTURES * 6 &&
-        world->player->prec.y > SIZE_TEXTURES * 5) {
-        world->cam->y = world->player->prec.y - world->cam->h / 2;
+    int precX = world->player->prec.x;
+    int precY = world->player->prec.y;
+
+    // Vérifie les dépassements à gauche et à droite
+    if (precX > SIZE_TEXTURES * 10 && precX < world->map->nb_col * SIZE_TEXTURES - SIZE_TEXTURES * 10) {
+        world->cam->x = precX - world->cam->w / 2;
     }
 
+    // Vérifie les dépassements en haut et en bas
+    if (precY < world->map->nb_row * SIZE_TEXTURES - SIZE_TEXTURES * 6 && precY > SIZE_TEXTURES * 5) {
+        world->cam->y = world->player->prec.y - world->cam->h / 2;
+    }
 }
 
 void blob_movement(world_t *world, sprite_t *sprite) {
     sprite->prec = sprite->DestR;
 
+    // Effectue un saut pour le blob tous les 180 cycles
     if (world->cycles % 180 == 0) {
         sprite->saut = true;
         sprite->ground = sprite->DestR.y;
+
+        // Défini où regarde du blob
         if (world->player->DestR.x >= sprite->DestR.x) sprite->goRight = true;
         else sprite->goRight = false;
     }
@@ -150,17 +172,20 @@ void blob_movement(world_t *world, sprite_t *sprite) {
         sprite->DestR.y += sprite->timeSinceJumpStart * GRAVITY;
         sprite->timeSinceJumpStart++;
     }
+
     // Vérifie la gravité lors d'un saut
     if (sprite->saut == true) {
+        // Réalise le saut selon une parabole : y_depart - vitesse * temps + GRAVITE * temps^2
         sprite->DestR.y = (int) round(sprite->ground - JUMP_BLOB_SPEED * sprite->timeSinceJumpStart
                                       +
                                       0.5 * GRAVITY * sprite->timeSinceJumpStart * sprite->timeSinceJumpStart);
         sprite->timeSinceJumpStart++;
+
+        // Vérifie si le joueur est attaqué et effectue le déplacement dans la bonne direction
         if (world->player->isAttacked == false) {
             if (sprite->goRight == true) sprite->DestR.x += sprite->v;
             else sprite->DestR.x -= sprite->v;
         }
-
     }
 }
 
@@ -178,52 +203,53 @@ void clean_data(world_t *world) {
 }
 
 void new_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources) {
+    // Fichiers par défaut
     char mapPathBlocks[100] = "../assets/classic.bmp";
     char mapPathBG[100] = "../assets/classic_bg.bmp";
+
+    // Fichier les autres fichiers selon le niveau
     if (strcmp(game->level, "END") != 0) {
-        // Défini le nom de la carte
         sprintf(mapPathBlocks, "../assets/%s.bmp", game->level);
         sprintf(mapPathBG, "../assets/%s_bg.bmp", game->level);
     }
 
-    // Défini les ressources liées à l'image
+    // Défini les ressources liées au niveau
     ressources->blocks = load_image(mapPathBlocks, renderer);
     ressources->background = load_image(mapPathBG, renderer);
 }
 
 void refresh_level(SDL_Renderer *renderer, game_t *game, ressources_t *ressources, world_t *world) {
-    // Mise à jour du niveau si besoin avec les nouvelles textures
-    if (world->newLevel) {
-        // Pause pendant 2sec
-        SDL_Delay(2000);
+    // Vérifie si nous changeons de niveau
+    if (!world->newLevel) return;
 
-        // Modifie les textures en fonction du niveau
-        if (strcmp(game->level, "classic") == 0) sprintf(game->level, "snow");
-        else if (strcmp(game->level, "snow") == 0) sprintf(game->level, "lava");
-        else {
-            struct tm now = getDate();
+    // Pause pendant 2sec
+    SDL_Delay(2000);
 
-            // Défini la date actuelle de fin
-            sprintf(game->endDate, "%d-%02d-%02d %02d:%02d:%02d", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
-                    now.tm_hour, now.tm_min, now.tm_sec);
+    // Modifie les textures en fonction du niveau
+    if (strcmp(game->level, "classic") == 0) sprintf(game->level, "snow");
+    else if (strcmp(game->level, "snow") == 0) sprintf(game->level, "lava");
+    else {
+        struct tm now = getDate();
 
-            sprintf(game->level, "END");
-        }
+        // Défini la date actuelle de fin
+        sprintf(game->endDate, "%d-%02d-%02d %02d:%02d:%02d", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday,
+                now.tm_hour, now.tm_min, now.tm_sec);
 
-        // Vérifie si s'il y a un prochain niveau
-        if (strcmp(game->level, "END") != 0) {
-            clean_data(world);
-            new_level(renderer, game, ressources);
-            init_world(game, world, false);
-        } else {
+        sprintf(game->level, "END");
+    }
 
-            sprintf(game->level, "classic");
-            world->end = true;
-            world->waitingMenu = false;
-            world->waitingMenu = true;
-            game->enteringPseudo = true;
-            world->cyclesPause = 0;
-        }
+    // Vérifie si s'il y a un prochain niveau
+    if (strcmp(game->level, "END") != 0) {
+        clean_data(world);
+        new_level(renderer, game, ressources);
+        init_world(game, world, false);
+    } else {
+        sprintf(game->level, "classic");
+        world->end = true;
+        world->waitingMenu = false;
+        world->waitingMenu = true;
+        game->enteringPseudo = true;
+        world->cyclesPause = 0;
     }
 }
 
@@ -334,9 +360,7 @@ void load_world(world_t *world) {
     load_player(world);
     load_details(world);
     init_cam(world, SCREEN_W, SCREEN_H);
-    if (world->cam->y < SIZE_TEXTURES * 5) {
-        world->cam->y = SIZE_TEXTURES * 5 - world->cam->h / 2;
-    }
+    if (world->cam->y < SIZE_TEXTURES * 5) world->cam->y = SIZE_TEXTURES * 5 - world->cam->h / 2;
 }
 
 void load_player(world_t *world) {
@@ -388,54 +412,51 @@ void load_player(world_t *world) {
 }
 
 void load_blocks(world_t *world) {
-    world->map->tab = lire_fichier("../backups/world/blocks.txt");
-    taille_fichier("../backups/world/blocks.txt", &world->map->nb_row, &world->map->nb_col);
-    for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]); // Libère toutes les lignes
+    // Libère les anciens blocs
+    for (int i = 0; i < world->map->nb_row; i++) free(world->blocks[i]);
     free(world->blocks);
-
-    // Initialisation de tous les blocs sur la map
-    world->blocks = calloc(sizeof(sprite_t *), world->map->nb_row);
-    for (int i = 0; i < world->map->nb_row; i++) world->blocks[i] = calloc(sizeof(sprite_t), world->map->nb_col);
 
     init_blocks(world);
 }
 
 void load_details(world_t *world) {
     FILE *fichier = NULL;
+
+    // Vérifie que le fichier s'ouvre
+    fichier = fopen("../backups/world/details.txt", "r");
+    if (fichier == NULL) return;
+
     char line[50];
     int size = 50;
     int step = 0;
-    fichier = fopen("../backups/world/details.txt", "r"); // Ouvre en mode lecture
 
-    if (fichier != NULL) { // Fichier introuvable
-        // Parcours toutes les lignes
-        while (fgets(line, size, fichier) != NULL) {
-            int value = (int) strtol(line, NULL, 10);
+    // Parcours toutes les lignes
+    while (fgets(line, size, fichier) != NULL) {
+        int value = (int) strtol(line, NULL, 10);
 
-            // Initialisation de l'image du joueur
-            switch (step) {
-                case 0:
-                    world->cycles = value;
-                    break;
-                case 1:
-                    world->hearts = value;
-                    break;
-                case 2:
-                    world->end = (bool) value;
-                    break;
-                case 3:
-                    world->menu = (bool) value;
-                    break;
-                default:
-                    world->pause = (bool) value;
-                    break;
-            }
-
-            step++;
+        // Initialisation de l'image du joueur
+        switch (step) {
+            case 0:
+                world->cycles = value;
+                break;
+            case 1:
+                world->hearts = value;
+                break;
+            case 2:
+                world->end = (bool) value;
+                break;
+            case 3:
+                world->menu = (bool) value;
+                break;
+            default:
+                world->pause = (bool) value;
+                break;
         }
 
-        fclose(fichier);
+        step++;
     }
+
+    fclose(fichier);
 }
 
 void update_hearts(game_t *game, world_t *world) {
