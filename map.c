@@ -65,7 +65,7 @@ int **lire_fichier(const char *nameFile) {
     // Vérifie que le fichier s'ouvre
     FILE *fichier = NULL;
     fichier = fopen(nameFile, "r");
-    if (fichier != NULL) return tab;
+    if (fichier == NULL) return tab;
 
     // Récupère la taille du fichier et alloue la matrice
     int colTerrain, rowTerrain;
