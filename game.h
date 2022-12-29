@@ -14,7 +14,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define LINE_SIZE 100 // La taille maximale d'une ligne du leaderboard
+/**
+ * @brief La taille maximale d'une ligne du leaderboard
+ */
+#define LINE_SIZE 100
 
 /**
  * @brief Définition d'une partie d'un joueur
@@ -30,6 +33,10 @@ struct game_s {
     char **leaderboard; /*!< Champ concernant le classement par score décroissant. */
     int leaderboardLength; /*!< Champ concernant la taille du classement. */
 };
+
+/**
+ * @brief Type concernant la partie
+ */
 typedef struct game_s game_t;
 
 /**
@@ -73,16 +80,15 @@ int getNbPlayers(char *path);
 /**
  * @brief Récupère chaque ligne avec pseudo + score
  * @param path Le chemin vers le fichier
- * @param lineSize La maximum pour un joueur
+ * @param nbPlayers Le nombre de joueurs
  * @return Les lignes avec les pseudonymes + scores
  */
 char **getPlayers(char *path, int nbPlayers);
 
 /**
  * @brief Récupère tous les scores
- * @param path Le chemin vers le fichier
- * @param players Les lignes avec tous les joueurs (Pseudo + score)
- * @param lineSize La taille maximale d'une ligne
+ * @param players Les joueurs
+ * @param nbPlayers Le nombre de joueurs
  * @return Les scores de chaque joueur
  */
 int *getScores(char **players, int nbPlayers);

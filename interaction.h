@@ -14,9 +14,10 @@
 
 /**
  * @brief Actualisation des actions sur le clavier.
+ * @param game La partie
  * @param world Le monde
  * @param keyboard Le statut du clavier
- * @param event L'événement
+ * @param event L'événement à exécuter
  */
 void refresh_keys(game_t *game, world_t *world, keyboard_status_t *keyboard, SDL_Event *event);
 
@@ -34,7 +35,7 @@ void init_keyboard(keyboard_status_t *keyboard);
  * @param keyboard Le clavier
  * @param game La partie
  * @param world Le monde
- * @param event L'événement
+ * @param event Les événements
  */
 void handle_event(SDL_Renderer *renderer, ressources_t *ressources, mouse_status_t *mouse, keyboard_status_t *keyboard,
                   game_t *game, world_t *world, SDL_Event *event);
@@ -42,13 +43,13 @@ void handle_event(SDL_Renderer *renderer, ressources_t *ressources, mouse_status
 /**
  * @brief Initialisation de la souris.
  * @param mouse La souris
- * @param event L'événement
  */
 void init_mouse(mouse_status_t *mouse);
 
 /**
  * @brief Actualisation des actions de la souris.
  * @param mouse La souris
+ * @param event L'événement à exécuter
  */
 void refresh_mouse(mouse_status_t *mouse, SDL_Event *event);
 

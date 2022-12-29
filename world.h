@@ -83,11 +83,18 @@
  */
 #define TEXTURE_INDEX_PLAYER (-1)
 
+/**
+ * @brief Structure représentant un bouton cliquable
+ */
 struct button_s {
     bool enable; /*!< Champ concernant l'état du bouton. */
     int type; /*!< Champ concernant le type du bouton. */
     SDL_Rect DestR; /*!< Champ concernant la destination du bouton. */
 };
+
+/**
+ * Type qui concerne un bouton
+ */
 typedef struct button_s button_t;
 
 /**
@@ -99,6 +106,10 @@ struct cam_s {
     int h;  /*!< Champ concernant la hauteur de la caméra. */
     int w;  /*!< Champ concernant la largeur de la caméra. */
 };
+
+/**
+ * @brief Type concernant la caméra
+ */
 typedef struct cam_s cam_t;
 
 /**
@@ -118,6 +129,10 @@ struct sprite_s {
     bool print_e; /*!< Oui si la lettre droit être affichée. */
 
 };
+
+/**
+ * @brief Type concernant l'image
+ */
 typedef struct sprite_s sprite_t;
 
 /**
@@ -128,6 +143,10 @@ struct map_s {
     int nb_row; /*!< Champ lié aux nombres de lignes de la map. */
     int nb_col; /*!< Champ lié aux nombres de colonnes de la map. */
 };
+
+/**
+ * @brief Type concernant la map
+ */
 typedef struct map_s map_t;
 
 /**
@@ -146,12 +165,16 @@ struct world_s {
     bool menu; /*!<  Champ désignant le menu principal. */
     bool pause; /*!<  Champ désignant le menu de pause. */
     bool waitingMenu; /*!<  Champ désignant l'animation entre le jeu et le menu si joueur gagne ou si joueur perd. */
+    bool newLevel; /*!<  Champ désignant si on change de niveau. */
+    bool reinstall; /*!<  Champ désignant si on doit relancer le jeu */
     int cycles; /*!<  Champ désignant le nombre de cycle de jeu. */
     int cyclesPause; /*!<  Champ désignant le nombre de cycle de jeu dans le menu de pause. */
-    bool newLevel; /*!<  Champ désignant si on change de niveau. */
-    bool reinstall;
 
 };
+
+/**
+ * @brief Type concernant le monde
+ */
 typedef struct world_s world_t;
 
 /**
@@ -168,6 +191,10 @@ struct ressources_s {
     SDL_Texture *letter_e; /*!< Ressource liée à l'image de la lettre E*/
     TTF_Font *font; /*!< Ressource liée au texte de la vie */
 };
+
+/**
+ * @brief Type concernant toutes les sources d'image/police d'écriture
+ */
 typedef struct ressources_s ressources_t;
 
 /**
@@ -178,8 +205,12 @@ struct keyboard_status_s {
     bool right; /*!< Champ concernant la flèche droite. */
     bool space; /*!< Champ concernant l'espace'. */
     bool lastIsLeft; /*!< Champ concernant la dernière touche appuyé. */
-    bool e;
+    bool e; /*!< Champ concernant la lettre E sur le coffre. */
 };
+
+/**
+ * @brief Type concernant le clavier
+ */
 typedef struct keyboard_status_s keyboard_status_t;
 
 /**
@@ -190,6 +221,10 @@ struct mouse_status_s {
     int x; /*!< Champ concernant l'abscisse de la souris'. */
     int y; /*!< Champ concernant l'ordonnée de la souris. */
 };
+
+/**
+ * @brief Type concernant la souris
+ */
 typedef struct mouse_status_s mouse_status_t;
 
 /**
@@ -212,7 +247,7 @@ void init_world(game_t *game, world_t *world, bool new_game);
  * @param w La hauteur de la caméra
  * @param h La largeur de la caméra
  */
-void init_cam(world_t *world, int w, int f);
+void init_cam(world_t *world, int w, int h);
 
 /**
  * @brief Initialisation d'une image.
@@ -226,6 +261,7 @@ void init_cam(world_t *world, int w, int f);
  * @param w2 La longueur pour la destination de l'image
  * @param h2 La hauteur pour la destination de l'image
  * @param textureIndex L'indice de la texture de l'image
+ * @param print_e  Si ça correspond à la lettre E
  */
 void init_sprite(sprite_t *sprite, int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2, int textureIndex,
                  bool print_e);

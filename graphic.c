@@ -165,8 +165,7 @@ void refresh_menu(game_t *game, world_t *world, SDL_Renderer *renderer, ressourc
     SDL_RenderCopy(renderer, ressources->background, NULL, NULL);
 
     // Affichage du menu
-    bool save = has_backup();
-    display_menu(renderer, game, world, ressources, save);
+    display_menu(renderer, game, world, ressources);
 
     // Met à jour l'écran
     update_screen(renderer);
@@ -237,16 +236,18 @@ void save_pseudo(game_t *game, world_t *world) {
     fclose(fichier);
 }
 
-void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save) {
+void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
     // Gère l'affichage des différents menus
-    display_main_menu(renderer, game, world, ressources, save);
+    display_main_menu(renderer, game, world, ressources);
     display_pause_menu(renderer, world, ressources);
     display_waiting_menu(renderer, game, world, ressources);
 }
 
-void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save) {
+void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources) {
     // Vérifie que nous sommes sur le menu principal
     if (!world->menu) return;
+
+    bool save = has_backup();
 
     // Affichage les textes aux coordonnées souhaitées
     int x = SCREEN_W / 2 - 800 / 2;

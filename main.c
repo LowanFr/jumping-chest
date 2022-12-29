@@ -22,7 +22,8 @@
  * @param renderer Le rendu
  * @param ressources Les ressources
  * @param world Le monde
- * @param keys Les touches du clavier
+ * @param keyboard Le clavier
+ * @param mouse La souris
  * @param game La partie
  */
 void init(SDL_Window **window, SDL_Renderer **renderer, ressources_t *ressources, world_t *world,
@@ -120,8 +121,8 @@ int main() {
 
         // Libère toute la mémoire utilisée pour le monde
         clean(window, renderer, &ressources, &game, &world);
-
     }
+
     return EXIT_SUCCESS;
 }
 

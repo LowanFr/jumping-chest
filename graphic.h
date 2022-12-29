@@ -29,6 +29,7 @@ void init_ressources(SDL_Renderer *renderer, ressources_t *ressources, game_t *g
 /**
  * @brief Demande à l'utilisateur d'entrer son pseudonyme
  * @param renderer Le moteur de rendu
+ * @param game La partie
  * @param world Le monde
  * @param ressources Les ressources
  */
@@ -67,6 +68,7 @@ void coin_animations(sprite_t *block);
 
 /**
  * @brief Actualisation du menu d'accueil
+ * @param game La partie
  * @param world Le monde
  * @param renderer Le moteur de rendu
  * @param ressources Les ressources
@@ -147,15 +149,16 @@ void display_player(SDL_Renderer *renderer, world_t *world, ressources_t *ressou
  * @param world Le monde
  * @param ressources Les ressources
  */
-void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save);
+void display_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
 
 /**
  * @brief Affiche le menu principal
  * @param renderer Le moteur de recherche
+ * @param game La partie
  * @param world Le monde
  * @param ressources Les ressources
  */
-void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources, bool save);
+void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, ressources_t *ressources);
 
 /**
  * @brief Affiche le classement
