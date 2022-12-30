@@ -1,4 +1,4 @@
-# Mario-Bross-Lite
+# Jumping Chest
 
 > This project is realized by Esteban DOUILLET and Paul SCHNEIDER for a project linked to the University of Lorraine.
 

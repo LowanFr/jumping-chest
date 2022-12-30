@@ -252,8 +252,7 @@ void display_main_menu(SDL_Renderer *renderer, game_t *game, world_t *world, res
     // Affichage les textes aux coordonnées souhaitées
     int x = SCREEN_W / 2 - 800 / 2;
     int y = SCREEN_H / 8;
-    apply_text(renderer, x, y, 800, 100, "Super (Mario) Bros", ressources->font);
-    apply_text(renderer, x + 400, y + 100, 200, 50, "(lite)", ressources->font);
+    apply_text(renderer, x, y, 800, 100, "Jumping Chest", ressources->font);
 
     // Affiche tous les boutons
     for (int i = 0; i < 4; i++) {
