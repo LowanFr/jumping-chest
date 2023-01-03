@@ -227,7 +227,7 @@ void save_pseudo(game_t *game, world_t *world) {
     // Ouvre le fichier et vérifie que pseudonyme n'est pas vide
     FILE *fichier = NULL;
     fichier = fopen("../backups/leaderboard.txt", "a");
-    if (fichier == NULL || strlen(game->pseudo) == 0) return;
+    if (fichier == NULL || strlen(game->pseudo) == 0 || game->score == 0) return;
 
     // Ajoute le pseudonyme à la suite dans le fichier
     char text[50];
