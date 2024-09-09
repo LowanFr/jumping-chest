@@ -1,4 +1,4 @@
-# Jumping Chest
+# Jumping Chest 
 
 > This project is realized by Esteban DOUILLET and Paul SCHNEIDER for a project linked to the University of Lorraine.
 
@@ -7,6 +7,9 @@
 > This game is built around several worlds with different levels. Each level is different, but at the end of each level.
 > By putting your nickname at the end of the game, you will be able to see your score compared to the other people who
 > played on your device.
+
+## Requirements
+- OS: Linux / MacOS
 
 ## How to run the game?
 
